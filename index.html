@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Statify - PvP Stats</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="./image.png?v=1" type="image/png">
+    <link rel="shortcut icon" href="./image.png?v=1" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #050709;
+            --surface: #0b0f14;
+            --surface2: #111820;
+            --red: #ff2d2d;
+            --red-glow: rgba(255, 45, 45, 0.4);
+            --red-dim: rgba(255, 45, 45, 0.12);
+            --gold: #ffd700;
+            --gold-glow: rgba(255, 215, 0, 0.35);
+            --gold-dim: rgba(255, 215, 0, 0.1);
+            --steel: #8fa3b8;
+            --steel-dim: rgba(143, 163, 184, 0.08);
+            --white: #f0f4f8;
+            --text-muted: #4a5a6a;
+            --border: rgba(143, 163, 184, 0.1);
+            --border-hot: rgba(255, 45, 45, 0.3);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--white);
+            font-family: "Syne", sans-serif;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+
+        /* PIXEL NOISE OVERLAY */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        /* SCANLINES */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.07) 2px,
+                    rgba(0, 0, 0, 0.07) 4px);
+            pointer-events: none;
+        }
+
+        /* GRID BG */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(255, 45, 45, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 45, 45, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            background-position: center center;
+        }
+
+        .grid-bg::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 20%, rgba(255, 45, 45, 0.06), transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(255, 215, 0, 0.04), transparent 60%);
+        }
+
+        /* LAYOUT */
+        .rel {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 48px;
+            background: rgba(5, 7, 9, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--red-dim);
+            border: 1px solid var(--border-hot);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255, 45, 45, 0.3));
+        }
+
+        .logo-text {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 18px;
+            letter-spacing: 3px;
+            color: var(--white);
+        }
+
+        .logo-text span {
+            color: var(--red);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+        }
+
+        nav a {
+            font-family: "Space Mono", monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--steel);
+            text-decoration: none;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--red);
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--white);
+        }
+
+        nav a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-badge {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            background: var(--red-dim);
+            border: 1px solid var(--border-hot);
+            border-radius: 3px;
+            color: var(--red);
+            text-transform: uppercase;
+            animation: pulse-badge 2s infinite;
+        }
+
+        @keyframes pulse-badge {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 48px 80px;
+            position: relative;
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--red);
+            border: 1px solid var(--border-hot);
+            background: var(--red-dim);
+            padding: 6px 14px;
+            border-radius: 3px;
+            margin-bottom: 28px;
+        }
+
+        .hero-eyebrow::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.4);
+                opacity: 0.6;
+            }
+        }
+
+        .hero-title {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: clamp(42px, 5vw, 68px);
+            line-height: 1.05;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .hero-title .line1 {
+            color: var(--white);
+            display: block;
+        }
+
+        .hero-title .line2 {
+            display: block;
+            background: linear-gradient(90deg, var(--red), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(255, 45, 45, 0.5));
+        }
+
+        .hero-version {
+            font-family: "Space Mono", monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            line-height: 1.75;
+            color: var(--steel);
+            max-width: 480px;
+            margin-bottom: 44px;
+        }
+
+        .hero-desc strong {
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            background: var(--red);
+            color: #fff;
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid var(--red);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px var(--red-glow), 0 0 60px rgba(255, 45, 45, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary .btn-icon {
+            font-size: 16px;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 28px;
+            background: transparent;
+            color: var(--steel);
+            font-family: "Space Mono", monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        /* INSTALL (GOLD) BUTTON */
+        .btn-install {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--gold), #ffb300);
+            color: #0a0800;
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-install::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-install:hover {
+            box-shadow: 0 0 30px var(--gold-glow), 0 0 60px rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-install:hover::before {
+            opacity: 1;
+        }
+
+        .btn-install .btn-icon {
+            font-size: 16px;
+        }
+
+        /* JAR DOWNLOAD (red ghost) */
+        .btn-jar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 22px;
+            background: transparent;
+            color: var(--steel);
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-jar:hover {
+            border-color: var(--red);
+            color: var(--red);
+            box-shadow: 0 0 16px var(--red-glow);
+        }
+
+        /* HERO STATS PANEL */
+        .hero-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
+        }
+
+        .panel-header {
+            padding: 16px 24px;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-title {
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--steel);
+        }
+
+        .panel-live {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--red);
+        }
+
+        .panel-live::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        .panel-player {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .player-skin {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #3a4a5a, #1a2a3a);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 1px solid var(--border);
+            image-rendering: pixelated;
+        }
+
+        .player-name {
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--white);
+        }
+
+        .player-status {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--red);
+            margin-top: 3px;
+        }
+
+        .panel-stats {
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-cell {
+            background: var(--steel-dim);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 14px 16px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .stat-cell:hover {
+            border-color: rgba(255, 45, 45, 0.25);
+            background: var(--red-dim);
+        }
+
+        .stat-label {
+            font-family: "Space Mono", monospace;
+            font-size: 8px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--white);
+        }
+
+        .stat-value.gold {
+            color: var(--gold);
+            filter: drop-shadow(0 0 6px var(--gold-glow));
+        }
+
+        .stat-value.red {
+            color: var(--red);
+            filter: drop-shadow(0 0 6px var(--red-glow));
+        }
+
+        .stat-sub {
+            font-family: "Space Mono", monospace;
+            font-size: 8px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .panel-history {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .history-label {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .history-bar {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+            height: 40px;
+        }
+
+        .h-bar {
+            flex: 1;
+            border-radius: 2px 2px 0 0;
+            position: relative;
+            transition: opacity 0.2s;
+        }
+
+        .h-bar:hover {
+            opacity: 0.8;
+        }
+
+        .h-bar.win {
+            background: var(--red);
+        }
+
+        .h-bar.loss {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+        }
+
+        /* FEATURES SECTION */
+        .section {
+            padding: 120px 48px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-label::before {
+            content: "";
+            display: inline-block;
+            width: 30px;
+            height: 1px;
+            background: var(--red);
+        }
+
+        .section-title {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: clamp(28px, 3.5vw, 48px);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .section-desc {
+            font-size: 16px;
+            color: var(--steel);
+            line-height: 1.75;
+            max-width: 560px;
+            margin-bottom: 64px;
+        }
+
+        /* FEATURE GRID */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 36px 32px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .feature-card:hover {
+            background: var(--surface2);
+        }
+
+        .feature-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--red);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 20px;
+            display: block;
+            filter: drop-shadow(0 0 8px rgba(255, 45, 45, 0.4));
+        }
+
+        .feature-name {
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            color: var(--white);
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: var(--steel);
+            line-height: 1.7;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            margin-top: 14px;
+            font-family: "Space Mono", monospace;
+            font-size: 8px;
+            letter-spacing: 2px;
+            padding: 3px 8px;
+            border-radius: 2px;
+            text-transform: uppercase;
+        }
+
+        .tag-red {
+            background: var(--red-dim);
+            border: 1px solid var(--border-hot);
+            color: var(--red);
+        }
+
+        .tag-gold {
+            background: var(--gold-dim);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            color: var(--gold);
+        }
+
+        .tag-steel {
+            background: var(--steel-dim);
+            border: 1px solid var(--border);
+            color: var(--steel);
+        }
+
+        /* HOW IT WORKS */
+        .how-section {
+            padding: 80px 48px 120px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            position: relative;
+            margin-top: 60px;
+        }
+
+        .steps::before {
+            content: "";
+            position: absolute;
+            top: 40px;
+            left: 60px;
+            right: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        .step {
+            padding: 0 24px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-num {
+            width: 80px;
+            height: 80px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 24px;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .step:hover .step-num {
+            border-color: var(--red);
+            color: var(--red);
+            box-shadow: 0 0 20px var(--red-glow);
+            background: var(--red-dim);
+        }
+
+        .step-icon {
+            font-size: 28px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .step-title {
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: var(--steel);
+            line-height: 1.65;
+        }
+
+        /* LEADERBOARD */
+        .leaderboard-section {
+            padding: 0 48px 120px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .leaderboard-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        .lb-header {
+            padding: 20px 32px;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .lb-title {
+            font-family: "Orbitron", monospace;
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: var(--gold);
+        }
+
+        .lb-note {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .lb-row {
+            display: grid;
+            grid-template-columns: 50px 1fr 100px 100px 100px 100px;
+            align-items: center;
+            padding: 16px 32px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+            gap: 16px;
+        }
+
+        .lb-row:last-child {
+            border-bottom: none;
+        }
+
+        .lb-row:hover {
+            background: var(--steel-dim);
+        }
+
+        .lb-row.first {
+            background: rgba(255, 215, 0, 0.04);
+        }
+
+        .lb-row.first:hover {
+            background: rgba(255, 215, 0, 0.08);
+        }
+
+        .lb-rank {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .lb-rank.r1 {
+            color: var(--gold);
+            filter: drop-shadow(0 0 8px var(--gold-glow));
+        }
+
+        .lb-rank.r2 {
+            color: #c0c0c0;
+        }
+
+        .lb-rank.r3 {
+            color: #cd7f32;
+        }
+
+        .lb-rank.other {
+            color: var(--text-muted);
+        }
+
+        .lb-player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lb-avatar {
+            font-size: 22px;
+        }
+
+        .lb-pname {
+            font-family: "Syne", sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--white);
+        }
+
+        .lb-guild {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .lb-val {
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .lb-val.kd {
+            color: var(--red);
+        }
+
+        .lb-val.kills {
+            color: var(--white);
+        }
+
+        .lb-val.wins {
+            color: #4ade80;
+        }
+
+        .lb-val.elo {
+            color: var(--gold);
+        }
+
+        .lb-col-header {
+            font-family: "Space Mono", monospace;
+            font-size: 8px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            text-align: right;
+            text-transform: uppercase;
+        }
+
+        .lb-col-header.left {
+            text-align: left;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-logo {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 16px;
+            letter-spacing: 3px;
+        }
+
+        .footer-logo span {
+            color: var(--red);
+        }
+
+        .footer-copy {
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-link {
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--red);
+        }
+
+        /* DIVIDER */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 0 48px;
+        }
+
+        /* SCROLL ANIMATIONS */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .d1 {
+            transition-delay: 0.1s;
+        }
+
+        .d2 {
+            transition-delay: 0.2s;
+        }
+
+        .d3 {
+            transition-delay: 0.3s;
+        }
+
+        .d4 {
+            transition-delay: 0.4s;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            header {
+                padding: 16px 24px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 24px 60px;
+            }
+
+            .hero-inner {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .hero-panel {
+                display: none;
+            }
+
+            .section,
+            .how-section,
+            .leaderboard-section {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+
+            .steps::before {
+                display: none;
+            }
+
+            .lb-row {
+                grid-template-columns: 40px 1fr 80px 80px;
+                gap: 12px;
+            }
+
+            .lb-row .lb-val.wins,
+            .lb-row .lb-val.elo {
+                display: none;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+        }
+
+        /* CURSOR GLOW */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--red);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+            box-shadow: 0 0 12px var(--red-glow);
+        }
+
+        .cursor-ring {
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(255, 45, 45, 0.4);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.15s, width 0.2s, height 0.2s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+
+    <!-- Custom cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- HEADER -->
+    <header class="rel">
+        <a href="#" class="logo">
+            <div class="logo-icon">⚔️</div>
+            <span class="logo-text">STAT<span>IFY</span></span>
+        </a>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#how">How It Works</a>
+            <a href="#leaderboard">Leaderboard</a>
+            <a href="#support">Support</a>
+            <span class="nav-badge">v2.4.1 LIVE</span>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero rel">
+        <div class="hero-inner">
+            <!-- Left -->
+            <div>
+                <div class="hero-eyebrow fade-up visible">Minecraft PvP Mod · All-Time Tracking</div>
+                <h1 class="hero-title fade-up visible d1">
+                    <span class="line1">STATIFY.</span>
+                    <span class="line2">MOD/MODPACK.</span>
+
+                </h1>
+                <p class="hero-version fade-up visible d2">VERSION 2.4.1 · FABRIC ONLY · MC 1.21+</p>
+                <p class="hero-desc fade-up visible d2">
+                    <strong>Statify</strong> is the first PvP stats mod that tracks your <strong>all-time kill/death
+                        history</strong>
+                    - even retroactively pulling stats from before installation. Every kill. Every win. Every moment.
+                </p>
+                <div class="hero-cta fade-up visible d3">
+                    <button class="btn-install" onclick="openPackModal()" id="btn-modpack">
+                        <span class="btn-icon">⚡</span> Install Modpack
+                    </button>
+                    <a class="btn-jar" href="Statify.jar" download>
+                        <span style="font-size:13px;">☕</span> Download .jar
+                    </a>
+                </div>
+                <div style="margin-top:14px;" class="fade-up visible d3">
+                    <button class="btn-secondary" onclick="openBtcModal()" style="padding:10px 20px; font-size:10px;">₿ Support Dev</button>
+                </div>
+            </div>
+
+            <!-- Right: Live Stats Panel -->
+            <div class="hero-panel fade-up visible d4">
+                <div class="panel-header">
+                    <span class="panel-title">// STATIFY OVERLAY</span>
+                    <span class="panel-live">TRACKING</span>
+                </div>
+                <div class="panel-player">
+                    <div class="player-skin">🎮</div>
+                    <div class="player-info">
+                        <div class="player-name">Notch_Slayer</div>
+                        <div class="player-status">● IN COMBAT · Hypixel SMP</div>
+                    </div>
+                </div>
+                <div class="panel-stats">
+                    <div class="stat-cell">
+                        <div class="stat-label">All-Time K/D</div>
+                        <div class="stat-value gold">4.83</div>
+                        <div class="stat-sub">▲ +0.12 this week</div>
+                    </div>
+                    <div class="stat-cell">
+                        <div class="stat-label">Total Kills</div>
+                        <div class="stat-value red">12,847</div>
+                        <div class="stat-sub">Since beta 1.7</div>
+                    </div>
+                    <div class="stat-cell">
+                        <div class="stat-label">Win Streak</div>
+                        <div class="stat-value">23🔥</div>
+                        <div class="stat-sub">Personal best: 41</div>
+                    </div>
+                    <div class="stat-cell">
+                        <div class="stat-label">ELO Rating</div>
+                        <div class="stat-value gold">2,340</div>
+                        <div class="stat-sub">Top 0.3% global</div>
+                    </div>
+                </div>
+                <div class="panel-history">
+                    <div class="history-label">// 30-day combat history</div>
+                    <div class="history-bar" id="histBar"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- FEATURES -->
+    <section class="section rel" id="features">
+        <div class="section-label">Core Features</div>
+        <h2 class="section-title fade-up">
+            Everything you need<br />
+            <span style="color: var(--red)">In one MODPACK</span>
+        </h2>
+        <p class="section-desc fade-up d1">
+            No other mod goes this deep. Statify pulls server history logs, cross-references UUID data, and reconstructs
+            your entire PvP career from day one.
+        </p>
+
+        <div class="feature-grid fade-up d2">
+            <div class="feature-card">
+                <span class="feature-icon">🕰️</span>
+                <div class="feature-name">Retroactive History Engine</div>
+                <div class="feature-desc">
+                    Install today, see your stats from day one. Statify's patented history engine scans server logs and
+                    UUID records to reconstruct kills, deaths, and match data - even years before installation.
+                </div>
+                <span class="feature-tag tag-red">Core Feature</span>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">📊</span>
+                <div class="feature-name">Live HUD Overlay</div>
+                <div class="feature-desc">
+                    A sleek in-game HUD shows real-time K/D, current streak, and session kills. Fully customizable
+                    position, opacity, and color. Zero performance impact with async rendering.
+                </div>
+                <span class="feature-tag tag-steel">Display</span>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🏆</span>
+                <div class="feature-name">Global ELO Ranking</div>
+                <div class="feature-desc">
+                    Compete on a worldwide leaderboard powered by a custom ELO algorithm. Rankings factor in opponent
+                    difficulty, server population, and win streaks for the most accurate skill rating system in
+                    Minecraft.
+                </div>
+                <span class="feature-tag tag-gold">Competitive</span>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">⚔️</span>
+                <div class="feature-name">Combat Analytics</div>
+                <div class="feature-desc">
+                    Deep-dive stats: weapon preference breakdown, time-of-day performance, favorite biomes to fight in,
+                    kill distance tracking, and critical hit ratios. Know yourself like never before.
+                </div>
+                <span class="feature-tag tag-steel">Analytics</span>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">👥</span>
+                <div class="feature-name">Rival Tracker</div>
+                <div class="feature-desc">
+                    Automatically detects players you've killed or been killed by most. Track your nemesis head-to-head
+                    ratio, compare stats, and get notified when they join your server.
+                </div>
+                <span class="feature-tag tag-red">Social</span>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🔗</span>
+                <div class="feature-name">Multi-Server Sync</div>
+                <div class="feature-desc">
+                    Your stats follow you across every server. Statify syncs data via a lightweight background service,
+                    merging stats from Hypixel, Mineplex, private SMPs - all into one unified profile.
+                </div>
+                <span class="feature-tag tag-gold">Cross-Server</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-section rel" id="how">
+        <div class="section-label">Installation</div>
+        <h2 class="section-title fade-up">
+            Up and running in<br />
+            <span style="color: var(--red)">4 steps.</span>
+        </h2>
+
+        <div class="steps">
+            <div class="step fade-up d1">
+                <div class="step-num">01</div>
+                <span class="step-icon">📦</span>
+                <div class="step-title">Download the Mod</div>
+                <div class="step-desc">Grab the latest .jar from the download section. Requires the Fabric loader for MC
+                    1.21+.</div>
+            </div>
+
+            <div class="step fade-up d2">
+                <div class="step-num">02</div>
+                <span class="step-icon">📂</span>
+                <div class="step-title">Drop in Mods Folder</div>
+                <div class="step-desc">
+                    Place the .jar file in your <code style="color: var(--red); font-size: 11px;">.minecraft/mods</code>
+                    folder. No additional config needed - plug and play.
+                </div>
+            </div>
+
+            <div class="step fade-up d3">
+                <div class="step-num">03</div>
+                <span class="step-icon">🚀</span>
+                <div class="step-title">Launch</div>
+                <div class="step-desc">Fire up Minecraft. Statify auto-authenticates with your Mojang UUID and begins
+                    the background history scan immediately.</div>
+            </div>
+
+            <div class="step fade-up d4">
+                <div class="step-num">04</div>
+                <span class="step-icon">📈</span>
+                <div class="step-title">Watch History Build</div>
+                <div class="step-desc">Within minutes, your all-time stats appear. The history engine continues scanning
+                    in the background - even recovering data from years ago.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FPS BOOST SECTION -->
+    <section class="leaderboard-section rel" id="leaderboard">
+        <div class="section-label">Performance Boost</div>
+        <h2 class="section-title fade-up">
+            Statify Performance<br />
+            <span style="color: var(--gold)">Boost.</span>
+        </h2>
+        <p class="section-desc fade-up d1" style="max-width:520px; margin: 0 auto 64px;">
+            Ultimate MODPACK for both <strong> PERFORMANCE </strong> and PVP Experience 
+        </p>
+
+        <style>
+            .fps-arena {
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                gap: 0;
+                align-items: center;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            /* ── BEFORE card ── */
+            .fps-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                padding: 44px 40px 40px;
+                position: relative;
+                overflow: hidden;
+                transition: transform 0.3s;
+            }
+            .fps-card:hover { transform: translateY(-4px); }
+
+            .fps-card.before {
+                border-color: rgba(255,45,45,0.25);
+            }
+            .fps-card.before::before {
+                content: "";
+                position: absolute; inset: 0;
+                background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,45,45,0.07), transparent 70%);
+                pointer-events: none;
+            }
+            .fps-card.before::after {
+                content: "";
+                position: absolute; top: 0; left: 0; right: 0; height: 2px;
+                background: linear-gradient(90deg, transparent, var(--red), transparent);
+            }
+
+            .fps-card.after {
+                border-color: rgba(255,215,0,0.3);
+            }
+            .fps-card.after::before {
+                content: "";
+                position: absolute; inset: 0;
+                background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,215,0,0.08), transparent 70%);
+                pointer-events: none;
+            }
+            .fps-card.after::after {
+                content: "";
+                position: absolute; top: 0; left: 0; right: 0; height: 2px;
+                background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            }
+
+            .fps-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-family: "Space Mono", monospace;
+                font-size: 9px;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                padding: 5px 12px;
+                border-radius: 3px;
+                margin-bottom: 32px;
+            }
+            .fps-tag.before-tag {
+                color: var(--red);
+                background: var(--red-dim);
+                border: 1px solid var(--border-hot);
+            }
+            .fps-tag.after-tag {
+                color: var(--gold);
+                background: var(--gold-dim);
+                border: 1px solid rgba(255,215,0,0.3);
+            }
+            .fps-tag-dot {
+                width: 5px; height: 5px;
+                border-radius: 50%;
+            }
+            .fps-tag.before-tag .fps-tag-dot { background: var(--red); }
+            .fps-tag.after-tag .fps-tag-dot { background: var(--gold); animation: pulse-dot 1.5s infinite; }
+
+            .fps-number {
+                font-family: "Orbitron", monospace;
+                font-weight: 900;
+                line-height: 1;
+                margin-bottom: 6px;
+                position: relative;
+                z-index: 1;
+            }
+            .fps-card.before .fps-number {
+                font-size: clamp(72px, 9vw, 108px);
+                color: var(--red);
+                text-shadow: 0 0 40px rgba(255,45,45,0.35);
+            }
+            .fps-card.after .fps-number {
+                font-size: clamp(72px, 9vw, 108px);
+                color: var(--gold);
+                text-shadow: 0 0 50px rgba(255,215,0,0.5);
+            }
+
+            .fps-unit {
+                font-family: "Space Mono", monospace;
+                font-size: 13px;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+                color: var(--text-muted);
+                margin-bottom: 28px;
+            }
+
+            /* bar graph */
+            .fps-bars {
+                display: flex;
+                align-items: flex-end;
+                gap: 5px;
+                height: 52px;
+                margin-bottom: 24px;
+            }
+            .fps-bar {
+                flex: 1;
+                border-radius: 2px 2px 0 0;
+                position: relative;
+                transition: height 0.4s ease;
+            }
+            .fps-card.before .fps-bar { background: rgba(255,45,45,0.35); }
+            .fps-card.after  .fps-bar { background: rgba(255,215,0,0.45); }
+            .fps-card.after  .fps-bar:last-child,
+            .fps-card.after  .fps-bar:nth-last-child(2) {
+                background: rgba(255,215,0,0.75);
+                box-shadow: 0 0 8px rgba(255,215,0,0.4);
+            }
+
+            .fps-meta {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .fps-meta-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-family: "Space Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 1px;
+                color: var(--text-muted);
+                padding: 8px 12px;
+                background: var(--steel-dim);
+                border-radius: 6px;
+                border: 1px solid var(--border);
+            }
+            .fps-meta-val {
+                font-weight: 700;
+            }
+            .fps-card.before .fps-meta-val { color: var(--red); }
+            .fps-card.after  .fps-meta-val { color: var(--gold); }
+
+            /* ── ARROW middle ── */
+            .fps-arrow-col {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+                padding: 0 20px;
+                position: relative;
+                z-index: 2;
+            }
+
+            .fps-arrow-wrap {
+                position: relative;
+                width: 80px;
+                height: 80px;
+            }
+
+            /* spinning ring */
+            .fps-arrow-wrap::before {
+                content: "";
+                position: absolute;
+                inset: -6px;
+                border-radius: 50%;
+                border: 1px solid transparent;
+                border-top-color: var(--red);
+                border-right-color: var(--gold);
+                animation: fps-spin 3s linear infinite;
+            }
+            .fps-arrow-wrap::after {
+                content: "";
+                position: absolute;
+                inset: -14px;
+                border-radius: 50%;
+                border: 1px dashed rgba(255,215,0,0.15);
+                animation: fps-spin 8s linear infinite reverse;
+            }
+            @keyframes fps-spin {
+                to { transform: rotate(360deg); }
+            }
+
+            .fps-arrow-svg {
+                width: 80px;
+                height: 80px;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* pulsing glow behind arrow */
+            .fps-arrow-glow {
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(255,215,0,0.18) 0%, transparent 70%);
+                animation: fps-glow-pulse 2s ease-in-out infinite;
+            }
+            @keyframes fps-glow-pulse {
+                0%, 100% { transform: scale(1); opacity: 0.8; }
+                50% { transform: scale(1.25); opacity: 1; }
+            }
+
+            .fps-boost-badge {
+                font-family: "Orbitron", monospace;
+                font-weight: 900;
+                font-size: 11px;
+                letter-spacing: 2px;
+                color: var(--gold);
+                background: var(--gold-dim);
+                border: 1px solid rgba(255,215,0,0.3);
+                border-radius: 4px;
+                padding: 6px 14px;
+                white-space: nowrap;
+                text-align: center;
+                animation: fps-glow-pulse 2s ease-in-out infinite;
+            }
+
+            .fps-multiplier {
+                font-family: "Space Mono", monospace;
+                font-size: 9px;
+                letter-spacing: 2px;
+                color: var(--text-muted);
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            @media (max-width: 768px) {
+                .fps-arena {
+                    grid-template-columns: 1fr;
+                    gap: 24px;
+                }
+                .fps-arrow-col {
+                    flex-direction: row;
+                    justify-content: center;
+                    padding: 0;
+                    transform: rotate(90deg);
+                }
+            }
+        </style>
+
+        <div class="fps-arena fade-up d1">
+
+            <!-- BEFORE -->
+            <div class="fps-card before">
+                <div class="fps-tag before-tag">
+                    <span class="fps-tag-dot"></span> Without Statify
+                </div>
+                <div class="fps-number" id="fps-before-num">26</div>
+                <div class="fps-unit">FPS</div>
+
+                <!-- mini bar chart: choppy low bars -->
+                <div class="fps-bars" id="fps-before-bars"></div>
+
+                <div class="fps-meta">
+                    <div class="fps-meta-row">
+                        <span>Avg FPS</span>
+                        <span class="fps-meta-val">26</span>
+                    </div>
+                    <div class="fps-meta-row">
+                        <span>1% Low</span>
+                        <span class="fps-meta-val">11</span>
+                    </div>
+                    <div class="fps-meta-row">
+                        <span>Frame time</span>
+                        <span class="fps-meta-val">38.4 ms</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ARROW -->
+            <div class="fps-arrow-col">
+                <div class="fps-arrow-wrap">
+                    <div class="fps-arrow-glow"></div>
+                    <svg class="fps-arrow-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- arrow shaft -->
+                        <line x1="10" y1="40" x2="58" y2="40" stroke="url(#arrowGrad)" stroke-width="3" stroke-linecap="round"/>
+                        <!-- arrowhead -->
+                        <polyline points="46,26 62,40 46,54" stroke="url(#arrowGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <!-- spark lines -->
+                        <line x1="14" y1="28" x2="22" y2="28" stroke="rgba(255,45,45,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+                        <line x1="10" y1="33" x2="16" y2="33" stroke="rgba(255,45,45,0.3)" stroke-width="1" stroke-linecap="round"/>
+                        <line x1="14" y1="52" x2="22" y2="52" stroke="rgba(255,215,0,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+                        <line x1="10" y1="47" x2="16" y2="47" stroke="rgba(255,215,0,0.3)" stroke-width="1" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="arrowGrad" x1="10" y1="40" x2="68" y2="40" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#ff2d2d"/>
+                                <stop offset="100%" stop-color="#ffd700"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="fps-boost-badge">+758%</div>
+                <div class="fps-multiplier">8.6× faster</div>
+            </div>
+
+            <!-- AFTER -->
+            <div class="fps-card after">
+                <div class="fps-tag after-tag">
+                    <span class="fps-tag-dot"></span> With Statify
+                </div>
+                <div class="fps-number" id="fps-after-num">223</div>
+                <div class="fps-unit">FPS</div>
+
+                <!-- mini bar chart: tall consistent bars -->
+                <div class="fps-bars" id="fps-after-bars"></div>
+
+                <div class="fps-meta">
+                    <div class="fps-meta-row">
+                        <span>Avg FPS</span>
+                        <span class="fps-meta-val">223</span>
+                    </div>
+                    <div class="fps-meta-row">
+                        <span>1% Low</span>
+                        <span class="fps-meta-val">198</span>
+                    </div>
+                    <div class="fps-meta-row">
+                        <span>Frame time</span>
+                        <span class="fps-meta-val">4.5 ms</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Build before bars (choppy, low, uneven)
+            (function() {
+                const beforeHeights = [28,18,35,12,40,22,15,38,10,25,30,14,42,20,16,32,8,27,36,19];
+                const afterHeights  = [82,90,85,95,88,92,86,94,89,96,91,87,93,90,95,88,92,97,85,94];
+                const bb = document.getElementById("fps-before-bars");
+                const ab = document.getElementById("fps-after-bars");
+                if (bb) beforeHeights.forEach(h => {
+                    const d = document.createElement("div");
+                    d.className = "fps-bar";
+                    d.style.height = h + "%";
+                    bb.appendChild(d);
+                });
+                if (ab) afterHeights.forEach(h => {
+                    const d = document.createElement("div");
+                    d.className = "fps-bar";
+                    d.style.height = h + "%";
+                    ab.appendChild(d);
+                });
+            })();
+
+            // Count-up animation on scroll
+            function countUp(el, target, duration) {
+                let start = 0, step = target / (duration / 16);
+                const tick = () => {
+                    start = Math.min(start + step, target);
+                    el.textContent = Math.floor(start);
+                    if (start < target) requestAnimationFrame(tick);
+                };
+                requestAnimationFrame(tick);
+            }
+
+            const fpsObs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        countUp(document.getElementById("fps-before-num"), 26, 800);
+                        countUp(document.getElementById("fps-after-num"), 223, 1400);
+                        fpsObs.disconnect();
+                    }
+                });
+            }, { threshold: 0.4 });
+
+            const fpsArena = document.querySelector(".fps-arena");
+            if (fpsArena) fpsObs.observe(fpsArena);
+        </script>
+    </section>
+
+    <!-- PACK PICKER MODAL -->
+    <style>
+        #pack-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        #pack-modal.open { display: flex; }
+
+        .pack-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            backdrop-filter: blur(18px);
+        }
+
+        .pack-dialog {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 560px;
+            background: var(--surface);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 80px rgba(255,215,0,0.08), 0 0 0 1px rgba(255,215,0,0.12);
+            animation: pack-in 0.35s cubic-bezier(.22,1,.36,1) both;
+        }
+        @keyframes pack-in {
+            from { transform: translateY(28px) scale(0.96); opacity: 0; }
+            to   { transform: none; opacity: 1; }
+        }
+
+        .pack-top-bar {
+            height: 3px;
+            background: linear-gradient(90deg, var(--red) 0%, var(--gold) 50%, var(--red) 100%);
+            background-size: 200% 100%;
+            animation: pack-bar-slide 3s linear infinite;
+        }
+        @keyframes pack-bar-slide {
+            0%   { background-position: 0% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .pack-header {
+            padding: 32px 36px 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .pack-eyebrow {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .pack-title {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 22px;
+            color: var(--white);
+            letter-spacing: 1px;
+        }
+        .pack-close {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            width: 34px; height: 34px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .pack-close:hover { border-color: var(--red); color: var(--white); background: var(--red-dim); }
+
+        .pack-subtitle {
+            padding: 10px 36px 28px;
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            line-height: 1.7;
+        }
+
+        .pack-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            padding: 0 24px 28px;
+        }
+
+        .pack-opt {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 28px 20px 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            overflow: hidden;
+            transition: transform 0.25s cubic-bezier(.22,1,.36,1), border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .pack-opt.mrpack { --opt-color: #7c6fff; --opt-glow: rgba(124,111,255,0.35); }
+        .pack-opt.zip    { --opt-color: var(--gold); --opt-glow: var(--gold-glow); }
+
+        .pack-opt::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--opt-color) 12%, transparent), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .pack-opt:hover::before { opacity: 1; }
+        .pack-opt:hover {
+            border-color: var(--opt-color);
+            box-shadow: 0 0 28px var(--opt-glow), 0 0 0 1px var(--opt-color);
+            transform: translateY(-4px) scale(1.02);
+        }
+
+        .pack-opt::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--opt-color);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        .pack-opt:hover::after { transform: scaleX(1); }
+
+        .pack-opt-icon {
+            width: 64px; height: 64px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 18px;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        .pack-opt:hover .pack-opt-icon { transform: scale(1.1) rotate(-3deg); }
+
+        .pack-opt-icon::after {
+            content: "";
+            position: absolute;
+            top: 6px; right: 6px;
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--opt-color);
+            box-shadow: 0 0 8px var(--opt-color);
+            animation: pack-dot-pulse 1.8s ease-in-out infinite;
+        }
+        @keyframes pack-dot-pulse {
+            0%,100% { transform: scale(1); opacity:1; }
+            50%      { transform: scale(1.5); opacity:0.6; }
+        }
+
+        .pack-opt-svg { width: 32px; height: 32px; }
+
+        .pack-opt-name {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 15px;
+            letter-spacing: 1px;
+            color: var(--white);
+            margin-bottom: 6px;
+        }
+        .pack-opt-ext {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--opt-color);
+            margin-bottom: 14px;
+        }
+        .pack-opt-desc {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .pack-opt-arrow {
+            margin-top: 18px;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--opt-color);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.25s, transform 0.25s;
+            color: var(--opt-color);
+            font-size: 15px;
+        }
+        .pack-opt:hover .pack-opt-arrow { opacity: 1; transform: translateY(0); }
+
+        .pack-opt.downloading { animation: pack-flash 0.4s ease; }
+        @keyframes pack-flash {
+            0%,100% { opacity:1; }
+            40%      { opacity:0.4; }
+        }
+
+        .pack-footer {
+            padding: 0 36px 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pack-footer-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .pack-footer-text {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            line-height: 1.7;
+        }
+        .pack-footer-text a { color: var(--steel); text-decoration: none; }
+        .pack-footer-text a:hover { color: var(--white); }
+
+        @media (max-width: 480px) {
+            .pack-options { grid-template-columns: 1fr; }
+            .pack-header { padding: 24px 20px 0; }
+            .pack-subtitle { padding: 8px 20px 20px; }
+            .pack-options { padding: 0 12px 20px; }
+            .pack-footer { padding: 0 20px 20px; }
+        }
+    </style>
+
+    <div id="pack-modal" role="dialog" aria-modal="true">
+        <div class="pack-backdrop" onclick="closePackModal()"></div>
+        <div class="pack-dialog">
+            <div class="pack-top-bar"></div>
+            <div class="pack-header">
+                <div>
+                    <div class="pack-eyebrow">⚡ Choose your format</div>
+                    <div class="pack-title">INSTALL MODPACK</div>
+                </div>
+                <button class="pack-close" onclick="closePackModal()">✕</button>
+            </div>
+            <div class="pack-subtitle">
+                Same mod. Two ways to install it.<br/>Pick the format that fits your launcher.
+            </div>
+
+            <div class="pack-options">
+                <a href="statify.mrpack" download class="pack-opt mrpack" onclick="flashOpt(this)">
+                    <div class="pack-opt-icon">
+                        <svg class="pack-opt-svg" viewBox="0 0 32 32" fill="none">
+                            <rect x="4" y="4" width="10" height="10" rx="2.5" fill="#7c6fff" opacity="0.9"/>
+                            <rect x="18" y="4" width="10" height="10" rx="2.5" fill="#7c6fff" opacity="0.5"/>
+                            <rect x="4" y="18" width="10" height="10" rx="2.5" fill="#7c6fff" opacity="0.5"/>
+                            <rect x="18" y="18" width="10" height="10" rx="2.5" fill="#7c6fff" opacity="0.9"/>
+                            <rect x="13" y="13" width="6" height="6" rx="1.5" fill="#7c6fff"/>
+                        </svg>
+                    </div>
+                    <div class="pack-opt-name">Modrinth</div>
+                    <div class="pack-opt-ext">.mrpack</div>
+                    <div class="pack-opt-desc">For Modrinth App<br/>& Prism Launcher</div>
+                    <div class="pack-opt-arrow">↓</div>
+                </a>
+
+                <a href="https://www.dropbox.com/scl/fi/jcev78drh44zouuiy2eq7/Statify.zip?rlkey=1aw854i8cb4ocjggxk8qoze60&st=m0l1hgs0&dl=1" class="pack-opt zip" onclick="flashOpt(this)">
+                    <div class="pack-opt-icon">
+                        <svg class="pack-opt-svg" viewBox="0 0 32 32" fill="none">
+                            <rect x="6" y="4" width="20" height="24" rx="3" stroke="#ffd700" stroke-width="1.5" fill="none" opacity="0.6"/>
+                            <rect x="13" y="4" width="6" height="24" fill="#ffd700" opacity="0.12" rx="1"/>
+                            <line x1="13" y1="7"  x2="19" y2="7"  stroke="#ffd700" stroke-width="1.5" stroke-linecap="round"/>
+                            <line x1="13" y1="10" x2="19" y2="10" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+                            <line x1="13" y1="13" x2="19" y2="13" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                            <line x1="13" y1="16" x2="19" y2="16" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+                            <circle cx="16" cy="21" r="2.5" fill="#ffd700" opacity="0.85"/>
+                        </svg>
+                    </div>
+                    <div class="pack-opt-name">Universal</div>
+                    <div class="pack-opt-ext">.zip</div>
+                    <div class="pack-opt-desc">For MultiMC,<br/>ATLauncher & others</div>
+                    <div class="pack-opt-arrow">↓</div>
+                </a>
+            </div>
+
+            <div class="pack-footer">
+                <div class="pack-footer-dot"></div>
+                <div class="pack-footer-text">
+                    Both require <strong style="color:var(--steel)">Fabric Loader</strong> · MC 1.21+&nbsp;&nbsp;·&nbsp;&nbsp;Manual? <a href="Statify.jar" download>Download .jar ↗</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BTC MODAL -->
+    <div id="btc-modal"
+        style="display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.85); backdrop-filter:blur(12px); align-items:center; justify-content:center; padding:24px;">
+        <div
+            style="background:var(--surface); border:1px solid rgba(255,215,0,0.3); border-radius:16px; max-width:520px; width:100%; padding:48px 40px; text-align:center; position:relative; box-shadow: 0 0 60px rgba(255,215,0,0.1);">
+            <div
+                style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, var(--gold), transparent); border-radius:16px 16px 0 0;">
+            </div>
+
+            <button onclick="closeBtcModal()"
+                style="position:absolute; top:16px; right:20px; background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer; line-height:1; transition:color 0.2s;"
+                onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-muted)'"
+                aria-label="Close">
+                ✕
+            </button>
+
+            <div style="font-size:48px; margin-bottom:16px;">₿</div>
+            <h3
+                style="font-family:'Orbitron',monospace; font-weight:900; font-size:22px; color:var(--gold); margin-bottom:8px; letter-spacing:2px;">
+                SUPPORT THE DEV</h3>
+            <p
+                style="font-family:'Space Mono',monospace; font-size:11px; color:var(--text-muted); letter-spacing:1px; margin-bottom:32px;">
+                Bitcoin · Taproot Address</p>
+
+            <div
+                style="width:160px; height:160px; margin:0 auto 28px; background:var(--surface2); border:1px solid rgba(255,215,0,0.2); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                <canvas id="btc-qr" width="150" height="150"></canvas>
+            </div>
+
+            <div id="btc-addr-box"
+                style="background:var(--surface2); border:1px solid rgba(255,215,0,0.25); border-radius:8px; padding:14px 16px; margin-bottom:20px; cursor:pointer; transition: border-color 0.2s;"
+                onclick="copyBtcAddr()" title="Click to copy">
+                <div
+                    style="font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:2px; margin-bottom:6px; text-transform:uppercase;">
+                    BTC Address (click to copy)</div>
+                <div id="btc-addr-text"
+                    style="font-family:'Space Mono',monospace; font-size:11px; color:var(--gold); word-break:break-all; line-height:1.6;">
+                    bc1pg0nl950avm7v2wsctaa7vkn53gtas4en927xu7jjanz75amquynsjmqh6n
+                </div>
+            </div>
+
+            <div id="btc-copy-msg"
+                style="font-family:'Space Mono',monospace; font-size:10px; color:#4ade80; letter-spacing:2px; height:16px; margin-bottom:16px; opacity:0; transition:opacity 0.3s;">
+                ✓ ADDRESS COPIED TO CLIPBOARD
+            </div>
+
+            <p
+                style="font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); line-height:1.7; letter-spacing:0.5px;">
+                Every satoshi helps keep development alive.<br />Thank you for the support.
+            </p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="rel" id="support">
+        <span class="footer-logo">STAT<span>IFY</span></span>
+        <div class="footer-links">
+            <a href="#" class="footer-link">GitHub</a>
+            <a href="#" class="footer-link">Discord</a>
+            <a href="#" class="footer-link">Modrinth</a>
+            <a href="#" class="footer-link">CurseForge</a>
+        </div>
+        <span class="footer-copy">© 2026 Statify · Not affiliated with Mojang</span>
+    </footer>
+
+    <script>
+        // Custom cursor
+        const dot = document.getElementById("cursorDot");
+        const ring = document.getElementById("cursorRing");
+        let mx = 0, my = 0, rx = 0, ry = 0;
+
+        document.addEventListener("mousemove", e => {
+            mx = e.clientX; my = e.clientY;
+            dot.style.left = (mx - 4) + "px";
+            dot.style.top = (my - 4) + "px";
+        });
+
+        function animRing() {
+            rx += (mx - rx - 15) * 0.12;
+            ry += (my - ry - 15) * 0.12;
+            ring.style.left = rx + "px";
+            ring.style.top = ry + "px";
+            requestAnimationFrame(animRing);
+        }
+        animRing();
+
+        document.querySelectorAll("a, button, .feature-card, .stat-cell, .lb-row, .step").forEach(el => {
+            el.addEventListener("mouseenter", () => {
+                dot.style.transform = "scale(2)";
+                ring.style.width = "50px";
+                ring.style.height = "50px";
+                ring.style.borderColor = "rgba(255,45,45,0.6)";
+            });
+            el.addEventListener("mouseleave", () => {
+                dot.style.transform = "scale(1)";
+                ring.style.width = "30px";
+                ring.style.height = "30px";
+                ring.style.borderColor = "rgba(255,45,45,0.4)";
+            });
+        });
+
+        // Build history bars
+        const bars = document.getElementById("histBar");
+        if (bars) {
+            const heights = [60, 40, 80, 30, 90, 70, 50, 85, 45, 55, 75, 95, 65, 35, 80, 70, 60, 90, 50, 40, 85, 30, 75, 60, 95, 45, 70, 55, 80, 40];
+            heights.forEach(h => {
+                const b = document.createElement("div");
+                b.className = "h-bar " + (h > 50 ? "win" : "loss");
+                b.style.height = h + "%";
+                bars.appendChild(b);
+            });
+        }
+
+        // Scroll animations
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) e.target.classList.add("visible");
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll(".fade-up:not(.visible)").forEach(el => obs.observe(el));
+
+        // Pack Picker Modal
+        function openPackModal() {
+            const m = document.getElementById("pack-modal");
+            m.classList.add("open");
+            document.body.style.overflow = "hidden";
+        }
+        function closePackModal() {
+            const m = document.getElementById("pack-modal");
+            m.classList.remove("open");
+            document.body.style.overflow = "";
+        }
+        function flashOpt(el) {
+            el.classList.add("downloading");
+            setTimeout(function(){ el.classList.remove("downloading"); }, 400);
+            setTimeout(function(){ closePackModal(); }, 600);
+        }
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") closePackModal();
+        });
+
+        // BTC Modal
+        const BTC_ADDR = "bc1pg0nl950avm7v2wsctaa7vkn53gtas4en927xu7jjanz75amquynsjmqh6n";
+
+        function openBtcModal() {
+            const modal = document.getElementById("btc-modal");
+            modal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+            drawQR();
+        }
+
+        function closeBtcModal() {
+            document.getElementById("btc-modal").style.display = "none";
+            document.body.style.overflow = "";
+        }
+
+        document.getElementById("btc-modal").addEventListener("click", function (e) {
+            if (e.target === this) closeBtcModal();
+        });
+
+        function copyBtcAddr() {
+            navigator.clipboard.writeText(BTC_ADDR).then(() => {
+                const msg = document.getElementById("btc-copy-msg");
+                const box = document.getElementById("btc-addr-box");
+                msg.style.opacity = "1";
+                box.style.borderColor = "rgba(74,222,128,0.5)";
+                setTimeout(() => {
+                    msg.style.opacity = "0";
+                    box.style.borderColor = "rgba(255,215,0,0.25)";
+                }, 2500);
+            });
+        }
+
+        function drawQR() {
+            const canvas = document.getElementById("btc-qr");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            const size = 150;
+            ctx.fillStyle = "#0b0f14";
+            ctx.fillRect(0, 0, size, size);
+            const cell = 6;
+
+            function finder(x, y) {
+                ctx.fillStyle = "#ffd700";
+                ctx.fillRect(x, y, cell * 7, cell * 7);
+                ctx.fillStyle = "#0b0f14";
+                ctx.fillRect(x + cell, y + cell, cell * 5, cell * 5);
+                ctx.fillStyle = "#ffd700";
+                ctx.fillRect(x + cell * 2, y + cell * 2, cell * 3, cell * 3);
+            }
+
+            finder(6, 6);
+            finder(size - 6 - cell * 7, 6);
+            finder(6, size - 6 - cell * 7);
+
+            ctx.fillStyle = "#ffd700";
+            const addr = BTC_ADDR;
+
+            for (let i = 0; i < addr.length * 3; i++) {
+                const code = addr.charCodeAt(i % addr.length);
+                const gx = ((code * (i + 3)) % 20) * cell + 3;
+                const gy = ((code * (i + 7)) % 20) * cell + 3;
+
+                const inTopLeft = gx < 54 && gy < 54;
+                const inTopRight = gx > size - 54 && gy < 54;
+                const inBottomLeft = gx < 54 && gy > size - 54;
+
+                if (!inTopLeft && !inTopRight && !inBottomLeft) {
+                    ctx.fillRect(gx, gy, cell - 1, cell - 1);
+                }
+            }
+        }
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener("click", e => {
+                const href = a.getAttribute("href");
+                const target = href ? document.querySelector(href) : null;
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
