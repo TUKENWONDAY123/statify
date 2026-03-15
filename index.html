@@ -746,7 +746,7 @@ function closeAdmin() { document.getElementById('adminModal').classList.remove('
 function tryLogin() {
   if(document.getElementById('adminPw').value === ADMIN_PW) {
     isAdmin = true; closeAdmin();
-    document.getElementById('adminBtn').style.display = 'none';
+    // admin btn removed
     document.getElementById('adminBadge').style.display = 'flex';
     document.querySelector('.create-poll-btn').classList.add('visible');
     renderPosts(); renderPolls();
@@ -759,7 +759,7 @@ function tryLogin() {
 }
 function logoutAdmin() {
   isAdmin = false;
-  document.getElementById('adminBtn').style.display = 'flex';
+  // admin btn removed
   document.getElementById('adminBadge').style.display = 'none';
   document.querySelector('.create-poll-btn').classList.remove('visible');
   document.getElementById('pollForm').classList.remove('open');
