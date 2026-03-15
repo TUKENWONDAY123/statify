@@ -545,7 +545,7 @@ let feedTab = 'all';
 const ADMIN_PW = 'pulse2024admin';
 
 let posts = []; // loaded from API
-let polls = JSON.parse(localStorage.getItem('pulse_polls') || '[]');
+let polls = []; // loaded from API
 
 const GRADS = [
   'linear-gradient(135deg,#ff3c6f,#ff8c42)',
@@ -561,7 +561,7 @@ const GRADS = [
 function grad(n) { let h=0; for(const c of(n||'?')) h=(h*31+c.charCodeAt(0))&0xffff; return GRADS[h%GRADS.length]; }
 function initials(n) { return(n||'?').trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?'; }
 function savePosts() { /* posts are stored server-side via API */ }
-function savePolls() { localStorage.setItem('pulse_polls', JSON.stringify(polls)); }
+function savePolls() { /* polls stored server-side */ }
 function ago(ts) {
   const d=Date.now()-ts;
   if(d<60000) return 'just now';
@@ -622,7 +622,7 @@ function enterApp() {
   splash.classList.add('hiding');
   setTimeout(() => { splash.style.display='none'; }, 500);
   loadPosts();
-  renderPolls();
+  loadPolls();
 }
 
 // ════════════════════════════════════════════════════════
@@ -633,7 +633,7 @@ function goPage(name) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById(name+'Page').classList.add('active');
   document.querySelector('.'+name+'-tab').classList.add('active');
-  renderPolls(); // always refresh polls when navigating
+  loadPolls(); // always refresh polls when navigating
 }
 
 // ════════════════════════════════════════════════════════
@@ -927,47 +927,65 @@ function addPollOpt() {
   document.getElementById('pollOpts').appendChild(row);
   row.querySelector('input').focus();
 }
-function createPoll() {
+async function createPoll() {
   const q=document.getElementById('pollQ').value.trim();
   if(!q){ toast('Question is required!','err'); return; }
   const opts=[...document.querySelectorAll('#pollOpts .cpf-opt-input')].map(i=>i.value.trim()).filter(Boolean);
   if(opts.length<2){ toast('At least 2 options needed!','err'); return; }
-  polls.unshift({
-    id: Date.now(),
-    question: q,
-    options: opts.map(o=>({text:o, votes:0, voters:[]})), // voters array per option
-    ts: Date.now()
-  });
-  savePolls();
-  document.getElementById('pollQ').value='';
-  document.getElementById('pollOpts').innerHTML=`
-    <div class="cpf-opt-row"><input class="cpf-opt-input" type="text" placeholder="Option 1" maxlength="100"></div>
-    <div class="cpf-opt-row"><input class="cpf-opt-input" type="text" placeholder="Option 2" maxlength="100"></div>`;
-  togglePollForm(); renderPolls(); toast('Poll published! 📊','ok');
+  const btn=document.querySelector('.cpf-submit');
+  btn.disabled=true; btn.textContent='Publishing…';
+  try {
+    const res=await fetch('/api/polls',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:q, options:opts})
+    });
+    if(!res.ok) throw new Error(await res.text());
+    document.getElementById('pollQ').value='';
+    document.getElementById('pollOpts').innerHTML=`
+      <div class="cpf-opt-row"><input class="cpf-opt-input" type="text" placeholder="Option 1" maxlength="100"></div>
+      <div class="cpf-opt-row"><input class="cpf-opt-input" type="text" placeholder="Option 2" maxlength="100"></div>`;
+    togglePollForm();
+    await loadPolls();
+    toast('Poll published! 📊','ok');
+  } catch(e) {
+    toast('Failed to publish poll: '+e.message,'err');
+  } finally {
+    btn.disabled=false; btn.textContent='Publish Poll';
+  }
 }
 
 // ════════════════════════════════════════════════════════
 //  POLLS — VOTE
 // ════════════════════════════════════════════════════════
-function votePoll(pollId, optIdx) {
+async function votePoll(pollId, optIdx) {
   if(!currentUser){ toast('Set your name first!','err'); return; }
-  const poll=polls.find(p=>p.id===pollId); if(!poll) return;
   const voteKey=`pulse_vote_${pollId}`;
   if(localStorage.getItem(voteKey)!==null){ toast('You already voted on this poll!','inf'); return; }
-  // Ensure voters array exists (backwards compat)
-  if(!poll.options[optIdx].voters) poll.options[optIdx].voters=[];
-  poll.options[optIdx].votes++;
-  poll.options[optIdx].voters.push(currentUser);
-  savePolls();
-  localStorage.setItem(voteKey, String(optIdx));
-  renderPolls(); toast('Vote cast! 🗳️','ok');
+  try {
+    const res=await fetch(`/api/polls/${pollId}/vote`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({option_index:optIdx, voter_name:currentUser})
+    });
+    if(!res.ok) throw new Error(await res.text());
+    localStorage.setItem(voteKey, String(optIdx));
+    await loadPolls();
+    toast('Vote cast! 🗳️','ok');
+  } catch(e) {
+    toast('Failed to vote: '+e.message,'err');
+  }
 }
 
 // ════════════════════════════════════════════════════════
 //  POLLS — DELETE
 // ════════════════════════════════════════════════════════
-function deletePoll(id) {
-  polls=polls.filter(p=>p.id!==id); savePolls(); renderPolls(); toast('Poll deleted','err');
+async function deletePoll(id) {
+  try {
+    const res=await fetch(`/api/polls/${id}`,{method:'DELETE'});
+    if(!res.ok) throw new Error(await res.text());
+    await loadPolls(); toast('Poll deleted','err');
+  } catch(e) { toast('Failed to delete: '+e.message,'err'); }
 }
 
 // ════════════════════════════════════════════════════════
@@ -1051,6 +1069,27 @@ function pollHtml(poll) {
   </div>`;
 }
 
+// ════════════════════════════════════════════════════════
+//  LOAD POLLS FROM API
+// ════════════════════════════════════════════════════════
+async function loadPolls() {
+  try {
+    const res=await fetch('/api/polls');
+    if(!res.ok) throw new Error('Server error');
+    const apiPolls=await res.json();
+    polls=apiPolls.map(p=>({
+      id: p.id,
+      question: p.question,
+      options: p.options, // expected: [{text, votes, voters:[]}]
+      ts: p.created_at ? new Date(p.created_at).getTime() : p.ts || Date.now(),
+    }));
+  } catch(e) {
+    console.warn('Could not load polls from API:', e);
+    // silently keep current polls array so UI doesn't break
+  }
+  renderPolls();
+}
+
 function renderPolls() {
   const el=document.getElementById('pollsList'); if(!el) return;
   if(!polls.length){
@@ -1065,8 +1104,8 @@ function renderPolls() {
   });
 }
 
-// Render polls immediately on load so they show without needing name entry
-renderPolls();
+// Load polls immediately on page load so everyone sees them
+loadPolls();
 </script>
 </body>
 </html>
