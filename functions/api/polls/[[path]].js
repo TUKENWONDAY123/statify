@@ -34,7 +34,7 @@ export async function onRequest(context) {
 
 async function getPolls(env) {
   const { results: polls } = await env.DB.prepare(`
-    SELECT id, question, image, created_at
+    SELECT id, question, created_at
     FROM polls
     ORDER BY id DESC
   `).all();
@@ -43,7 +43,7 @@ async function getPolls(env) {
 
   for (const poll of polls) {
     const { results: options } = await env.DB.prepare(`
-      SELECT option_text, option_index
+      SELECT option_text, option_index, option_image
       FROM poll_options
       WHERE poll_id = ?
       ORDER BY option_index ASC
@@ -62,6 +62,7 @@ async function getPolls(env) {
 
       return {
         text: opt.option_text,
+        image: opt.option_image || null,
         votes: voters.length,
         voters
       };
@@ -70,7 +71,6 @@ async function getPolls(env) {
     finalPolls.push({
       id: poll.id,
       question: poll.question,
-      image: poll.image || null,
       created_at: poll.created_at,
       options: mappedOptions
     });
@@ -82,11 +82,15 @@ async function getPolls(env) {
 async function createPoll(request, env) {
   const body = await request.json();
   const question = String(body.question || "").trim();
-  const options = Array.isArray(body.options)
-    ? body.options.map(x => String(x || "").trim()).filter(Boolean)
-    : [];
-  // image is an optional base64 data URL string
-  const image = body.image && typeof body.image === "string" ? body.image : null;
+
+  // options is now an array of {text, image} objects
+  const rawOptions = Array.isArray(body.options) ? body.options : [];
+  const options = rawOptions
+    .map(x => ({
+      text: String(x?.text || x || "").trim(),
+      image: (x?.image && typeof x.image === "string") ? x.image : null
+    }))
+    .filter(o => o.text);
 
   if (!question) {
     return text("Question is required", 400);
@@ -99,17 +103,17 @@ async function createPoll(request, env) {
   }
 
   const insertPoll = await env.DB.prepare(`
-    INSERT INTO polls (question, image)
-    VALUES (?, ?)
-  `).bind(question, image).run();
+    INSERT INTO polls (question)
+    VALUES (?)
+  `).bind(question).run();
 
   const pollId = insertPoll.meta.last_row_id;
 
   for (let i = 0; i < options.length; i++) {
     await env.DB.prepare(`
-      INSERT INTO poll_options (poll_id, option_text, option_index)
-      VALUES (?, ?, ?)
-    `).bind(pollId, options[i], i).run();
+      INSERT INTO poll_options (poll_id, option_text, option_index, option_image)
+      VALUES (?, ?, ?, ?)
+    `).bind(pollId, options[i].text, i, options[i].image).run();
   }
 
   return text("ok", 201);
