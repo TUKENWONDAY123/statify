@@ -958,7 +958,7 @@ async function deleteComment(postId, commentId) {
 
 function sharePost(id) {
   const p=posts.find(x=>x.id===id); if(!p) return;
-  const txt=`"${p.content.slice(0,80)}…" — ${p.author} on Pulse`;
+  const txt='"' + (p.content||'📷 image').slice(0,80) + '…" — ' + p.author + ' on Pulse';
   if(navigator.share) navigator.share({title:'Pulse',text:txt}).catch(()=>{});
   else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>toast('Copied!','inf'));
   else toast('Copied!','inf');
@@ -1003,6 +1003,13 @@ function commentsHtml(post) {
   }).join('');
 }
 
+function postImageHtml(post) {
+  if (!post.image) return '';
+  return '<div style="margin-bottom:0.9rem;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);">'
+    + '<img src="' + post.image + '" alt="" style="width:100%;max-height:320px;object-fit:cover;display:block;" loading="lazy">'
+    + '</div>';
+}
+
 function postHtml(post) {
   const g=grad(post.author);
   return `<div class="post-card${post.pinned?' pinned':''}" data-id="${post.id}">
@@ -1027,7 +1034,7 @@ function postHtml(post) {
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>Delete</div>`:''}
         </div>
       </div>
-      ${post.image ? `<div style="margin-bottom:0.9rem;border-radius:14px;overflow:hidden;border:1px solid var(--border);"><img src="${post.image}" alt="" style="width:100%;max-height:320px;object-fit:cover;display:block;" loading="lazy"></div>` : ''}
+      ${postImageHtml(post)}
       <div class="post-content">${post.content ? rich(post.content) : ''}</div>
       <div class="post-actions">
         <button class="act like${post.liked?' on':''}" onclick="toggleLike(${post.id})">
