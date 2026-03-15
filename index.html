@@ -784,9 +784,35 @@
 </head>
 <body>
 
+<!-- ADMIN LOGIN MODAL -->
+<div id="adminModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:2rem;width:340px;box-shadow:0 20px 60px rgba(0,0,0,0.6);animation:fadeUp 0.3s ease both;position:relative;">
+    <button onclick="closeAdminModal()" style="position:absolute;top:1rem;right:1rem;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1rem;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:background 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='transparent'">✕</button>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:0.25rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Admin Access</div>
+    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem;">Enter your password to unlock admin controls.</div>
+    <input id="adminPassInput" type="password" placeholder="Password…"
+      style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.7rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;margin-bottom:0.75rem;box-sizing:border-box;transition:border-color 0.2s;"
+      onfocus="this.style.borderColor='rgba(124,58,255,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.07)'"
+      onkeydown="if(event.key==='Enter')checkAdminLogin()">
+    <div id="adminError" style="color:var(--accent);font-size:0.8rem;margin-bottom:0.75rem;display:none;">Incorrect password. Try again.</div>
+    <button onclick="checkAdminLogin()" style="width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;padding:0.7rem;color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(124,58,255,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow=''">Unlock</button>
+  </div>
+</div>
+
 <!-- NAVBAR -->
 <nav>
-  <div class="nav-logo">Pulse<span>.</span></div>
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <div class="nav-logo">Pulse<span>.</span></div>
+    <button id="adminLoginBtn" onclick="openAdminModal()" style="background:transparent;border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:0.3rem 0.75rem;color:var(--muted);font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.4rem;" onmouseover="this.style.borderColor='rgba(255,60,111,0.4)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)';this.style.color='var(--muted)'">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Admin
+    </button>
+    <div id="adminBadge" style="display:none;background:rgba(255,60,111,0.12);border:1px solid rgba(255,60,111,0.3);border-radius:8px;padding:0.3rem 0.75rem;color:var(--accent);font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;align-items:center;gap:0.4rem;">
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;animation:pulse 1.5s infinite;"></span>
+      Admin Mode
+      <button onclick="logoutAdmin()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;margin-left:0.3rem;font-size:0.75rem;padding:0;transition:color 0.2s;line-height:1;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">✕</button>
+    </div>
+  </div>
   <div class="nav-actions">
     <div class="nav-avatar" id="userAvatar">Me</div>
   </div>
@@ -870,27 +896,8 @@
   <!-- SIDEBAR RIGHT -->
   <aside class="sidebar-right">
     <div class="widget">
-      <div class="stats-row" style="padding:0 0 0.875rem; border-bottom:1px solid var(--border); margin-bottom:0.875rem; display:flex; gap:1.5rem;">
-        <div class="stat">
-          <div class="stat-num" id="statPosts">0</div>
-          <div class="stat-label">Posts</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num" id="statLikes">0</div>
-          <div class="stat-label">Likes</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num" id="statPinned">0</div>
-          <div class="stat-label">Pinned</div>
-        </div>
-      </div>
       <div class="widget-title"><span class="live-dot"></span>Trending Tags</div>
-      <div id="trendingTags">
-        <div class="trend-item"><span class="trend-hash">#design</span><span class="trend-count">428 posts</span></div>
-        <div class="trend-item"><span class="trend-hash">#tech</span><span class="trend-count">314 posts</span></div>
-        <div class="trend-item"><span class="trend-hash">#culture</span><span class="trend-count">201 posts</span></div>
-        <div class="trend-item"><span class="trend-hash">#random</span><span class="trend-count">186 posts</span></div>
-      </div>
+      <div id="trendingTags"></div>
     </div>
 
     <div class="widget">
@@ -1109,9 +1116,7 @@ function setTab(btn, tab) {
 //  STATS
 // ──────────────────────────────────────────────────────────
 function updateStats() {
-  document.getElementById('statPosts').textContent = posts.length;
-  document.getElementById('statLikes').textContent = posts.reduce((a,p)=>a+p.likes,0);
-  document.getElementById('statPinned').textContent = posts.filter(p=>p.pinned).length;
+  renderTrendingTags();
 }
 
 // ──────────────────────────────────────────────────────────
@@ -1156,10 +1161,10 @@ function postCardHtml(post) {
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
               Share
             </div>
-            <div class="dropdown-item danger" onclick="deletePost(${post.id})">
+            ${isAdmin ? `<div class="dropdown-item danger" onclick="deletePost(${post.id})">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
               Delete
-            </div>
+            </div>` : ''}
           </div>
         </div>
         <div class="post-content">${processContent(post.content)}</div>
@@ -1307,7 +1312,49 @@ document.addEventListener('keydown', e => {
 });
 
 // ──────────────────────────────────────────────────────────
-//  SUGGESTED USERS
+//  ADMIN
+// ──────────────────────────────────────────────────────────
+const ADMIN_PASSWORD = 'pulse2024admin';
+let isAdmin = false;
+
+function openAdminModal() {
+  document.getElementById('adminModal').style.display = 'flex';
+  document.getElementById('adminPassInput').value = '';
+  document.getElementById('adminError').style.display = 'none';
+  setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
+}
+function closeAdminModal() {
+  document.getElementById('adminModal').style.display = 'none';
+}
+function checkAdminLogin() {
+  const val = document.getElementById('adminPassInput').value;
+  if (val === ADMIN_PASSWORD) {
+    isAdmin = true;
+    closeAdminModal();
+    document.getElementById('adminLoginBtn').style.display = 'none';
+    const badge = document.getElementById('adminBadge');
+    badge.style.display = 'flex';
+    renderPosts();
+    showToast('Admin mode enabled 🔐', 'success');
+  } else {
+    document.getElementById('adminError').style.display = 'block';
+    document.getElementById('adminPassInput').value = '';
+    document.getElementById('adminPassInput').focus();
+  }
+}
+function logoutAdmin() {
+  isAdmin = false;
+  document.getElementById('adminLoginBtn').style.display = 'flex';
+  document.getElementById('adminBadge').style.display = 'none';
+  renderPosts();
+  showToast('Admin mode off', 'info');
+}
+document.getElementById('adminModal').addEventListener('click', function(e) {
+  if (e.target === this) closeAdminModal();
+});
+
+// ──────────────────────────────────────────────────────────
+//  SUGGESTED USERS (no follow buttons)
 // ──────────────────────────────────────────────────────────
 function renderSuggested() {
   const el = document.getElementById('suggestedUsers');
@@ -1318,32 +1365,43 @@ function renderSuggested() {
         <div class="suggested-name">${u.name}</div>
         <div class="suggested-handle">${u.handle}</div>
       </div>
-      <button class="follow-btn" onclick="this.textContent=this.classList.toggle('following')?'Following':'Follow'">Follow</button>
     </div>
   `).join('');
 }
 
 // ──────────────────────────────────────────────────────────
-//  SEED DATA if empty
+//  TRENDING TAGS (derived from real posts)
 // ──────────────────────────────────────────────────────────
-function seedIfEmpty() {
-  if (posts.length > 0) return;
-  posts = [
-    { id: 1000001, author:'Alex Rivera', content:'Just shipped a major redesign at work. The new dark mode looks 🔥 Feeling proud of the team. #design #work', ts: Date.now()-3600000*2, likes:14, liked:false, pinned:true, comments:[{id:1,author:'Jamie',text:'Congrats!! Can\'t wait to see it live 🎉',ts:Date.now()-3600000}] },
-    { id: 1000002, author:'Sam Chen', content:'Hot take: good typography does 80% of the work in any UI. Change my mind. #design #tech', ts: Date.now()-86400000, likes:31, liked:false, pinned:false, comments:[{id:2,author:'Mia',text:'Hard agree. Most people sleep on font choice.',ts:Date.now()-3600000*5}] },
-    { id: 1000003, author:'Jordan Park', content:'Finished reading Dune again for the 4th time. Every read hits different. #books #culture', ts: Date.now()-86400000*2, likes:8, liked:false, pinned:false, comments:[] },
-    { id: 1000004, author:'Raya Osei', content:'Anyone else addicted to mechanical keyboards? Just got a new 65% build and I\'m obsessed #tech #random', ts: Date.now()-86400000*3, likes:19, liked:false, pinned:false, comments:[{id:3,author:'Sam',text:'What switches?? Asking for a friend 😅',ts:Date.now()-86400000*2}] },
-  ];
-  saveState();
+function renderTrendingTags() {
+  const tagCounts = {};
+  posts.forEach(p => {
+    const tags = p.content.match(/#(\w+)/g) || [];
+    tags.forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; });
+  });
+  const sorted = Object.entries(tagCounts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const el = document.getElementById('trendingTags');
+  if (!sorted.length) {
+    el.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);padding:0.5rem 0">No tags yet. Add #hashtags to your posts!</div>';
+    return;
+  }
+  el.innerHTML = sorted.map(([tag, count]) => `
+    <div class="trend-item"><span class="trend-hash">${tag}</span><span class="trend-count">${count} post${count>1?'s':''}</span></div>
+  `).join('');
 }
 
 // ──────────────────────────────────────────────────────────
 //  INIT
 // ──────────────────────────────────────────────────────────
-seedIfEmpty();
+// Clear any old seed data from localStorage
+const storedPosts = JSON.parse(localStorage.getItem('pulse_posts') || '[]');
+// Remove old demo seed posts (ids 1000001-1000004)
+posts = storedPosts.filter(p => ![1000001,1000002,1000003,1000004].includes(p.id));
+if (posts.length !== storedPosts.length) saveState();
+
 renderPosts();
 updateStats();
 renderSuggested();
+renderTrendingTags();
 </script>
 </body>
 </html>
