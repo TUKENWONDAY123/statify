@@ -264,9 +264,19 @@
     @keyframes slideDown { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:none} }
     .comment-row { display: flex; gap: 0.65rem; animation: fadeUp 0.2s ease both; }
     .c-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: #fff; }
-    .c-bubble { background: var(--surface2); border-radius: 12px 12px 12px 3px; padding: 0.55rem 0.9rem; flex: 1; min-width: 0; }
+    .c-bubble { background: var(--surface2); border-radius: 12px 12px 12px 3px; padding: 0.55rem 0.9rem; flex: 1; min-width: 0; position: relative; }
     .c-name { font-family: 'Syne',sans-serif; font-size: 0.79rem; font-weight: 700; margin-bottom: 0.1rem; }
     .c-text { font-size: 0.84rem; color: #b0b0cc; line-height: 1.5; }
+    /* ── DELETE COMMENT BUTTON ── */
+    .c-delete {
+      position: absolute; top: 0.4rem; right: 0.5rem;
+      background: transparent; border: none; cursor: pointer;
+      color: var(--muted); width: 22px; height: 22px; border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.18s; opacity: 0;
+    }
+    .c-bubble:hover .c-delete { opacity: 1; }
+    .c-delete:hover { background: rgba(255,60,111,0.12); color: var(--accent); }
     .c-input-row { display: flex; gap: 0.6rem; align-items: center; }
     .c-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 0.52rem 1rem; color: var(--text); font-family: 'DM Sans',sans-serif; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
     .c-input:focus { border-color: rgba(124,58,255,0.4); }
@@ -292,8 +302,14 @@
     .create-poll-btn.visible { display: flex; }
     .create-poll-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(124,58,255,0.4); }
 
-    .poll-card { background: var(--surface); border: 1px solid var(--border); border-radius: 22px; padding: 1.4rem; margin-bottom: 1.1rem; animation: fadeUp 0.4s ease both; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; }
+    .poll-card { background: var(--surface); border: 1px solid var(--border); border-radius: 22px; overflow: hidden; margin-bottom: 1.1rem; animation: fadeUp 0.4s ease both; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; }
     .poll-card:hover { border-color: rgba(124,58,255,0.2); box-shadow: 0 4px 28px rgba(0,0,0,0.4); transform: translateY(-2px); }
+
+    /* Poll image */
+    .poll-image-wrap { width: 100%; max-height: 280px; overflow: hidden; }
+    .poll-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .poll-card-body { padding: 1.4rem; }
     .poll-top { display: flex; align-items: flex-start; gap: 0.8rem; margin-bottom: 1.1rem; }
     .poll-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; background: linear-gradient(135deg, var(--accent2), #4f46e5); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
     .poll-meta { flex: 1; }
@@ -376,6 +392,39 @@
     .cpf-remove:hover { border-color: var(--accent); color: var(--accent); }
     .add-opt-btn { background: transparent; border: 1px dashed rgba(124,58,255,0.3); border-radius: 10px; padding: 0.55rem 1rem; color: #a78bfa; font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700; cursor: pointer; width: 100%; transition: all 0.2s; margin-bottom: 1.1rem; }
     .add-opt-btn:hover { background: rgba(124,58,255,0.08); border-style: solid; }
+
+    /* ── POLL IMAGE UPLOAD ── */
+    .cpf-image-section { margin-bottom: 1.1rem; }
+    .cpf-image-drop {
+      width: 100%; border: 1.5px dashed rgba(124,58,255,0.3); border-radius: 12px;
+      padding: 1.2rem 1rem; cursor: pointer; transition: all 0.2s; text-align: center;
+      background: transparent; position: relative; overflow: hidden;
+    }
+    .cpf-image-drop:hover, .cpf-image-drop.drag-over {
+      border-color: rgba(124,58,255,0.6); background: rgba(124,58,255,0.05);
+    }
+    .cpf-image-drop input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .cpf-image-drop-inner { pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+    .cpf-image-drop-icon { font-size: 1.6rem; }
+    .cpf-image-drop-text { font-size: 0.82rem; color: var(--muted); }
+    .cpf-image-drop-text strong { color: #a78bfa; }
+    .cpf-image-preview {
+      display: none; position: relative; border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border); margin-top: 0.5rem;
+    }
+    .cpf-image-preview.show { display: block; }
+    .cpf-image-preview img { width: 100%; max-height: 180px; object-fit: cover; display: block; }
+    .cpf-image-remove {
+      position: absolute; top: 0.5rem; right: 0.5rem;
+      background: rgba(0,0,0,0.65); border: none; border-radius: 7px;
+      width: 28px; height: 28px; cursor: pointer; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; transition: background 0.2s;
+    }
+    .cpf-image-remove:hover { background: rgba(255,60,111,0.75); }
+
     .cpf-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
     .cpf-cancel { background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 1.1rem; color: var(--muted); cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.83rem; transition: all 0.2s; }
     .cpf-cancel:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
@@ -524,6 +573,27 @@
         <div class="cpf-opt-row"><input class="cpf-opt-input" type="text" placeholder="Option 2" maxlength="100"></div>
       </div>
       <button class="add-opt-btn" onclick="addPollOpt()">+ Add another option</button>
+
+      <!-- ── IMAGE UPLOAD SECTION ── -->
+      <label class="cpf-label">Image <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <div class="cpf-image-section">
+        <div class="cpf-image-drop" id="imgDrop"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event)">
+          <input type="file" id="pollImageInput" accept="image/*" onchange="handleImageSelect(event)">
+          <div class="cpf-image-drop-inner">
+            <div class="cpf-image-drop-icon">🖼️</div>
+            <div class="cpf-image-drop-text"><strong>Click to upload</strong> or drag & drop</div>
+            <div class="cpf-image-drop-text" style="font-size:0.73rem">PNG, JPG, GIF, WEBP · Max 5MB</div>
+          </div>
+        </div>
+        <div class="cpf-image-preview" id="imgPreview">
+          <img id="imgPreviewImg" src="" alt="Poll image preview">
+          <button class="cpf-image-remove" onclick="removeImage()" title="Remove image">✕</button>
+        </div>
+      </div>
+
       <div class="cpf-actions">
         <button class="cpf-cancel" onclick="togglePollForm()">Cancel</button>
         <button class="cpf-submit" onclick="createPoll()">Publish Poll</button>
@@ -544,8 +614,9 @@ let isAdmin = false;
 let feedTab = 'all';
 const ADMIN_PW = 'waleedface';
 
-let posts = []; // loaded from API
-let polls = []; // loaded from API
+let posts = [];
+let polls = [];
+let pollImageDataUrl = null; // base64 image for current poll being created
 
 const GRADS = [
   'linear-gradient(135deg,#ff3c6f,#ff8c42)',
@@ -590,7 +661,6 @@ function toast(msg, type='ok') {
 // ════════════════════════════════════════════════════════
 const splashInput = document.getElementById('splashName');
 splashInput.addEventListener('keydown', e => { if(e.key==='Enter') enterApp(); });
-// Auto-focus after a tiny delay for animation
 setTimeout(() => splashInput.focus(), 400);
 
 function enterApp() {
@@ -606,17 +676,14 @@ function enterApp() {
     return;
   }
   currentUser = name;
-  // Update nav
   const navAv = document.getElementById('navAv');
   navAv.textContent = initials(name);
   navAv.style.background = grad(name);
   document.getElementById('navName').textContent = name;
-  // Update compose
   const compAv = document.getElementById('composeAv');
   compAv.textContent = initials(name);
   compAv.style.background = grad(name);
   document.getElementById('composeWho').innerHTML = `Posting as <strong>${esc(name)}</strong>`;
-  // Hide orbs and splash
   ['orb1','orb2','orb3'].forEach(id => document.getElementById(id).style.display='none');
   const splash = document.getElementById('splashOverlay');
   splash.classList.add('hiding');
@@ -633,7 +700,7 @@ function goPage(name) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById(name+'Page').classList.add('active');
   document.querySelector('.'+name+'-tab').classList.add('active');
-  loadPolls(); // always refresh polls when navigating
+  loadPolls();
 }
 
 // ════════════════════════════════════════════════════════
@@ -749,6 +816,22 @@ function addComment(id) {
   const cnt=document.querySelector(`[data-id="${id}"] .act.comment .cnt`);
   if(cnt) cnt.textContent=p.comments.length;
 }
+
+// ── DELETE OWN COMMENT ──
+function deleteComment(postId, commentId) {
+  const p=posts.find(x=>x.id===postId); if(!p) return;
+  const comment=p.comments.find(c=>c.id===commentId); if(!comment) return;
+  // Safety check: only allow deleting own comments
+  if(comment.author !== currentUser) { toast('You can only delete your own comments.','err'); return; }
+  p.comments=p.comments.filter(c=>c.id!==commentId);
+  saveLocalMeta();
+  const list=document.querySelector(`[data-id="${postId}"] .c-list`);
+  if(list) list.innerHTML=commentsHtml(p);
+  const cnt=document.querySelector(`[data-id="${postId}"] .act.comment .cnt`);
+  if(cnt) cnt.textContent=p.comments.length;
+  toast('Comment deleted','inf');
+}
+
 function sharePost(id) {
   const p=posts.find(x=>x.id===id); if(!p) return;
   const txt=`"${p.content.slice(0,80)}…" — ${p.author} on Pulse`;
@@ -774,12 +857,25 @@ function setFTab(btn,tab) {
 //  POST HTML
 // ════════════════════════════════════════════════════════
 function commentsHtml(post) {
-  return post.comments.map(c=>`
+  return post.comments.map(c=>{
+    const isOwn = c.author === currentUser;
+    const deleteBtn = isOwn
+      ? `<button class="c-delete" onclick="deleteComment(${post.id},${c.id})" title="Delete comment">
+           <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+         </button>`
+      : '';
+    return `
     <div class="comment-row">
       <div class="c-avatar" style="background:${grad(c.author)}">${initials(c.author)}</div>
-      <div class="c-bubble"><div class="c-name">${esc(c.author)}</div><div class="c-text">${rich(c.text)}</div></div>
-    </div>`).join('');
+      <div class="c-bubble">
+        <div class="c-name">${esc(c.author)}</div>
+        <div class="c-text">${rich(c.text)}</div>
+        ${deleteBtn}
+      </div>
+    </div>`;
+  }).join('');
 }
+
 function postHtml(post) {
   const g=grad(post.author);
   return `<div class="post-card${post.pinned?' pinned':''}" data-id="${post.id}">
@@ -845,7 +941,6 @@ async function loadPosts() {
     const res = await fetch('/api/posts');
     if (!res.ok) throw new Error('Server error');
     const apiPosts = await res.json();
-    // Merge API posts with local like/pin/comment state
     const localMeta = JSON.parse(localStorage.getItem('pulse_post_meta') || '{}');
     posts = apiPosts.map(p => ({
       id: p.id,
@@ -860,7 +955,6 @@ async function loadPosts() {
   } catch(e) {
     console.warn('API unavailable, using localStorage fallback', e);
     posts = JSON.parse(localStorage.getItem('pulse_posts_fallback') || '[]');
-    // Show subtle warning if posts container is empty
     if (!posts.length) {
       el.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Could not reach the server. Check your API is running.</p></div>';
       return;
@@ -909,11 +1003,54 @@ function renderPosts() {
 }
 
 // ════════════════════════════════════════════════════════
+//  POLL IMAGE UPLOAD HANDLERS
+// ════════════════════════════════════════════════════════
+function handleImageSelect(e) {
+  const file = e.target.files[0];
+  if (file) loadPollImage(file);
+}
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('imgDrop').classList.add('drag-over');
+}
+function handleDragLeave(e) {
+  document.getElementById('imgDrop').classList.remove('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('imgDrop').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadPollImage(file);
+  else toast('Please drop an image file.','err');
+}
+function loadPollImage(file) {
+  if (file.size > 5 * 1024 * 1024) { toast('Image must be under 5MB.','err'); return; }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    pollImageDataUrl = e.target.result;
+    const preview = document.getElementById('imgPreview');
+    document.getElementById('imgPreviewImg').src = pollImageDataUrl;
+    preview.classList.add('show');
+    document.getElementById('imgDrop').style.display = 'none';
+    toast('Image ready 🖼️','ok');
+  };
+  reader.readAsDataURL(file);
+}
+function removeImage() {
+  pollImageDataUrl = null;
+  document.getElementById('imgPreviewImg').src = '';
+  document.getElementById('imgPreview').classList.remove('show');
+  document.getElementById('imgDrop').style.display = '';
+  document.getElementById('pollImageInput').value = '';
+}
+
+// ════════════════════════════════════════════════════════
 //  POLLS — CREATE
 // ════════════════════════════════════════════════════════
 function togglePollForm() {
-  document.getElementById('pollForm').classList.toggle('open');
-  if(document.getElementById('pollForm').classList.contains('open')) document.getElementById('pollQ').focus();
+  const form = document.getElementById('pollForm');
+  form.classList.toggle('open');
+  if(form.classList.contains('open')) document.getElementById('pollQ').focus();
 }
 function addPollOpt() {
   const container=document.getElementById('pollOpts');
@@ -935,16 +1072,21 @@ async function createPoll() {
   const btn=document.querySelector('.cpf-submit');
   btn.disabled=true; btn.textContent='Publishing…';
   try {
+    const body = { question: q, options: opts };
+    if (pollImageDataUrl) body.image = pollImageDataUrl; // include base64 if present
+
     const res=await fetch('/api/polls',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({question:q, options:opts})
+      body:JSON.stringify(body)
     });
     if(!res.ok) throw new Error(await res.text());
+    // Reset form
     document.getElementById('pollQ').value='';
     document.getElementById('pollOpts').innerHTML=`
       <div class="cpf-opt-row"><input class="cpf-opt-input" type="text" placeholder="Option 1" maxlength="100"></div>
       <div class="cpf-opt-row"><input class="cpf-opt-input" type="text" placeholder="Option 2" maxlength="100"></div>`;
+    removeImage();
     togglePollForm();
     await loadPolls();
     toast('Poll published! 📊','ok');
@@ -1048,24 +1190,32 @@ function pollHtml(poll) {
       </div>`;
   }
 
+  // Poll image
+  const imageHtml = poll.image
+    ? `<div class="poll-image-wrap"><img src="${esc(poll.image)}" alt="Poll image" loading="lazy"></div>`
+    : '';
+
   return `<div class="poll-card" data-poll="${poll.id}">
-    <div class="poll-top">
-      <div class="poll-icon">📊</div>
-      <div class="poll-meta">
-        <div class="poll-q">${esc(poll.question)}</div>
-        <div class="poll-info">By Admin · ${ago(poll.ts)} · ${total} vote${total!==1?'s':''}</div>
+    ${imageHtml}
+    <div class="poll-card-body">
+      <div class="poll-top">
+        <div class="poll-icon">📊</div>
+        <div class="poll-meta">
+          <div class="poll-q">${esc(poll.question)}</div>
+          <div class="poll-info">By Admin · ${ago(poll.ts)} · ${total} vote${total!==1?'s':''}</div>
+        </div>
+        <button class="poll-del${isAdmin?' visible':''}" onclick="deletePoll(${poll.id})" title="Delete">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
       </div>
-      <button class="poll-del${isAdmin?' visible':''}" onclick="deletePoll(${poll.id})" title="Delete">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-      </button>
+      <div class="poll-options">${optsHtml}</div>
+      <div class="poll-footer">
+        ${hasVoted?`<span style="color:var(--accent3)">✓ You voted</span><span class="poll-footer-dot"></span>`:''}
+        <span>${total} vote${total!==1?'s':''}</span>
+        ${isAdmin?`<span class="poll-footer-dot"></span><button class="toggle-voters-btn" onclick="toggleVoterList(${poll.id})">See voters</button>`:''}
+      </div>
+      ${voterListHtml}
     </div>
-    <div class="poll-options">${optsHtml}</div>
-    <div class="poll-footer">
-      ${hasVoted?`<span style="color:var(--accent3)">✓ You voted</span><span class="poll-footer-dot"></span>`:''}
-      <span>${total} vote${total!==1?'s':''}</span>
-      ${isAdmin?`<span class="poll-footer-dot"></span><button class="toggle-voters-btn" onclick="toggleVoterList(${poll.id})">See voters</button>`:''}
-    </div>
-    ${voterListHtml}
   </div>`;
 }
 
@@ -1080,12 +1230,12 @@ async function loadPolls() {
     polls=apiPolls.map(p=>({
       id: p.id,
       question: p.question,
-      options: p.options, // expected: [{text, votes, voters:[]}]
+      options: p.options,
+      image: p.image || null,
       ts: p.created_at ? new Date(p.created_at).getTime() : p.ts || Date.now(),
     }));
   } catch(e) {
     console.warn('Could not load polls from API:', e);
-    // silently keep current polls array so UI doesn't break
   }
   renderPolls();
 }
@@ -1104,8 +1254,7 @@ function renderPolls() {
   });
 }
 
-// Load polls immediately on page load so everyone sees them
-loadPolls();
+// Polls load only after the user enters their name (see enterApp)
 </script>
 </body>
 </html>
