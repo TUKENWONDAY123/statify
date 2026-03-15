@@ -34,7 +34,7 @@ export async function onRequest(context) {
 
 async function getPolls(env) {
   const { results: polls } = await env.DB.prepare(`
-    SELECT id, question, created_at
+    SELECT id, question, image, created_at
     FROM polls
     ORDER BY id DESC
   `).all();
@@ -70,6 +70,7 @@ async function getPolls(env) {
     finalPolls.push({
       id: poll.id,
       question: poll.question,
+      image: poll.image || null,
       created_at: poll.created_at,
       options: mappedOptions
     });
@@ -81,24 +82,26 @@ async function getPolls(env) {
 async function createPoll(request, env) {
   const body = await request.json();
   const question = String(body.question || "").trim();
-  const options = Array.isArray(body.options) ? body.options.map(x => String(x || "").trim()).filter(Boolean) : [];
+  const options = Array.isArray(body.options)
+    ? body.options.map(x => String(x || "").trim()).filter(Boolean)
+    : [];
+  // image is an optional base64 data URL string
+  const image = body.image && typeof body.image === "string" ? body.image : null;
 
   if (!question) {
     return text("Question is required", 400);
   }
-
   if (options.length < 2) {
     return text("At least 2 options are required", 400);
   }
-
   if (options.length > 6) {
     return text("Maximum 6 options allowed", 400);
   }
 
   const insertPoll = await env.DB.prepare(`
-    INSERT INTO polls (question)
-    VALUES (?)
-  `).bind(question).run();
+    INSERT INTO polls (question, image)
+    VALUES (?, ?)
+  `).bind(question, image).run();
 
   const pollId = insertPoll.meta.last_row_id;
 
@@ -124,15 +127,12 @@ async function votePoll(request, env, pollId) {
   if (Number.isNaN(optionIndex)) {
     return text("Invalid option index", 400);
   }
-
   if (!voterName) {
     return text("Voter name is required", 400);
   }
 
   const existingPoll = await env.DB.prepare(`
-    SELECT id
-    FROM polls
-    WHERE id = ?
+    SELECT id FROM polls WHERE id = ?
   `).bind(pollId).first();
 
   if (!existingPoll) {
@@ -140,8 +140,7 @@ async function votePoll(request, env, pollId) {
   }
 
   const validOption = await env.DB.prepare(`
-    SELECT id
-    FROM poll_options
+    SELECT id FROM poll_options
     WHERE poll_id = ? AND option_index = ?
   `).bind(pollId, optionIndex).first();
 
@@ -150,8 +149,7 @@ async function votePoll(request, env, pollId) {
   }
 
   const existingVote = await env.DB.prepare(`
-    SELECT id
-    FROM poll_votes
+    SELECT id FROM poll_votes
     WHERE poll_id = ? AND lower(voter_name) = lower(?)
     LIMIT 1
   `).bind(pollId, voterName).first();
@@ -183,9 +181,7 @@ async function deletePoll(env, pollId) {
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: {
-      "Content-Type": "application/json"
-    }
+    headers: { "Content-Type": "application/json" }
   });
 }
 
