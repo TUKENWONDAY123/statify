@@ -4,33 +4,49 @@ export async function onRequest(context) {
   const path = (params.path || []).filter(Boolean);
 
   try {
-    // GET /api/polls
+    // GET /api/posts
     if (method === "GET" && path.length === 0) {
-      return await getPolls(env);
+      return await getPosts(env);
     }
 
-    // POST /api/polls
+    // POST /api/posts
     if (method === "POST" && path.length === 0) {
-      return await createPoll(request, env);
+      return await createPost(request, env);
     }
 
-    // POST /api/polls/:id/vote
-    if (method === "POST" && path.length === 2 && path[1] === "vote") {
-      const pollId = Number(path[0]);
-      return await votePoll(request, env, pollId);
-    }
-
-    // DELETE /api/polls/:id/voters/:voterName
-    if (method === "DELETE" && path.length === 3 && path[1] === "voters") {
-      const pollId = Number(path[0]);
-      const voterName = decodeURIComponent(path[2]);
-      return await deleteVoter(env, pollId, voterName);
-    }
-
-    // DELETE /api/polls/:id
+    // DELETE /api/posts/:id
     if (method === "DELETE" && path.length === 1) {
-      const pollId = Number(path[0]);
-      return await deletePoll(env, pollId);
+      return await deletePost(env, Number(path[0]));
+    }
+
+    // GET /api/posts/:id/comments
+    if (method === "GET" && path.length === 2 && path[1] === "comments") {
+      return await getComments(env, Number(path[0]));
+    }
+
+    // POST /api/posts/:id/comments
+    if (method === "POST" && path.length === 2 && path[1] === "comments") {
+      return await addComment(request, env, Number(path[0]));
+    }
+
+    // DELETE /api/posts/:id/comments/:commentId
+    if (method === "DELETE" && path.length === 3 && path[1] === "comments") {
+      return await deleteComment(request, env, Number(path[0]), Number(path[2]));
+    }
+
+    // POST /api/posts/:id/pin  (admin only — toggled server-side)
+    if (method === "POST" && path.length === 2 && path[1] === "pin") {
+      return await pinPost(request, env, Number(path[0]));
+    }
+
+    // POST /api/posts/:id/like
+    if (method === "POST" && path.length === 2 && path[1] === "like") {
+      return await likePost(request, env, Number(path[0]));
+    }
+
+    // DELETE /api/posts/:id/like
+    if (method === "DELETE" && path.length === 2 && path[1] === "like") {
+      return await unlikePost(request, env, Number(path[0]));
     }
 
     return text("Not found", 404);
@@ -39,166 +55,156 @@ export async function onRequest(context) {
   }
 }
 
-async function getPolls(env) {
-  const { results: polls } = await env.DB.prepare(`
-    SELECT id, question, created_at
-    FROM polls
-    ORDER BY id DESC
+// ── GET ALL POSTS with comment count and like count ──
+async function getPosts(env) {
+  const { results: posts } = await env.DB.prepare(`
+    SELECT p.id, p.author, p.content, p.image, p.pinned, p.created_at,
+      (SELECT COUNT(*) FROM post_comments c WHERE c.post_id = p.id) AS comment_count,
+      (SELECT COUNT(*) FROM post_likes l WHERE l.post_id = p.id) AS like_count
+    FROM posts p
+    ORDER BY p.pinned DESC, p.id DESC
   `).all();
 
-  const finalPolls = [];
-
-  for (const poll of polls) {
-    const { results: options } = await env.DB.prepare(`
-      SELECT option_text, option_index, option_image
-      FROM poll_options
-      WHERE poll_id = ?
-      ORDER BY option_index ASC
-    `).bind(poll.id).all();
-
-    const { results: votes } = await env.DB.prepare(`
-      SELECT option_index, voter_name
-      FROM poll_votes
-      WHERE poll_id = ?
-    `).bind(poll.id).all();
-
-    const mappedOptions = options.map(opt => {
-      const voters = votes
-        .filter(v => Number(v.option_index) === Number(opt.option_index))
-        .map(v => v.voter_name);
-
-      return {
-        text: opt.option_text,
-        image: opt.option_image || null,
-        votes: voters.length,
-        voters
-      };
-    });
-
-    finalPolls.push({
-      id: poll.id,
-      question: poll.question,
-      created_at: poll.created_at,
-      options: mappedOptions
-    });
-  }
-
-  return json(finalPolls);
+  return json(posts.map(p => ({
+    id: p.id,
+    author: p.author,
+    content: p.content,
+    image: p.image || null,
+    pinned: !!p.pinned,
+    created_at: p.created_at,
+    comment_count: p.comment_count,
+    like_count: p.like_count,
+  })));
 }
 
-async function createPoll(request, env) {
+// ── CREATE POST ──
+async function createPost(request, env) {
   const body = await request.json();
-  const question = String(body.question || "").trim();
+  const author = String(body.author || "").trim();
+  const content = String(body.content || "").trim();
+  const image = body.image && typeof body.image === "string" ? body.image : null;
 
-  // options is now an array of {text, image} objects
-  const rawOptions = Array.isArray(body.options) ? body.options : [];
-  const options = rawOptions
-    .map(x => ({
-      text: String(x?.text || x || "").trim(),
-      image: (x?.image && typeof x.image === "string") ? x.image : null
-    }))
-    .filter(o => o.text);
+  if (!author) return text("Author is required", 400);
+  if (!content && !image) return text("Content or image is required", 400);
 
-  if (!question) {
-    return text("Question is required", 400);
-  }
-  if (options.length < 2) {
-    return text("At least 2 options are required", 400);
-  }
-  if (options.length > 6) {
-    return text("Maximum 6 options allowed", 400);
-  }
+  const result = await env.DB.prepare(`
+    INSERT INTO posts (author, content, image) VALUES (?, ?, ?)
+  `).bind(author, content, image).run();
 
-  const insertPoll = await env.DB.prepare(`
-    INSERT INTO polls (question)
-    VALUES (?)
-  `).bind(question).run();
-
-  const pollId = insertPoll.meta.last_row_id;
-
-  for (let i = 0; i < options.length; i++) {
-    await env.DB.prepare(`
-      INSERT INTO poll_options (poll_id, option_text, option_index, option_image)
-      VALUES (?, ?, ?, ?)
-    `).bind(pollId, options[i].text, i, options[i].image).run();
-  }
-
-  return text("ok", 201);
+  return json({ id: result.meta.last_row_id }, 201);
 }
 
-async function votePoll(request, env, pollId) {
-  if (!pollId || Number.isNaN(pollId)) {
-    return text("Invalid poll id", 400);
-  }
-
-  const body = await request.json();
-  const optionIndex = Number(body.option_index);
-  const voterName = String(body.voter_name || "").trim();
-
-  if (Number.isNaN(optionIndex)) {
-    return text("Invalid option index", 400);
-  }
-  if (!voterName) {
-    return text("Voter name is required", 400);
-  }
-
-  const existingPoll = await env.DB.prepare(`
-    SELECT id FROM polls WHERE id = ?
-  `).bind(pollId).first();
-
-  if (!existingPoll) {
-    return text("Poll not found", 404);
-  }
-
-  const validOption = await env.DB.prepare(`
-    SELECT id FROM poll_options
-    WHERE poll_id = ? AND option_index = ?
-  `).bind(pollId, optionIndex).first();
-
-  if (!validOption) {
-    return text("Invalid option", 400);
-  }
-
-  const existingVote = await env.DB.prepare(`
-    SELECT id FROM poll_votes
-    WHERE poll_id = ? AND lower(voter_name) = lower(?)
-    LIMIT 1
-  `).bind(pollId, voterName).first();
-
-  if (existingVote) {
-    return text("You already voted on this poll", 400);
-  }
-
-  await env.DB.prepare(`
-    INSERT INTO poll_votes (poll_id, option_index, voter_name)
-    VALUES (?, ?, ?)
-  `).bind(pollId, optionIndex, voterName).run();
-
-  return text("ok", 201);
-}
-
-async function deleteVoter(env, pollId, voterName) {
-  if (!pollId || Number.isNaN(pollId)) return text("Invalid poll id", 400);
-  if (!voterName) return text("Voter name is required", 400);
-
-  await env.DB.prepare(`
-    DELETE FROM poll_votes
-    WHERE poll_id = ? AND lower(voter_name) = lower(?)
-  `).bind(pollId, voterName).run();
-
+// ── DELETE POST (admin) ──
+async function deletePost(env, postId) {
+  if (!postId || isNaN(postId)) return text("Invalid post id", 400);
+  await env.DB.prepare(`DELETE FROM post_likes WHERE post_id = ?`).bind(postId).run();
+  await env.DB.prepare(`DELETE FROM post_comments WHERE post_id = ?`).bind(postId).run();
+  await env.DB.prepare(`DELETE FROM posts WHERE id = ?`).bind(postId).run();
   return text("ok");
 }
 
-async function deletePoll(env, pollId) {
-  if (!pollId || Number.isNaN(pollId)) {
-    return text("Invalid poll id", 400);
+// ── GET COMMENTS ──
+async function getComments(env, postId) {
+  if (!postId || isNaN(postId)) return text("Invalid post id", 400);
+  const { results } = await env.DB.prepare(`
+    SELECT id, post_id, author, content, created_at
+    FROM post_comments
+    WHERE post_id = ?
+    ORDER BY id ASC
+  `).bind(postId).all();
+  return json(results);
+}
+
+// ── ADD COMMENT ──
+async function addComment(request, env, postId) {
+  if (!postId || isNaN(postId)) return text("Invalid post id", 400);
+  const body = await request.json();
+  const author = String(body.author || "").trim();
+  const content = String(body.content || "").trim();
+  if (!author) return text("Author is required", 400);
+  if (!content) return text("Content is required", 400);
+
+  const result = await env.DB.prepare(`
+    INSERT INTO post_comments (post_id, author, content) VALUES (?, ?, ?)
+  `).bind(postId, author, content).run();
+
+  return json({ id: result.meta.last_row_id }, 201);
+}
+
+// ── DELETE COMMENT (own comment, or admin) ──
+async function deleteComment(request, env, postId, commentId) {
+  if (!postId || isNaN(postId)) return text("Invalid post id", 400);
+  if (!commentId || isNaN(commentId)) return text("Invalid comment id", 400);
+
+  const body = await request.json().catch(() => ({}));
+  const requester = String(body.requester || "").trim();
+  const adminDelete = !!body.admin;
+
+  if (!adminDelete) {
+    // Verify ownership
+    const comment = await env.DB.prepare(`
+      SELECT author FROM post_comments WHERE id = ? AND post_id = ?
+    `).bind(commentId, postId).first();
+    if (!comment) return text("Comment not found", 404);
+    if (comment.author.toLowerCase() !== requester.toLowerCase()) {
+      return text("Not your comment", 403);
+    }
   }
 
-  await env.DB.prepare(`DELETE FROM poll_votes WHERE poll_id = ?`).bind(pollId).run();
-  await env.DB.prepare(`DELETE FROM poll_options WHERE poll_id = ?`).bind(pollId).run();
-  await env.DB.prepare(`DELETE FROM polls WHERE id = ?`).bind(pollId).run();
-
+  await env.DB.prepare(`DELETE FROM post_comments WHERE id = ? AND post_id = ?`)
+    .bind(commentId, postId).run();
   return text("ok");
+}
+
+// ── PIN POST ──
+async function pinPost(request, env, postId) {
+  if (!postId || isNaN(postId)) return text("Invalid post id", 400);
+  const body = await request.json();
+  const pinned = body.pinned ? 1 : 0;
+  await env.DB.prepare(`UPDATE posts SET pinned = ? WHERE id = ?`).bind(pinned, postId).run();
+  return text("ok");
+}
+
+// ── LIKE POST ──
+async function likePost(request, env, postId) {
+  if (!postId || isNaN(postId)) return text("Invalid post id", 400);
+  const body = await request.json();
+  const liker = String(body.liker || "").trim();
+  if (!liker) return text("Liker name required", 400);
+
+  const existing = await env.DB.prepare(`
+    SELECT id FROM post_likes WHERE post_id = ? AND lower(liker_name) = lower(?)
+  `).bind(postId, liker).first();
+
+  if (existing) return text("Already liked", 400);
+
+  await env.DB.prepare(`
+    INSERT INTO post_likes (post_id, liker_name) VALUES (?, ?)
+  `).bind(postId, liker).run();
+
+  const { count } = await env.DB.prepare(
+    `SELECT COUNT(*) as count FROM post_likes WHERE post_id = ?`
+  ).bind(postId).first();
+
+  return json({ likes: count });
+}
+
+// ── UNLIKE POST ──
+async function unlikePost(request, env, postId) {
+  if (!postId || isNaN(postId)) return text("Invalid post id", 400);
+  const body = await request.json();
+  const liker = String(body.liker || "").trim();
+  if (!liker) return text("Liker name required", 400);
+
+  await env.DB.prepare(`
+    DELETE FROM post_likes WHERE post_id = ? AND lower(liker_name) = lower(?)
+  `).bind(postId, liker).run();
+
+  const { count } = await env.DB.prepare(
+    `SELECT COUNT(*) as count FROM post_likes WHERE post_id = ?`
+  ).bind(postId).first();
+
+  return json({ likes: count });
 }
 
 function json(data, status = 200) {
