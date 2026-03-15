@@ -20,6 +20,13 @@ export async function onRequest(context) {
       return await votePoll(request, env, pollId);
     }
 
+    // DELETE /api/polls/:id/voters/:voterName
+    if (method === "DELETE" && path.length === 3 && path[1] === "voters") {
+      const pollId = Number(path[0]);
+      const voterName = decodeURIComponent(path[2]);
+      return await deleteVoter(env, pollId, voterName);
+    }
+
     // DELETE /api/polls/:id
     if (method === "DELETE" && path.length === 1) {
       const pollId = Number(path[0]);
@@ -168,6 +175,18 @@ async function votePoll(request, env, pollId) {
   `).bind(pollId, optionIndex, voterName).run();
 
   return text("ok", 201);
+}
+
+async function deleteVoter(env, pollId, voterName) {
+  if (!pollId || Number.isNaN(pollId)) return text("Invalid poll id", 400);
+  if (!voterName) return text("Voter name is required", 400);
+
+  await env.DB.prepare(`
+    DELETE FROM poll_votes
+    WHERE poll_id = ? AND lower(voter_name) = lower(?)
+  `).bind(pollId, voterName).run();
+
+  return text("ok");
 }
 
 async function deletePoll(env, pollId) {
