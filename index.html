@@ -544,12 +544,8 @@ let isAdmin = false;
 let feedTab = 'all';
 const ADMIN_PW = 'pulse2024admin';
 
-let posts = JSON.parse(localStorage.getItem('pulse_posts') || '[]');
+let posts = []; // loaded from API
 let polls = JSON.parse(localStorage.getItem('pulse_polls') || '[]');
-
-// Remove old seed posts if present
-posts = posts.filter(p => ![1000001,1000002,1000003,1000004].includes(p.id));
-savePosts();
 
 const GRADS = [
   'linear-gradient(135deg,#ff3c6f,#ff8c42)',
@@ -564,7 +560,7 @@ const GRADS = [
 
 function grad(n) { let h=0; for(const c of(n||'?')) h=(h*31+c.charCodeAt(0))&0xffff; return GRADS[h%GRADS.length]; }
 function initials(n) { return(n||'?').trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?'; }
-function savePosts() { localStorage.setItem('pulse_posts', JSON.stringify(posts)); }
+function savePosts() { /* posts are stored server-side via API */ }
 function savePolls() { localStorage.setItem('pulse_polls', JSON.stringify(polls)); }
 function ago(ts) {
   const d=Date.now()-ts;
@@ -625,7 +621,7 @@ function enterApp() {
   const splash = document.getElementById('splashOverlay');
   splash.classList.add('hiding');
   setTimeout(() => { splash.style.display='none'; }, 500);
-  renderPosts();
+  loadPosts();
   renderPolls();
 }
 
@@ -687,19 +683,29 @@ document.getElementById('contentIn').addEventListener('input', function() {
 // ════════════════════════════════════════════════════════
 //  SUBMIT POST
 // ════════════════════════════════════════════════════════
-function submitPost() {
+async function submitPost() {
   if(!currentUser) { toast('Please set your name first!','err'); return; }
   const c = document.getElementById('contentIn').value.trim();
   if(!c) { toast('Write something first!','err'); return; }
-  posts.unshift({
-    id: Date.now()+Math.random(), author: currentUser,
-    content: c, ts: Date.now(), likes: 0, liked: false, pinned: false, comments: []
-  });
-  savePosts();
-  document.getElementById('contentIn').value='';
-  document.getElementById('charCnt').textContent='0 / 500';
-  renderPosts(); toast('Post published! 🎉','ok');
-  document.getElementById('postsList').scrollIntoView({behavior:'smooth',block:'nearest'});
+  const btn = document.querySelector('.post-btn');
+  btn.disabled = true; btn.textContent = 'Posting…';
+  try {
+    const res = await fetch('/api/posts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ author: currentUser, content: c })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    document.getElementById('contentIn').value='';
+    document.getElementById('charCnt').textContent='0 / 500';
+    await loadPosts();
+    toast('Post published! 🎉','ok');
+    document.getElementById('postsList').scrollIntoView({behavior:'smooth',block:'nearest'});
+  } catch(e) {
+    toast('Failed to post: ' + e.message,'err');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Post it';
+  }
 }
 document.addEventListener('keydown', e => { if((e.ctrlKey||e.metaKey)&&e.key==='Enter') submitPost(); });
 
@@ -708,7 +714,7 @@ document.addEventListener('keydown', e => { if((e.ctrlKey||e.metaKey)&&e.key==='
 // ════════════════════════════════════════════════════════
 function toggleLike(id) {
   const p=posts.find(x=>x.id===id); if(!p) return;
-  p.liked=!p.liked; p.likes+=p.liked?1:-1; savePosts();
+  p.liked=!p.liked; p.likes+=p.liked?1:-1; saveLocalMeta();
   const card=document.querySelector(`[data-id="${id}"]`); if(!card) return;
   const btn=card.querySelector('.act.like');
   btn.querySelector('.cnt').textContent=p.likes;
@@ -718,13 +724,13 @@ function toggleLike(id) {
 }
 function togglePin(id) {
   const p=posts.find(x=>x.id===id); if(!p) return;
-  p.pinned=!p.pinned; savePosts(); renderPosts();
+  p.pinned=!p.pinned; saveLocalMeta(); renderPosts();
   toast(p.pinned?'📌 Pinned!':'Unpinned', p.pinned?'ok':'inf');
 }
 function deletePost(id) {
   const card=document.querySelector(`[data-id="${id}"]`);
   if(card){ card.style.transition='all 0.28s'; card.style.opacity='0'; card.style.transform='scale(0.95)'; }
-  setTimeout(()=>{ posts=posts.filter(x=>x.id!==id); savePosts(); renderPosts(); },290);
+  setTimeout(async ()=>{ posts=posts.filter(x=>x.id!==id); saveLocalMeta(); await loadPosts(); },290);
   toast('Post deleted','err');
 }
 function toggleComments(id) {
@@ -737,7 +743,7 @@ function addComment(id) {
   const txt=inp.value.trim(); if(!txt) return;
   const p=posts.find(x=>x.id===id); if(!p) return;
   p.comments.push({id:Date.now(), author:currentUser, text:txt, ts:Date.now()});
-  savePosts(); inp.value='';
+  saveLocalMeta(); inp.value='';
   const list=document.querySelector(`[data-id="${id}"] .c-list`);
   if(list) list.innerHTML=commentsHtml(p);
   const cnt=document.querySelector(`[data-id="${id}"] .act.comment .cnt`);
@@ -828,6 +834,47 @@ function postHtml(post) {
       </div>
     </div>
   </div>`;
+}
+
+// ════════════════════════════════════════════════════════
+//  LOAD POSTS FROM API
+// ════════════════════════════════════════════════════════
+async function loadPosts() {
+  const el = document.getElementById('postsList');
+  try {
+    const res = await fetch('/api/posts');
+    if (!res.ok) throw new Error('Server error');
+    const apiPosts = await res.json();
+    // Merge API posts with local like/pin/comment state
+    const localMeta = JSON.parse(localStorage.getItem('pulse_post_meta') || '{}');
+    posts = apiPosts.map(p => ({
+      id: p.id,
+      author: p.author,
+      content: p.content,
+      ts: new Date(p.created_at).getTime(),
+      likes: localMeta[p.id]?.likes ?? 0,
+      liked: localMeta[p.id]?.liked ?? false,
+      pinned: localMeta[p.id]?.pinned ?? false,
+      comments: localMeta[p.id]?.comments ?? [],
+    }));
+  } catch(e) {
+    console.warn('API unavailable, using localStorage fallback', e);
+    posts = JSON.parse(localStorage.getItem('pulse_posts_fallback') || '[]');
+    // Show subtle warning if posts container is empty
+    if (!posts.length) {
+      el.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Could not reach the server. Check your API is running.</p></div>';
+      return;
+    }
+  }
+  renderPosts();
+}
+
+function saveLocalMeta() {
+  const meta = {};
+  posts.forEach(p => {
+    meta[p.id] = { likes: p.likes, liked: p.liked, pinned: p.pinned, comments: p.comments };
+  });
+  localStorage.setItem('pulse_post_meta', JSON.stringify(meta));
 }
 
 // ════════════════════════════════════════════════════════
