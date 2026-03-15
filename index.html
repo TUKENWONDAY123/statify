@@ -1092,7 +1092,7 @@ async function loadPosts() {
       author: p.author,
       content: p.content,
       image: p.image || null,
-      ts: new Date(p.created_at).getTime(),
+      ts: new Date((p.created_at||'').replace(' ','T')+'Z').getTime(),
       likes: p.like_count || 0,
       liked: !!myLikes[p.id],
       pinned: p.pinned || !!myPins[p.id],
@@ -1445,7 +1445,7 @@ async function loadPolls() {
         votes:  typeof o === 'string' ? 0 : (o.votes || 0),
         voters: typeof o === 'string' ? [] : (o.voters || []),
       })),
-      ts: p.created_at ? new Date(p.created_at).getTime() : p.ts || Date.now(),
+      ts: p.created_at ? new Date((p.created_at||'').replace(' ','T')+'Z').getTime() : p.ts || Date.now(),
     }));
   } catch(e) {
     console.warn('Could not load polls from API:', e);
