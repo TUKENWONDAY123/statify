@@ -633,7 +633,7 @@ function goPage(name) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById(name+'Page').classList.add('active');
   document.querySelector('.'+name+'-tab').classList.add('active');
-  if(name==='polls') renderPolls();
+  renderPolls(); // always refresh polls when navigating
 }
 
 // ════════════════════════════════════════════════════════
@@ -993,14 +993,14 @@ function pollHtml(poll) {
     const isChosen=hasVoted&&chosenIdx===i;
     const isWinner=hasVoted&&opt.votes===maxVotes&&total>0&&isChosen;
     const classes=['poll-option',hasVoted?'voted':'',isChosen?'is-chosen':'',isWinner?'is-winner':''].filter(Boolean).join(' ');
-    return `<div class="${classes}" onclick="${hasVoted?'':` votePoll(${poll.id},${i})`}">
-      <div class="poll-bar" style="transform:scaleX(${hasVoted?pct/100:0})"></div>
-      <div class="poll-option-inner">
-        <div class="poll-radio"></div>
-        <div class="poll-opt-text">${esc(opt.text)}</div>
-        <div class="poll-pct${hasVoted?' show':''}">${pct}%</div>
-      </div>
-    </div>`;
+    const clickAttr=hasVoted?'':'onclick="votePoll('+poll.id+','+i+')"';
+    return '<div class="'+classes+'" '+clickAttr+'>'
+      +'<div class="poll-bar" style="transform:scaleX('+(hasVoted?pct/100:0)+')"></div>'
+      +'<div class="poll-option-inner">'
+      +'<div class="poll-radio"></div>'
+      +'<div class="poll-opt-text">'+esc(opt.text)+'</div>'
+      +'<div class="poll-pct'+(hasVoted?' show':'')+'">'+pct+'%</div>'
+      +'</div></div>';
   }).join('');
 
   // Voter list for admin
@@ -1064,6 +1064,9 @@ function renderPolls() {
     });
   });
 }
+
+// Render polls immediately on load so they show without needing name entry
+renderPolls();
 </script>
 </body>
 </html>
