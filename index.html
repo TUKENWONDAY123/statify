@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Posting Site</title>
+</head>
+<body>
+  <h1>Simple Posting Site</h1>
+
+  <h2>Create a post</h2>
+  <form id="postForm">
+    <div>
+      <label for="author">Name:</label>
+      <input type="text" id="author" name="author" required>
+    </div>
+
+    <div>
+      <label for="content">Post:</label>
+      <textarea id="content" name="content" required></textarea>
+    </div>
+
+    <div>
+      <button type="submit">Submit Post</button>
+    </div>
+  </form>
+
+  <hr>
+
+  <h2>All posts</h2>
+  <div id="posts"></div>
+
+  <script>
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    async function loadPosts() {
+      const postsContainer = document.getElementById("posts");
+      postsContainer.innerHTML = "Loading posts...";
+
+      try {
+        const response = await fetch("/api/posts");
+        if (!response.ok) {
+          throw new Error("Failed to load posts");
+        }
+
+        const posts = await response.json();
+
+        if (!posts.length) {
+          postsContainer.innerHTML = "No posts yet.";
+          return;
+        }
+
+        postsContainer.innerHTML = posts.map(post => `
+          <div>
+            <p><strong>${escapeHtml(post.author)}</strong></p>
+            <p>${escapeHtml(post.content)}</p>
+            <p>${escapeHtml(post.created_at)}</p>
+            <hr>
+          </div>
+        `).join("");
+      } catch (error) {
+        postsContainer.innerHTML = "Error loading posts.";
+      }
+    }
+
+    document.getElementById("postForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const author = document.getElementById("author").value.trim();
+      const content = document.getElementById("content").value.trim();
+
+      if (!author || !content) {
+        alert("Name and post are required.");
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/posts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ author, content })
+        });
+
+        if (!response.ok) {
+          const msg = await response.text();
+          throw new Error(msg || "Failed to save post");
+        }
+
+        document.getElementById("postForm").reset();
+        await loadPosts();
+      } catch (error) {
+        alert("Error saving post.");
+      }
+    });
+
+    loadPosts();
+  </script>
+</body>
+</html>
