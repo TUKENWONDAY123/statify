@@ -1293,8 +1293,12 @@ async function loadPolls() {
     polls=apiPolls.map(p=>({
       id: p.id,
       question: p.question,
-      options: p.options,
-      image: p.image || null,
+      options: (p.options||[]).map(o => ({
+        text:   typeof o === 'string' ? o : (o.text || ''),
+        image:  typeof o === 'string' ? null : (o.image || null),
+        votes:  typeof o === 'string' ? 0 : (o.votes || 0),
+        voters: typeof o === 'string' ? [] : (o.voters || []),
+      })),
       ts: p.created_at ? new Date(p.created_at).getTime() : p.ts || Date.now(),
     }));
   } catch(e) {
