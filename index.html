@@ -468,7 +468,30 @@
     /* ══════════════════════════════════════
        TOAST
     ══════════════════════════════════════ */
-    #toastZone { position: fixed; bottom: 2rem; right: 2rem; z-index: 9998; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
+    /* ══════════════════════════════════════
+       USERS PAGE
+    ══════════════════════════════════════ */
+    .user-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      padding: 1rem 1.2rem; margin-bottom: 0.8rem; display: flex; align-items: center;
+      gap: 0.9rem; animation: fadeUp 0.3s ease both; transition: border-color 0.2s;
+    }
+    .user-card:hover { border-color: rgba(124,58,255,0.2); }
+    .user-card-av { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: #fff; }
+    .user-card-info { flex: 1; min-width: 0; }
+    .user-card-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; }
+    .user-card-name .admin-pip { background: rgba(255,60,111,0.15); color: var(--accent); border: 1px solid rgba(255,60,111,0.3); border-radius: 6px; padding: 0.1rem 0.45rem; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; }
+    .user-card-name .online-pip { background: rgba(0,229,196,0.12); color: var(--accent3); border: 1px solid rgba(0,229,196,0.3); border-radius: 6px; padding: 0.1rem 0.45rem; font-size: 0.65rem; font-weight: 700; }
+    .user-card-meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+    .user-card-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+    .user-action-btn { border: 1px solid var(--border); border-radius: 8px; padding: 0.38rem 0.8rem; font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; }
+    .user-action-btn.kick { color: #f59e0b; border-color: rgba(245,158,11,0.3); }
+    .user-action-btn.kick:hover { background: rgba(245,158,11,0.1); border-color: #f59e0b; }
+    .user-action-btn.del { color: var(--accent); border-color: rgba(255,60,111,0.3); }
+    .user-action-btn.del:hover { background: rgba(255,60,111,0.1); border-color: var(--accent); }
+    .user-action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        #toastZone { position: fixed; bottom: 2rem; right: 2rem; z-index: 9998; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
     .toast { background: var(--surface2); border: 1px solid var(--border); border-radius: 13px; padding: 0.72rem 1.1rem; font-size: 0.85rem; color: var(--text); display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 8px 28px rgba(0,0,0,0.5); pointer-events: all; animation: toastIn 0.28s ease both; }
     .toast.ok { border-color: rgba(0,229,196,0.3); }
     .toast.err { border-color: rgba(255,60,111,0.3); }
@@ -533,6 +556,7 @@
     <div class="nav-tabs">
       <button class="nav-tab home-tab active" onclick="goPage('home')">Home</button>
       <button class="nav-tab polls-tab" onclick="goPage('polls')">Polls</button>
+      <button class="nav-tab users-tab" id="usersTabBtn" onclick="goPage('users')" style="display:none">👥 Users</button>
     </div>
   </div>
   <div class="nav-right">
@@ -634,6 +658,20 @@
   </div>
 </div>
 
+<!-- USERS PAGE (admin only) -->
+<div class="page" id="usersPage">
+  <div class="page-wrap">
+    <div class="polls-header">
+      <div class="polls-title">👥 Users</div>
+      <button class="create-poll-btn visible" onclick="loadUsers()" style="background:linear-gradient(135deg,var(--accent3),#0ea5e9)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+        Refresh
+      </button>
+    </div>
+    <div id="usersList"></div>
+  </div>
+</div>
+
 <div id="toastZone"></div>
 
 <script>
@@ -686,8 +724,10 @@ function toast(msg, type='ok') {
 }
 
 // ════════════════════════════════════════════════════════
-//  AUTH — LOGIN / REGISTER
+//  AUTH — LOGIN / REGISTER / SESSION
 // ════════════════════════════════════════════════════════
+let sessionToken = null;
+
 function switchAuthTab(tab) {
   document.getElementById('loginTab').classList.toggle('active', tab === 'login');
   document.getElementById('registerTab').classList.toggle('active', tab === 'register');
@@ -695,9 +735,14 @@ function switchAuthTab(tab) {
   document.getElementById('registerPanel').classList.toggle('active', tab === 'register');
   document.getElementById('loginErr').textContent = '';
   document.getElementById('regErr').textContent = '';
-  setTimeout(() => {
-    document.getElementById(tab === 'login' ? 'loginUser' : 'regUser').focus();
-  }, 50);
+  setTimeout(() => document.getElementById(tab === 'login' ? 'loginUser' : 'regUser').focus(), 50);
+}
+
+// Attach token to all API requests
+function authFetch(url, opts = {}) {
+  opts.headers = opts.headers || {};
+  if (sessionToken) opts.headers['Authorization'] = 'Bearer ' + sessionToken;
+  return fetch(url, opts);
 }
 
 async function doLogin() {
@@ -710,20 +755,16 @@ async function doLogin() {
   btn.disabled = true; btn.textContent = 'Signing in…';
   try {
     const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
     });
-    const text = await res.text();
-    if (!res.ok) { errEl.textContent = text; return; }
-    const user = JSON.parse(text);
+    const body = await res.text();
+    if (!res.ok) { errEl.textContent = body; return; }
+    const user = JSON.parse(body);
     saveSession(user);
     enterApp(user);
-  } catch(e) {
-    errEl.textContent = 'Network error. Try again.';
-  } finally {
-    btn.disabled = false; btn.textContent = 'Sign In →';
-  }
+  } catch(e) { errEl.textContent = 'Network error. Try again.'; }
+  finally { btn.disabled = false; btn.textContent = 'Sign In →'; }
 }
 
 async function doRegister() {
@@ -736,24 +777,21 @@ async function doRegister() {
   btn.disabled = true; btn.textContent = 'Creating…';
   try {
     const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
     });
-    const text = await res.text();
-    if (!res.ok) { errEl.textContent = text; return; }
-    const user = JSON.parse(text);
+    const body = await res.text();
+    if (!res.ok) { errEl.textContent = body; return; }
+    const user = JSON.parse(body);
     saveSession(user);
     enterApp(user);
     toast('Welcome to Pulse! 🎉', 'ok');
-  } catch(e) {
-    errEl.textContent = 'Network error. Try again.';
-  } finally {
-    btn.disabled = false; btn.textContent = 'Create Account →';
-  }
+  } catch(e) { errEl.textContent = 'Network error. Try again.'; }
+  finally { btn.disabled = false; btn.textContent = 'Create Account →'; }
 }
 
 function saveSession(user) {
+  sessionToken = user.token;
   localStorage.setItem('pulse_session', JSON.stringify(user));
 }
 
@@ -761,7 +799,12 @@ function loadSession() {
   try { return JSON.parse(localStorage.getItem('pulse_session')); } catch { return null; }
 }
 
-function logoutUser() {
+async function logoutUser() {
+  if (sessionToken) {
+    await fetch('/api/auth/logout', {
+      method: 'POST', headers: { 'Authorization': 'Bearer ' + sessionToken }
+    }).catch(() => {});
+  }
   localStorage.removeItem('pulse_session');
   location.reload();
 }
@@ -769,6 +812,7 @@ function logoutUser() {
 function enterApp(user) {
   currentUser = user.username;
   isAdmin = !!user.is_admin;
+  sessionToken = user.token || null;
 
   const navAv = document.getElementById('navAv');
   navAv.textContent = initials(user.username);
@@ -783,6 +827,7 @@ function enterApp(user) {
   if (isAdmin) {
     document.getElementById('adminBadge').style.display = 'flex';
     document.querySelector('.create-poll-btn').classList.add('visible');
+    document.getElementById('usersTabBtn').style.display = '';
   }
 
   ['orb1','orb2','orb3'].forEach(id => document.getElementById(id).style.display='none');
@@ -793,12 +838,29 @@ function enterApp(user) {
   loadPolls();
 }
 
-// Auto-login from saved session
+// Auto-login: validate saved session token against server
 (function() {
   const session = loadSession();
-  if (session && session.username) {
-    // Small delay so DOM is ready
-    setTimeout(() => enterApp(session), 50);
+  if (session && session.token) {
+    fetch('/api/auth/validate', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + session.token }
+    }).then(async r => {
+      if (r.ok) {
+        const user = await r.json();
+        // keep token from saved session
+        user.token = session.token;
+        enterApp(user);
+      } else {
+        // Session kicked or expired — force login
+        localStorage.removeItem('pulse_session');
+        setTimeout(() => document.getElementById('loginUser').focus(), 400);
+        toast('Your session has expired. Please sign in again.', 'inf');
+      }
+    }).catch(() => {
+      // Network issue — let them in with cached session
+      enterApp(session);
+    });
   } else {
     setTimeout(() => document.getElementById('loginUser').focus(), 400);
   }
@@ -811,16 +873,83 @@ function goPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById(name+'Page').classList.add('active');
-  document.querySelector('.'+name+'-tab').classList.add('active');
-  loadPolls();
+  const tabEl = document.querySelector('.'+name+'-tab');
+  if (tabEl) tabEl.classList.add('active');
+  if (name === 'polls') loadPolls();
+  if (name === 'users') loadUsers();
 }
 
 // ════════════════════════════════════════════════════════
 //  ADMIN BADGE LOGOUT
 // ════════════════════════════════════════════════════════
-function logoutAdmin() {
-  // logoutAdmin just signs out entirely since admin = special account now
-  logoutUser();
+function logoutAdmin() { logoutUser(); }
+
+// ════════════════════════════════════════════════════════
+//  USERS PAGE (admin)
+// ════════════════════════════════════════════════════════
+async function loadUsers() {
+  const el = document.getElementById('usersList');
+  el.innerHTML = '<div class="empty"><div class="icon">⏳</div><p>Loading users…</p></div>';
+  try {
+    const res = await authFetch('/api/auth/users');
+    if (!res.ok) throw new Error(await res.text());
+    const users = await res.json();
+    renderUsers(users);
+  } catch(e) {
+    el.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>' + esc(e.message) + '</p></div>';
+  }
+}
+
+function renderUsers(users) {
+  const el = document.getElementById('usersList');
+  if (!users.length) {
+    el.innerHTML = '<div class="empty"><div class="icon">👥</div><p>No users yet.</p></div>';
+    return;
+  }
+  el.innerHTML = users.map(u => {
+    const isSelf = u.username === currentUser;
+    return '<div class="user-card">'
+      + '<div class="user-card-av" style="background:' + grad(u.username) + '">' + initials(u.username) + '</div>'
+      + '<div class="user-card-info">'
+      + '<div class="user-card-name">' + esc(u.username)
+      + (u.is_admin ? ' <span class="admin-pip">Admin</span>' : '')
+      + (u.online  ? ' <span class="online-pip">● Online</span>' : '')
+      + '</div>'
+      + '<div class="user-card-meta">Joined ' + ago(new Date((u.created_at||'').replace(' ','T')+'Z').getTime()) + '</div>'
+      + '</div>'
+      + (!isSelf ? '<div class="user-card-actions">'
+        + '<button class="user-action-btn kick" onclick="kickUser('' + esc(u.username) + '',this)" ' + (!u.online?'disabled title="Not logged in"':'') + '>Kick</button>'
+        + '<button class="user-action-btn del" onclick="deleteUser('' + esc(u.username) + '',this)">Delete</button>'
+        + '</div>' : '<div style="font-size:0.72rem;color:var(--muted);padding:0 0.5rem">You</div>')
+      + '</div>';
+  }).join('');
+}
+
+async function kickUser(username, btn) {
+  btn.disabled = true; btn.textContent = '…';
+  try {
+    const res = await authFetch('/api/auth/users/' + encodeURIComponent(username) + '/session', { method: 'DELETE' });
+    if (!res.ok) throw new Error(await res.text());
+    toast(username + ' has been kicked 👢', 'ok');
+    await loadUsers();
+  } catch(e) {
+    btn.disabled = false; btn.textContent = 'Kick';
+    toast('Failed: ' + e.message, 'err');
+  }
+}
+
+async function deleteUser(username, btn) {
+  if (!confirm('Delete ' + username + '? This cannot be undone.')) return;
+  btn.disabled = true; btn.textContent = '…';
+  try {
+    const res = await authFetch('/api/auth/users/' + encodeURIComponent(username), { method: 'DELETE' });
+    if (!res.ok) throw new Error(await res.text());
+    toast(username + ' deleted', 'inf');
+    await loadUsers();
+  } catch(e) {
+    btn.disabled = false; btn.textContent = 'Delete';
+    toast('Failed: ' + e.message, 'err');
+  }
 }
 
 // ════════════════════════════════════════════════════════
