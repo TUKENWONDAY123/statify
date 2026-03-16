@@ -16,7 +16,7 @@ export async function onRequest(context) {
 
     // DELETE /api/posts/:id
     if (method === "DELETE" && path.length === 1) {
-      return await deletePost(env, Number(path[0]));
+      return await deletePost(env, Number(path[0]), request);
     }
 
     // GET /api/posts/:id/comments
@@ -94,9 +94,21 @@ async function createPost(request, env) {
   return json({ id: result.meta.last_row_id }, 201);
 }
 
-// ── DELETE POST (admin) ──
-async function deletePost(env, postId) {
+// ── DELETE POST (admin or own post) ──
+async function deletePost(env, postId, request) {
   if (!postId || isNaN(postId)) return text("Invalid post id", 400);
+  const body = await request.json().catch(() => ({}));
+  const requester = String(body.requester || "").trim();
+  const isAdmin = !!body.admin;
+
+  if (!isAdmin) {
+    const post = await env.DB.prepare(`SELECT author FROM posts WHERE id = ?`).bind(postId).first();
+    if (!post) return text("Post not found", 404);
+    if (post.author.toLowerCase() !== requester.toLowerCase()) {
+      return text("Not your post", 403);
+    }
+  }
+
   await env.DB.prepare(`DELETE FROM post_likes WHERE post_id = ?`).bind(postId).run();
   await env.DB.prepare(`DELETE FROM post_comments WHERE post_id = ?`).bind(postId).run();
   await env.DB.prepare(`DELETE FROM posts WHERE id = ?`).bind(postId).run();
