@@ -469,6 +469,82 @@
        TOAST
     ══════════════════════════════════════ */
     /* ══════════════════════════════════════
+       ROOMS PAGE
+    ══════════════════════════════════════ */
+    .rooms-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; animation: fadeUp 0.4s ease both; }
+    .rooms-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; background: linear-gradient(135deg, #00e5c4, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .room-actions-bar { display: flex; gap: 0.6rem; }
+    .room-btn { display: flex; align-items: center; gap: 0.4rem; border: none; border-radius: 11px; padding: 0.55rem 1.1rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.83rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .room-btn.create { background: linear-gradient(135deg, var(--accent3), #0ea5e9); color: #000; }
+    .room-btn.join { background: var(--surface2); border: 1px solid var(--border); color: var(--text); }
+    .room-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(0,0,0,0.3); }
+
+    /* Room list cards */
+    .room-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 1.1rem 1.3rem; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 1rem; cursor: pointer; transition: all 0.22s; animation: fadeUp 0.3s ease both; }
+    .room-card:hover { border-color: rgba(0,229,196,0.3); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.4); }
+    .room-card-icon { width: 46px; height: 46px; border-radius: 13px; background: linear-gradient(135deg, var(--accent3), #0ea5e9); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .room-card-info { flex: 1; min-width: 0; }
+    .room-card-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.98rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .room-card-meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+    .room-card-code { font-family: monospace; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.25rem 0.6rem; font-size: 0.82rem; color: var(--accent3); letter-spacing: 0.12em; font-weight: 700; flex-shrink: 0; }
+    .room-del-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+    .room-del-btn:hover { background: rgba(255,60,111,0.1); color: var(--accent); }
+
+    /* Room chat view */
+    #roomChatView { display: none; }
+    #roomChatView.open { display: flex; flex-direction: column; height: calc(100vh - 130px); }
+    .room-chat-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; animation: fadeUp 0.3s ease both; }
+    .room-back-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 0.45rem 0.9rem; color: var(--text); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+    .room-back-btn:hover { border-color: rgba(255,255,255,0.15); }
+    .room-chat-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .room-chat-code-badge { font-family: monospace; background: rgba(0,229,196,0.1); border: 1px solid rgba(0,229,196,0.25); border-radius: 8px; padding: 0.22rem 0.6rem; font-size: 0.78rem; color: var(--accent3); letter-spacing: 0.1em; cursor: pointer; flex-shrink: 0; }
+    .room-chat-code-badge:hover { background: rgba(0,229,196,0.18); }
+
+    .room-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding: 0.5rem 0; margin-bottom: 0.8rem; scroll-behavior: smooth; }
+    .room-messages::-webkit-scrollbar { width: 4px; }
+    .room-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .room-msg { display: flex; gap: 0.6rem; animation: fadeUp 0.18s ease both; max-width: 85%; }
+    .room-msg.mine { align-self: flex-end; flex-direction: row-reverse; }
+    .room-msg-av { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 700; color: #fff; margin-top: 2px; }
+    .room-msg-body { display: flex; flex-direction: column; gap: 0.15rem; }
+    .room-msg.mine .room-msg-body { align-items: flex-end; }
+    .room-msg-author { font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; color: var(--muted); padding: 0 0.3rem; }
+    .room-msg-bubble { background: var(--surface2); border-radius: 16px 16px 16px 4px; padding: 0.55rem 0.9rem; font-size: 0.88rem; line-height: 1.5; color: var(--text); position: relative; word-break: break-word; border: 1px solid var(--border); }
+    .room-msg.mine .room-msg-bubble { background: linear-gradient(135deg, rgba(0,229,196,0.18), rgba(14,165,233,0.15)); border-radius: 16px 16px 4px 16px; border-color: rgba(0,229,196,0.2); }
+    .room-msg-time { font-size: 0.68rem; color: var(--muted); padding: 0 0.3rem; }
+    .room-msg-del { position: absolute; top: 50%; right: -26px; transform: translateY(-50%); background: transparent; border: none; color: var(--muted); cursor: pointer; width: 20px; height: 20px; border-radius: 5px; display: none; align-items: center; justify-content: center; font-size: 0.65rem; transition: all 0.15s; }
+    .room-msg-bubble:hover .room-msg-del { display: flex; }
+    .room-msg-del:hover { background: rgba(255,60,111,0.15); color: var(--accent); }
+
+    .room-input-bar { display: flex; gap: 0.6rem; align-items: center; padding: 0.5rem 0; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .room-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 22px; padding: 0.65rem 1.1rem; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+    .room-input:focus { border-color: rgba(0,229,196,0.4); }
+    .room-input::placeholder { color: var(--muted); }
+    .room-send-btn { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent3), #0ea5e9); border: none; cursor: pointer; color: #000; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s; }
+    .room-send-btn:hover { transform: scale(1.1); box-shadow: 0 4px 14px rgba(0,229,196,0.4); }
+
+    /* Create/Join modals */
+    .room-modal { display: none; position: fixed; inset: 0; z-index: 1500; background: rgba(0,0,0,0.72); backdrop-filter: blur(10px); align-items: center; justify-content: center; }
+    .room-modal.open { display: flex; }
+    .room-modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 22px; padding: 1.8rem; width: 340px; box-shadow: 0 24px 60px rgba(0,0,0,0.65); animation: fadeUp 0.28s ease both; }
+    .room-modal-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.15rem; margin-bottom: 1.2rem; background: linear-gradient(135deg, var(--accent3), #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .room-modal-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 11px; padding: 0.72rem 1rem; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.92rem; outline: none; margin-bottom: 0.85rem; transition: border-color 0.2s; }
+    .room-modal-input:focus { border-color: rgba(0,229,196,0.45); }
+    .room-modal-input::placeholder { color: var(--muted); }
+    .room-modal-err { color: var(--accent); font-size: 0.8rem; margin-bottom: 0.7rem; min-height: 1.1em; }
+    .room-modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
+    .room-modal-cancel { background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 1rem; color: var(--muted); cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.82rem; transition: all 0.2s; }
+    .room-modal-cancel:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
+    .room-modal-submit { background: linear-gradient(135deg, var(--accent3), #0ea5e9); border: none; border-radius: 10px; padding: 0.6rem 1.2rem; color: #000; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .room-modal-submit:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(0,229,196,0.35); }
+    .room-modal-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* Code reveal after creation */
+    .room-code-display { text-align: center; background: var(--surface2); border: 1px solid rgba(0,229,196,0.25); border-radius: 14px; padding: 1.2rem; margin-bottom: 1rem; }
+    .room-code-display .code-big { font-family: monospace; font-size: 2.2rem; font-weight: 900; color: var(--accent3); letter-spacing: 0.18em; display: block; margin-bottom: 0.35rem; }
+    .room-code-display p { font-size: 0.78rem; color: var(--muted); }
+
+        /* ══════════════════════════════════════
        USERS PAGE
     ══════════════════════════════════════ */
     .user-card {
@@ -570,6 +646,7 @@
     <div class="nav-tabs">
       <button class="nav-tab home-tab active" onclick="goPage('home')">Home</button>
       <button class="nav-tab polls-tab" onclick="goPage('polls')">Polls</button>
+      <button class="nav-tab rooms-tab" onclick="goPage('rooms')">💬 Rooms</button>
       <button class="nav-tab users-tab" id="usersTabBtn" onclick="goPage('users')" style="display:none">👥 Users</button>
     </div>
   </div>
@@ -669,6 +746,90 @@
       </div>
     </div>
     <div id="pollsList"></div>
+  </div>
+</div>
+
+<!-- ROOMS PAGE -->
+<div class="page" id="roomsPage">
+  <div class="page-wrap">
+    <!-- Room list view -->
+    <div id="roomListView">
+      <div class="rooms-header">
+        <div class="rooms-title">💬 Rooms</div>
+        <div class="room-actions-bar">
+          <button class="room-btn join" onclick="openJoinModal()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Join Room
+          </button>
+          <button class="room-btn create" onclick="openCreateModal()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Room
+          </button>
+        </div>
+      </div>
+      <div id="roomsList"></div>
+    </div>
+
+    <!-- Room chat view -->
+    <div id="roomChatView">
+      <div class="room-chat-header">
+        <button class="room-back-btn" onclick="leaveRoomView()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </button>
+        <div class="room-chat-name" id="roomChatName"></div>
+        <div class="room-chat-code-badge" id="roomChatCode" onclick="copyRoomCode()" title="Click to copy code"></div>
+      </div>
+      <div class="room-messages" id="roomMessages"></div>
+      <div class="room-input-bar">
+        <input class="room-input" id="roomMsgInput" type="text" placeholder="Message…" maxlength="1000"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendRoomMessage()}">
+        <button class="room-send-btn" onclick="sendRoomMessage()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE ROOM MODAL -->
+<div class="room-modal" id="createRoomModal" onclick="if(event.target===this)closeCreateModal()">
+  <div class="room-modal-box">
+    <div class="room-modal-title">Create a Room</div>
+    <div id="createRoomForm">
+      <input class="room-modal-input" id="newRoomName" type="text" placeholder="Room name…" maxlength="50"
+        onkeydown="if(event.key==='Enter')submitCreateRoom()">
+      <div class="room-modal-err" id="createRoomErr"></div>
+      <div class="room-modal-actions">
+        <button class="room-modal-cancel" onclick="closeCreateModal()">Cancel</button>
+        <button class="room-modal-submit" id="createRoomBtn" onclick="submitCreateRoom()">Create</button>
+      </div>
+    </div>
+    <div id="createRoomSuccess" style="display:none">
+      <div class="room-code-display">
+        <span class="code-big" id="newRoomCode"></span>
+        <p>Share this code with anyone you want to invite</p>
+      </div>
+      <div class="room-modal-actions">
+        <button class="room-modal-cancel" onclick="copyNewRoomCode()">📋 Copy Code</button>
+        <button class="room-modal-submit" onclick="enterRoomFromCode()">Enter Room →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JOIN ROOM MODAL -->
+<div class="room-modal" id="joinRoomModal" onclick="if(event.target===this)closeJoinModal()">
+  <div class="room-modal-box">
+    <div class="room-modal-title">Join a Room</div>
+    <input class="room-modal-input" id="joinRoomCode" type="text" placeholder="Enter 6-digit code…" maxlength="6"
+      style="text-align:center;font-size:1.4rem;letter-spacing:0.2em;font-family:monospace;font-weight:700"
+      onkeydown="if(event.key==='Enter')submitJoinRoom()" oninput="this.value=this.value.replace(/[^0-9]/g,'').toUpperCase()">
+    <div class="room-modal-err" id="joinRoomErr"></div>
+    <div class="room-modal-actions">
+      <button class="room-modal-cancel" onclick="closeJoinModal()">Cancel</button>
+      <button class="room-modal-submit" id="joinRoomBtn" onclick="submitJoinRoom()">Join →</button>
+    </div>
   </div>
 </div>
 
@@ -894,6 +1055,7 @@ function goPage(name) {
   if (tabEl) tabEl.classList.add('active');
   if (name === 'polls') loadPolls();
   if (name === 'users') loadUsers();
+  if (name === 'rooms') loadRooms();
 }
 
 // ════════════════════════════════════════════════════════
@@ -1721,6 +1883,243 @@ function renderPolls() {
 }
 
 // Polls load only after the user enters their name (see enterApp)
+
+// ════════════════════════════════════════════════════════
+//  ROOMS
+// ════════════════════════════════════════════════════════
+let currentRoom = null;      // { code, name }
+let roomPollInterval = null; // auto-refresh interval
+let lastMessageCount = 0;
+
+// ── Navigation ──
+async function loadRooms() {
+  const el = document.getElementById('roomsList');
+  if (!el) return;
+  try {
+    const res = await fetch('/api/rooms');
+    if (!res.ok) throw new Error(await res.text());
+    const rooms = await res.json();
+    if (!rooms.length) {
+      el.innerHTML = '<div class="empty"><div class="icon">💬</div><p>No rooms yet — create one!</p></div>';
+      return;
+    }
+    el.innerHTML = rooms.map(r => {
+      const canDelete = isAdmin || r.created_by === currentUser;
+      return '<div class="room-card" onclick="enterRoom(\'' + r.code + '\',\'' + r.name.replace(/'/g,"\''") + '\')">'
+        + '<div class="room-card-icon">💬</div>'
+        + '<div class="room-card-info">'
+        + '<div class="room-card-name">' + esc(r.name) + '</div>'
+        + '<div class="room-card-meta">By ' + esc(r.created_by) + ' · ' + (r.message_count || 0) + ' messages</div>'
+        + '</div>'
+        + '<div class="room-card-code">' + r.code + '</div>'
+        + (canDelete ? '<button class="room-del-btn" onclick="event.stopPropagation();deleteRoom(\'' + r.code + '\',this)" title="Delete room">'
+          + '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>'
+          + '</button>' : '')
+        + '</div>';
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>' + esc(e.message) + '</p></div>';
+  }
+}
+
+async function enterRoom(code, name) {
+  const res = await fetch('/api/rooms/' + code + '/join', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser }) });
+  if (!res.ok) { toast('Room not found', 'err'); return; }
+  currentRoom = { code, name };
+  document.getElementById('roomListView').style.display = 'none';
+  const chatView = document.getElementById('roomChatView');
+  chatView.classList.add('open');
+  document.getElementById('roomChatName').textContent = name;
+  document.getElementById('roomChatCode').textContent = code;
+  lastMessageCount = 0;
+  await fetchRoomMessages();
+  // Start polling every 3 seconds
+  clearInterval(roomPollInterval);
+  roomPollInterval = setInterval(fetchRoomMessages, 3000);
+  setTimeout(() => document.getElementById('roomMsgInput').focus(), 100);
+}
+
+function leaveRoomView() {
+  clearInterval(roomPollInterval);
+  currentRoom = null;
+  document.getElementById('roomChatView').classList.remove('open');
+  document.getElementById('roomListView').style.display = '';
+  document.getElementById('roomMessages').innerHTML = '';
+  loadRooms();
+}
+
+async function fetchRoomMessages() {
+  if (!currentRoom) return;
+  try {
+    const res = await fetch('/api/rooms/' + currentRoom.code);
+    if (!res.ok) { leaveRoomView(); toast('Room no longer exists', 'err'); return; }
+    const data = await res.json();
+    if (data.messages.length === lastMessageCount) return; // no new messages
+    lastMessageCount = data.messages.length;
+    renderRoomMessages(data.messages);
+  } catch(e) { /* silent fail on poll */ }
+}
+
+function renderRoomMessages(messages) {
+  const el = document.getElementById('roomMessages');
+  const wasAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
+  if (!messages.length) {
+    el.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:0.83rem;padding:2rem 0">No messages yet. Say something! 👋</div>';
+    return;
+  }
+  el.innerHTML = messages.map(m => {
+    const mine = m.author === currentUser;
+    const canDel = mine || isAdmin;
+    const time = ago(new Date((m.created_at||'').replace(' ','T')+'Z').getTime());
+    return '<div class="room-msg' + (mine ? ' mine' : '') + '">'
+      + '<div class="room-msg-av" style="background:' + grad(m.author) + '">' + initials(m.author) + '</div>'
+      + '<div class="room-msg-body">'
+      + (!mine ? '<div class="room-msg-author">' + esc(m.author) + '</div>' : '')
+      + '<div class="room-msg-bubble">' + rich(esc(m.content))
+      + (canDel ? '<button class="room-msg-del" onclick="deleteRoomMessage(' + m.id + ',this)" title="Delete">'
+        + '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>'
+        + '</button>' : '')
+      + '</div>'
+      + '<div class="room-msg-time">' + time + '</div>'
+      + '</div></div>';
+  }).join('');
+  if (wasAtBottom) el.scrollTop = el.scrollHeight;
+}
+
+async function sendRoomMessage() {
+  if (!currentRoom || !currentUser) return;
+  const inp = document.getElementById('roomMsgInput');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  inp.value = '';
+  try {
+    const res = await fetch('/api/rooms/' + currentRoom.code + '/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ author: currentUser, content: txt })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    await fetchRoomMessages();
+  } catch(e) {
+    inp.value = txt;
+    toast('Failed to send: ' + e.message, 'err');
+  }
+}
+
+async function deleteRoomMessage(msgId, btn) {
+  if (!currentRoom) return;
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/rooms/' + currentRoom.code + '/messages/' + msgId, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requester: currentUser, admin: isAdmin })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    lastMessageCount = 0; // force re-render
+    await fetchRoomMessages();
+  } catch(e) {
+    toast('Failed to delete: ' + e.message, 'err');
+  }
+}
+
+async function deleteRoom(code, btn) {
+  if (!confirm('Delete this room and all its messages?')) return;
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/rooms/' + code, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requester: currentUser, admin: isAdmin })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    toast('Room deleted', 'inf');
+    await loadRooms();
+  } catch(e) {
+    toast('Failed: ' + e.message, 'err');
+    btn.disabled = false;
+  }
+}
+
+function copyRoomCode() {
+  if (!currentRoom) return;
+  navigator.clipboard.writeText(currentRoom.code).then(() => toast('Code copied! ' + currentRoom.code, 'ok'));
+}
+
+// ── Create Room Modal ──
+function openCreateModal() {
+  document.getElementById('newRoomName').value = '';
+  document.getElementById('createRoomErr').textContent = '';
+  document.getElementById('createRoomForm').style.display = '';
+  document.getElementById('createRoomSuccess').style.display = 'none';
+  document.getElementById('createRoomModal').classList.add('open');
+  setTimeout(() => document.getElementById('newRoomName').focus(), 80);
+}
+function closeCreateModal() {
+  document.getElementById('createRoomModal').classList.remove('open');
+}
+async function submitCreateRoom() {
+  const name = document.getElementById('newRoomName').value.trim();
+  const errEl = document.getElementById('createRoomErr');
+  if (!name) { errEl.textContent = 'Enter a room name.'; return; }
+  const btn = document.getElementById('createRoomBtn');
+  btn.disabled = true; btn.textContent = 'Creating…';
+  try {
+    const res = await fetch('/api/rooms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, created_by: currentUser })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const room = await res.json();
+    window._pendingRoomCode = room.code;
+    window._pendingRoomName = room.name;
+    document.getElementById('newRoomCode').textContent = room.code;
+    document.getElementById('createRoomForm').style.display = 'none';
+    document.getElementById('createRoomSuccess').style.display = '';
+    loadRooms();
+  } catch(e) {
+    errEl.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Create';
+  }
+}
+function copyNewRoomCode() {
+  navigator.clipboard.writeText(window._pendingRoomCode || '').then(() => toast('Code copied!', 'ok'));
+}
+function enterRoomFromCode() {
+  closeCreateModal();
+  enterRoom(window._pendingRoomCode, window._pendingRoomName);
+}
+
+// ── Join Room Modal ──
+function openJoinModal() {
+  document.getElementById('joinRoomCode').value = '';
+  document.getElementById('joinRoomErr').textContent = '';
+  document.getElementById('joinRoomModal').classList.add('open');
+  setTimeout(() => document.getElementById('joinRoomCode').focus(), 80);
+}
+function closeJoinModal() {
+  document.getElementById('joinRoomModal').classList.remove('open');
+}
+async function submitJoinRoom() {
+  const code = document.getElementById('joinRoomCode').value.trim();
+  const errEl = document.getElementById('joinRoomErr');
+  if (code.length !== 6) { errEl.textContent = 'Enter a valid 6-digit code.'; return; }
+  const btn = document.getElementById('joinRoomBtn');
+  btn.disabled = true; btn.textContent = 'Joining…';
+  try {
+    const res = await fetch('/api/rooms/' + code);
+    if (!res.ok) { errEl.textContent = 'Room not found. Check the code.'; return; }
+    const room = await res.json();
+    closeJoinModal();
+    enterRoom(room.code, room.name);
+  } catch(e) {
+    errEl.textContent = 'Network error. Try again.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Join →';
+  }
+}
 </script>
 </body>
 </html>
