@@ -767,7 +767,8 @@
           </button>
         </div>
       </div>
-      <div id="roomsList"></div>
+      <!-- Shows only rooms the current user created or joined this session -->
+      <div id="myRoomsList"></div>
     </div>
 
     <!-- Room chat view -->
@@ -1892,40 +1893,60 @@ let roomPollInterval = null; // auto-refresh interval
 let lastMessageCount = 0;
 
 // ── Navigation ──
-async function loadRooms() {
-  const el = document.getElementById('roomsList');
-  if (!el) return;
-  try {
-    const res = await fetch('/api/rooms');
-    if (!res.ok) throw new Error(await res.text());
-    const rooms = await res.json();
-    if (!rooms.length) {
-      el.innerHTML = '<div class="empty"><div class="icon">💬</div><p>No rooms yet — create one!</p></div>';
-      return;
-    }
-    el.innerHTML = rooms.map(r => {
-      const canDelete = isAdmin || r.created_by === currentUser;
-      return '<div class="room-card" onclick="enterRoom(\'' + r.code + '\',\'' + r.name.replace(/'/g,"\''") + '\')">'
-        + '<div class="room-card-icon">💬</div>'
-        + '<div class="room-card-info">'
-        + '<div class="room-card-name">' + esc(r.name) + '</div>'
-        + '<div class="room-card-meta">By ' + esc(r.created_by) + ' · ' + (r.message_count || 0) + ' messages</div>'
-        + '</div>'
-        + '<div class="room-card-code">' + r.code + '</div>'
-        + (canDelete ? '<button class="room-del-btn" onclick="event.stopPropagation();deleteRoom(\'' + r.code + '\',this)" title="Delete room">'
-          + '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>'
-          + '</button>' : '')
-        + '</div>';
-    }).join('');
-  } catch(e) {
-    el.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>' + esc(e.message) + '</p></div>';
-  }
+// Rooms the user has accessed this session (persisted in localStorage)
+function getMyRoomCodes() {
+  try { return JSON.parse(localStorage.getItem('pulse_my_rooms') || '[]'); } catch { return []; }
+}
+function saveMyRoomCode(code) {
+  const codes = getMyRoomCodes();
+  if (!codes.includes(code)) { codes.unshift(code); localStorage.setItem('pulse_my_rooms', JSON.stringify(codes.slice(0,50))); }
+}
+function removeMyRoomCode(code) {
+  const codes = getMyRoomCodes().filter(c => c !== code);
+  localStorage.setItem('pulse_my_rooms', JSON.stringify(codes));
 }
 
+async function loadRooms() {
+  const el = document.getElementById('myRoomsList');
+  if (!el) return;
+  const myCodes = getMyRoomCodes();
+  if (!myCodes.length) {
+    el.innerHTML = '<div class="empty"><div class="icon">🔐</div><p>Rooms are private.<br>Create one or enter a code to join.</p></div>';
+    return;
+  }
+  el.innerHTML = '<div class="empty"><div class="icon">⏳</div><p>Loading your rooms…</p></div>';
+  const results = await Promise.all(myCodes.map(code =>
+    fetch('/api/rooms/' + code).then(r => r.ok ? r.json() : null).catch(() => null)
+  ));
+  const valid = results.filter(Boolean);
+  myCodes.filter(c => !valid.map(r=>r.code).includes(c)).forEach(removeMyRoomCode);
+  if (!valid.length) {
+    el.innerHTML = '<div class="empty"><div class="icon">🔐</div><p>Rooms are private.<br>Create one or enter a code to join.</p></div>';
+    return;
+  }
+  el.innerHTML = valid.map(r => {
+    const canDelete = isAdmin || r.created_by === currentUser;
+    const msgCount = r.messages ? r.messages.length : 0;
+    return '<div class="room-card" onclick="enterRoom(\'' + r.code + '\',\'' + r.name.replace(/\\/g,'\\\\').replace(/\'/g,"\\'") + '\')">'
+      + '<div class="room-card-icon">💬</div>'
+      + '<div class="room-card-info">'
+      + '<div class="room-card-name">' + esc(r.name) + '</div>'
+      + '<div class="room-card-meta">By ' + esc(r.created_by) + ' · ' + msgCount + ' messages</div>'
+      + '</div>'
+      + '<div class="room-card-code">' + r.code + '</div>'
+      + (canDelete ? '<button class="room-del-btn" onclick="event.stopPropagation();deleteRoom(\'' + r.code + '\',this)" title="Delete room">'
+        + '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>'
+        + '</button>' : '')
+      + '</div>';
+  }).join('');
+}
+
+    
 async function enterRoom(code, name) {
   const res = await fetch('/api/rooms/' + code + '/join', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser }) });
   if (!res.ok) { toast('Room not found', 'err'); return; }
   currentRoom = { code, name };
+  saveMyRoomCode(code);
   document.getElementById('roomListView').style.display = 'none';
   const chatView = document.getElementById('roomChatView');
   chatView.classList.add('open');
@@ -2033,6 +2054,8 @@ async function deleteRoom(code, btn) {
       body: JSON.stringify({ requester: currentUser, admin: isAdmin })
     });
     if (!res.ok) throw new Error(await res.text());
+    removeMyRoomCode(code);
+    removeMyRoomCode(code);
     toast('Room deleted', 'inf');
     await loadRooms();
   } catch(e) {
@@ -2074,6 +2097,8 @@ async function submitCreateRoom() {
     const room = await res.json();
     window._pendingRoomCode = room.code;
     window._pendingRoomName = room.name;
+    saveMyRoomCode(room.code);
+    saveMyRoomCode(room.code);
     document.getElementById('newRoomCode').textContent = room.code;
     document.getElementById('createRoomForm').style.display = 'none';
     document.getElementById('createRoomSuccess').style.display = '';
@@ -2112,6 +2137,7 @@ async function submitJoinRoom() {
     const res = await fetch('/api/rooms/' + code);
     if (!res.ok) { errEl.textContent = 'Room not found. Check the code.'; return; }
     const room = await res.json();
+    saveMyRoomCode(room.code);
     closeJoinModal();
     enterRoom(room.code, room.name);
   } catch(e) {
@@ -2120,6 +2146,7 @@ async function submitJoinRoom() {
     btn.disabled = false; btn.textContent = 'Join →';
   }
 }
+
 </script>
 </body>
 </html>
