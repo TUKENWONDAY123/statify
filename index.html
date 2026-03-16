@@ -1,2020 +1,1936 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLEP</title>
 
-    <title>Statify</title>
-
-    <!-- Favicon -->
-    <link rel="icon" href="./image.png?v=1" type="image/png">
-    <link rel="shortcut icon" href="./image.png?v=1" type="image/png">
-
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons (CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['IBM Plex Mono', 'monospace'],
+                    },
+                    colors: {
+                        slate: {
+                            950: '#020617',
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                        },
+                        cyan: {
+                            400: '#22d3ee',
+                            500: '#06b6d4',
+                            300: '#67e8f9',
+                        },
+                        violet: {
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                        },
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                        },
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'fade-in': 'fadeIn 0.3s ease-in',
+                        'bounce-in': 'bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+                        'progress': 'progress 2s ease-in-out',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(100px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        bounceIn: {
+                            '0%': { transform: 'scale(0.3)', opacity: '0' },
+                            '50%': { transform: 'scale(1.05)' },
+                            '70%': { transform: 'scale(0.9)' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        progress: {
+                            '0%': { width: '0%' },
+                            '100%': { width: '100%' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        :root {
-            --bg: #050709;
-            --surface: #0b0f14;
-            --surface2: #111820;
-            --red: #ff2d2d;
-            --red-glow: rgba(255, 45, 45, 0.4);
-            --red-dim: rgba(255, 45, 45, 0.12);
-            --gold: #ffd700;
-            --gold-glow: rgba(255, 215, 0, 0.35);
-            --gold-dim: rgba(255, 215, 0, 0.1);
-            --steel: #8fa3b8;
-            --steel-dim: rgba(143, 163, 184, 0.08);
-            --white: #f0f4f8;
-            --text-muted: #4a5a6a;
-            --border: rgba(143, 163, 184, 0.1);
-            --border-hot: rgba(255, 45, 45, 0.3);
+        /* Custom Grid Background for Blueprint Effect */
+        .bg-grid {
+            background-image: linear-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 211, 238, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
 
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        /* Subtle Grid for Glass Cards */
+        .bg-grid-sm {
+            background-image: linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
 
-        html {
-            scroll-behavior: smooth;
+        /* Smooth View Transitions */
+        .view-section {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
 
-        body {
-            background: var(--bg);
-            color: var(--white);
-            font-family: "Syne", sans-serif;
-            overflow-x: hidden;
-            cursor: crosshair;
-        }
-
-        /* PIXEL NOISE OVERLAY */
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            opacity: 0.4;
-        }
-
-        /* SCANLINES */
-        body::after {
-            content: "";
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            background: repeating-linear-gradient(0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0, 0, 0, 0.07) 2px,
-                    rgba(0, 0, 0, 0.07) 4px);
-            pointer-events: none;
-        }
-
-        /* GRID BG */
-        .grid-bg {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            background-image:
-                linear-gradient(rgba(255, 45, 45, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 45, 45, 0.04) 1px, transparent 1px);
-            background-size: 60px 60px;
-            background-position: center center;
-        }
-
-        .grid-bg::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 80% 60% at 50% 20%, rgba(255, 45, 45, 0.06), transparent 70%),
-                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(255, 215, 0, 0.04), transparent 60%);
-        }
-
-        /* LAYOUT */
-        .rel {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* HEADER */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 48px;
-            background: rgba(5, 7, 9, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--red-dim);
-            border: 1px solid var(--border-hot);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .logo-icon::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 40%, rgba(255, 45, 45, 0.3));
-        }
-
-        .logo-text {
-            font-family: "Orbitron", monospace;
-            font-weight: 900;
-            font-size: 18px;
-            letter-spacing: 3px;
-            color: var(--white);
-        }
-
-        .logo-text span {
-            color: var(--red);
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 36px;
-        }
-
-        nav a {
-            font-family: "Space Mono", monospace;
-            font-size: 11px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--steel);
-            text-decoration: none;
-            transition: color 0.2s;
-            position: relative;
-        }
-
-        nav a::after {
-            content: "";
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: var(--red);
-            transform: scaleX(0);
-            transition: transform 0.2s;
-        }
-
-        nav a:hover {
-            color: var(--white);
-        }
-
-        nav a:hover::after {
-            transform: scaleX(1);
-        }
-
-        .nav-badge {
-            font-family: "Space Mono", monospace;
-            font-size: 9px;
-            letter-spacing: 1px;
-            padding: 3px 8px;
-            background: var(--red-dim);
-            border: 1px solid var(--border-hot);
-            border-radius: 3px;
-            color: var(--red);
-            text-transform: uppercase;
-            animation: pulse-badge 2s infinite;
-        }
-
-        @keyframes pulse-badge {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.6;
-            }
-        }
-
-        /* HERO */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 120px 48px 80px;
-            position: relative;
-        }
-
-        .hero-inner {
-            max-width: 1200px;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-        }
-
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-family: "Space Mono", monospace;
-            font-size: 10px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--red);
-            border: 1px solid var(--border-hot);
-            background: var(--red-dim);
-            padding: 6px 14px;
-            border-radius: 3px;
-            margin-bottom: 28px;
-        }
-
-        .hero-eyebrow::before {
-            content: "";
-            width: 6px;
-            height: 6px;
-            background: var(--red);
-            border-radius: 50%;
-            animation: pulse-dot 1.5s infinite;
-        }
-
-        @keyframes pulse-dot {
-
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(1.4);
-                opacity: 0.6;
-            }
-        }
-
-        .hero-title {
-            font-family: "Orbitron", monospace;
-            font-weight: 900;
-            font-size: clamp(42px, 5vw, 68px);
-            line-height: 1.05;
-            letter-spacing: -1px;
-            margin-bottom: 10px;
-        }
-
-        .hero-title .line1 {
-            color: var(--white);
-            display: block;
-        }
-
-        .hero-title .line2 {
-            display: block;
-            background: linear-gradient(90deg, var(--red), var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 20px rgba(255, 45, 45, 0.5));
-        }
-
-        .hero-version {
-            font-family: "Space Mono", monospace;
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 2px;
-            margin-bottom: 24px;
-        }
-
-        .hero-desc {
-            font-size: 16px;
-            line-height: 1.75;
-            color: var(--steel);
-            max-width: 480px;
-            margin-bottom: 44px;
-        }
-
-        .hero-desc strong {
-            color: var(--white);
-            font-weight: 700;
-        }
-
-        .hero-cta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 32px;
-            background: var(--red);
-            color: #fff;
-            font-family: "Orbitron", monospace;
-            font-weight: 700;
-            font-size: 12px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-decoration: none;
-            border-radius: 4px;
-            border: 1px solid var(--red);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .btn-primary::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+        .hidden-view {
+            display: none;
             opacity: 0;
-            transition: opacity 0.3s;
+            transform: translateY(20px);
         }
 
-        .btn-primary:hover {
-            box-shadow: 0 0 30px var(--red-glow), 0 0 60px rgba(255, 45, 45, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .btn-primary:hover::before {
-            opacity: 1;
-        }
-
-        .btn-primary .btn-icon {
-            font-size: 16px;
-        }
-
-        .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px 28px;
-            background: transparent;
-            color: var(--steel);
-            font-family: "Space Mono", monospace;
-            font-size: 11px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-decoration: none;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-            box-shadow: 0 0 20px var(--gold-glow);
-        }
-
-        /* INSTALL (GOLD) BUTTON */
-        .btn-install {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 32px;
-            background: linear-gradient(135deg, var(--gold), #ffb300);
-            color: #0a0800;
-            font-family: "Orbitron", monospace;
-            font-weight: 900;
-            font-size: 12px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-decoration: none;
-            border-radius: 4px;
-            border: 1px solid var(--gold);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .btn-install::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .btn-install:hover {
-            box-shadow: 0 0 30px var(--gold-glow), 0 0 60px rgba(255, 215, 0, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .btn-install:hover::before {
-            opacity: 1;
-        }
-
-        .btn-install .btn-icon {
-            font-size: 16px;
-        }
-
-        /* JAR DOWNLOAD (red ghost) */
-        .btn-jar {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 22px;
-            background: transparent;
-            color: var(--steel);
-            font-family: "Space Mono", monospace;
-            font-size: 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-decoration: none;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .btn-jar:hover {
-            border-color: var(--red);
-            color: var(--red);
-            box-shadow: 0 0 16px var(--red-glow);
-        }
-
-        /* HERO STATS PANEL */
-        .hero-panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .hero-panel::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
-        }
-
-        .panel-header {
-            padding: 16px 24px;
-            background: var(--surface2);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .panel-title {
-            font-family: "Space Mono", monospace;
-            font-size: 10px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--steel);
-        }
-
-        .panel-live {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-family: "Space Mono", monospace;
-            font-size: 9px;
-            letter-spacing: 2px;
-            color: var(--red);
-        }
-
-        .panel-live::before {
-            content: "";
-            width: 5px;
-            height: 5px;
-            background: var(--red);
-            border-radius: 50%;
-            animation: pulse-dot 1.5s infinite;
-        }
-
-        .panel-player {
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .player-skin {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #3a4a5a, #1a2a3a);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            border: 1px solid var(--border);
-            image-rendering: pixelated;
-        }
-
-        .player-name {
-            font-family: "Orbitron", monospace;
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--white);
-        }
-
-        .player-status {
-            font-family: "Space Mono", monospace;
-            font-size: 9px;
-            letter-spacing: 2px;
-            color: var(--red);
-            margin-top: 3px;
-        }
-
-        .panel-stats {
-            padding: 20px 24px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .stat-cell {
-            background: var(--steel-dim);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 14px 16px;
-            transition: border-color 0.2s, background 0.2s;
-        }
-
-        .stat-cell:hover {
-            border-color: rgba(255, 45, 45, 0.25);
-            background: var(--red-dim);
-        }
-
-        .stat-label {
-            font-family: "Space Mono", monospace;
-            font-size: 8px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .stat-value {
-            font-family: "Orbitron", monospace;
-            font-weight: 700;
-            font-size: 22px;
-            color: var(--white);
-        }
-
-        .stat-value.gold {
-            color: var(--gold);
-            filter: drop-shadow(0 0 6px var(--gold-glow));
-        }
-
-        .stat-value.red {
-            color: var(--red);
-            filter: drop-shadow(0 0 6px var(--red-glow));
-        }
-
-        .stat-sub {
-            font-family: "Space Mono", monospace;
-            font-size: 8px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .panel-history {
-            padding: 16px 24px;
-            border-top: 1px solid var(--border);
-        }
-
-        .history-label {
-            font-family: "Space Mono", monospace;
-            font-size: 9px;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .history-bar {
-            display: flex;
-            gap: 3px;
-            align-items: flex-end;
-            height: 40px;
-        }
-
-        .h-bar {
-            flex: 1;
-            border-radius: 2px 2px 0 0;
-            position: relative;
-            transition: opacity 0.2s;
-        }
-
-        .h-bar:hover {
-            opacity: 0.8;
-        }
-
-        .h-bar.win {
-            background: var(--red);
-        }
-
-        .h-bar.loss {
-            background: var(--surface2);
-            border: 1px solid var(--border);
-        }
-
-        /* FEATURES SECTION */
-        .section {
-            padding: 120px 48px;
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .section-label {
-            font-family: "Space Mono", monospace;
-            font-size: 10px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--red);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .section-label::before {
-            content: "";
-            display: inline-block;
-            width: 30px;
-            height: 1px;
-            background: var(--red);
-        }
-
-        .section-title {
-            font-family: "Orbitron", monospace;
-            font-weight: 900;
-            font-size: clamp(28px, 3.5vw, 48px);
-            line-height: 1.1;
-            margin-bottom: 20px;
-        }
-
-        .section-desc {
-            font-size: 16px;
-            color: var(--steel);
-            line-height: 1.75;
-            max-width: 560px;
-            margin-bottom: 64px;
-        }
-
-        /* FEATURE GRID */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .feature-card {
-            background: var(--surface);
-            padding: 36px 32px;
-            position: relative;
-            transition: background 0.3s;
-        }
-
-        .feature-card:hover {
-            background: var(--surface2);
-        }
-
-        .feature-card::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--red);
-            transform: scaleX(0);
-            transition: transform 0.3s;
-        }
-
-        .feature-card:hover::after {
-            transform: scaleX(1);
-        }
-
-        .feature-icon {
-            font-size: 32px;
-            margin-bottom: 20px;
+        .visible-view {
             display: block;
-            filter: drop-shadow(0 0 8px rgba(255, 45, 45, 0.4));
-        }
-
-        .feature-name {
-            font-family: "Orbitron", monospace;
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            color: var(--white);
-        }
-
-        .feature-desc {
-            font-size: 14px;
-            color: var(--steel);
-            line-height: 1.7;
-        }
-
-        .feature-tag {
-            display: inline-block;
-            margin-top: 14px;
-            font-family: "Space Mono", monospace;
-            font-size: 8px;
-            letter-spacing: 2px;
-            padding: 3px 8px;
-            border-radius: 2px;
-            text-transform: uppercase;
-        }
-
-        .tag-red {
-            background: var(--red-dim);
-            border: 1px solid var(--border-hot);
-            color: var(--red);
-        }
-
-        .tag-gold {
-            background: var(--gold-dim);
-            border: 1px solid rgba(255, 215, 0, 0.25);
-            color: var(--gold);
-        }
-
-        .tag-steel {
-            background: var(--steel-dim);
-            border: 1px solid var(--border);
-            color: var(--steel);
-        }
-
-        /* HOW IT WORKS */
-        .how-section {
-            padding: 80px 48px 120px;
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0;
-            position: relative;
-            margin-top: 60px;
-        }
-
-        .steps::before {
-            content: "";
-            position: absolute;
-            top: 40px;
-            left: 60px;
-            right: 60px;
-            height: 1px;
-            background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
-            opacity: 0.4;
-            z-index: 0;
-        }
-
-        .step {
-            padding: 0 24px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .step-num {
-            width: 80px;
-            height: 80px;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            font-family: "Orbitron", monospace;
-            font-weight: 900;
-            font-size: 24px;
-            color: var(--text-muted);
-            transition: all 0.3s;
-        }
-
-        .step:hover .step-num {
-            border-color: var(--red);
-            color: var(--red);
-            box-shadow: 0 0 20px var(--red-glow);
-            background: var(--red-dim);
-        }
-
-        .step-icon {
-            font-size: 28px;
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        .step-title {
-            font-family: "Orbitron", monospace;
-            font-weight: 700;
-            font-size: 13px;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            color: var(--white);
-        }
-
-        .step-desc {
-            font-size: 13px;
-            color: var(--steel);
-            line-height: 1.65;
-        }
-
-        /* LEADERBOARD */
-        .leaderboard-section {
-            padding: 0 48px 120px;
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .leaderboard-wrap {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-top: 60px;
-        }
-
-        .lb-header {
-            padding: 20px 32px;
-            background: var(--surface2);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .lb-title {
-            font-family: "Orbitron", monospace;
-            font-size: 12px;
-            letter-spacing: 3px;
-            color: var(--gold);
-        }
-
-        .lb-note {
-            font-family: "Space Mono", monospace;
-            font-size: 9px;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-        }
-
-        .lb-row {
-            display: grid;
-            grid-template-columns: 50px 1fr 100px 100px 100px 100px;
-            align-items: center;
-            padding: 16px 32px;
-            border-bottom: 1px solid var(--border);
-            transition: background 0.2s;
-            gap: 16px;
-        }
-
-        .lb-row:last-child {
-            border-bottom: none;
-        }
-
-        .lb-row:hover {
-            background: var(--steel-dim);
-        }
-
-        .lb-row.first {
-            background: rgba(255, 215, 0, 0.04);
-        }
-
-        .lb-row.first:hover {
-            background: rgba(255, 215, 0, 0.08);
-        }
-
-        .lb-rank {
-            font-family: "Orbitron", monospace;
-            font-weight: 900;
-            font-size: 18px;
-            text-align: center;
-        }
-
-        .lb-rank.r1 {
-            color: var(--gold);
-            filter: drop-shadow(0 0 8px var(--gold-glow));
-        }
-
-        .lb-rank.r2 {
-            color: #c0c0c0;
-        }
-
-        .lb-rank.r3 {
-            color: #cd7f32;
-        }
-
-        .lb-rank.other {
-            color: var(--text-muted);
-        }
-
-        .lb-player {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .lb-avatar {
-            font-size: 22px;
-        }
-
-        .lb-pname {
-            font-family: "Syne", sans-serif;
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--white);
-        }
-
-        .lb-guild {
-            font-family: "Space Mono", monospace;
-            font-size: 9px;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .lb-val {
-            font-family: "Orbitron", monospace;
-            font-weight: 700;
-            font-size: 14px;
-            text-align: right;
-        }
-
-        .lb-val.kd {
-            color: var(--red);
-        }
-
-        .lb-val.kills {
-            color: var(--white);
-        }
-
-        .lb-val.wins {
-            color: #4ade80;
-        }
-
-        .lb-val.elo {
-            color: var(--gold);
-        }
-
-        .lb-col-header {
-            font-family: "Space Mono", monospace;
-            font-size: 8px;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-            text-align: right;
-            text-transform: uppercase;
-        }
-
-        .lb-col-header.left {
-            text-align: left;
-        }
-
-        /* FOOTER */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 40px 48px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            z-index: 2;
-        }
-
-        .footer-logo {
-            font-family: "Orbitron", monospace;
-            font-weight: 900;
-            font-size: 16px;
-            letter-spacing: 3px;
-        }
-
-        .footer-logo span {
-            color: var(--red);
-        }
-
-        .footer-copy {
-            font-family: "Space Mono", monospace;
-            font-size: 10px;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .footer-link {
-            font-family: "Space Mono", monospace;
-            font-size: 10px;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .footer-link:hover {
-            color: var(--red);
-        }
-
-        /* DIVIDER */
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
-            margin: 0 48px;
-        }
-
-        /* SCROLL ANIMATIONS */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .fade-up.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        .d1 {
-            transition-delay: 0.1s;
+        /* Modal Backdrop */
+        .modal-backdrop {
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.7);
         }
 
-        .d2 {
-            transition-delay: 0.2s;
-        }
-
-        .d3 {
-            transition-delay: 0.3s;
-        }
-
-        .d4 {
-            transition-delay: 0.4s;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 1024px) {
-            header {
-                padding: 16px 24px;
+        /* Progress Bar Animation */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
             }
 
-            nav {
-                display: none;
-            }
-
-            .hero {
-                padding: 100px 24px 60px;
-            }
-
-            .hero-inner {
-                grid-template-columns: 1fr;
-                gap: 48px;
-            }
-
-            .hero-panel {
-                display: none;
-            }
-
-            .section,
-            .how-section,
-            .leaderboard-section {
-                padding-left: 24px;
-                padding-right: 24px;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .steps {
-                grid-template-columns: 1fr 1fr;
-                gap: 40px;
-            }
-
-            .steps::before {
-                display: none;
-            }
-
-            .lb-row {
-                grid-template-columns: 40px 1fr 80px 80px;
-                gap: 12px;
-            }
-
-            .lb-row .lb-val.wins,
-            .lb-row .lb-val.elo {
-                display: none;
-            }
-
-            footer {
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
+            100% {
+                background-position: 1000px 0;
             }
         }
 
-        @media (max-width: 640px) {
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .steps {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-title {
-                font-size: 36px;
-            }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.3), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
         }
 
-        /* CURSOR GLOW */
-        .cursor-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--red);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s;
-            box-shadow: 0 0 12px var(--red-glow);
+        /* Glowing effect */
+        .glow {
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.5), 0 0 40px rgba(34, 211, 238, 0.3);
         }
 
-        .cursor-ring {
-            width: 30px;
-            height: 30px;
-            border: 1px solid rgba(255, 45, 45, 0.4);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            transition: transform 0.15s, width 0.2s, height 0.2s;
+        .glow-red {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5), 0 0 40px rgba(239, 68, 68, 0.3);
+        }
+
+        .glow-green {
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5), 0 0 40px rgba(34, 197, 94, 0.3);
         }
     </style>
 </head>
 
-<body>
-    <div class="grid-bg"></div>
+<body class="min-h-screen bg-slate-950 text-white overflow-x-hidden selection:bg-cyan-500/30">
 
-    <!-- Custom cursor -->
-    <div class="cursor-dot" id="cursorDot"></div>
-    <div class="cursor-ring" id="cursorRing"></div>
+    <!-- Fixed Background Grid Overlay -->
+    <div class="fixed inset-0 pointer-events-none opacity-20 bg-grid z-0"></div>
 
-    <!-- HEADER -->
-    <header class="rel">
-        <a href="#" class="logo">
-            <div class="logo-icon">⚔️</div>
-            <span class="logo-text">STAT<span>IFY</span></span>
-        </a>
-        <nav>
-            <a href="#features">Features</a>
-            <a href="#how">How It Works</a>
-            <a href="#leaderboard">Leaderboard</a>
-            <a href="#support">Support</a>
-            <span class="nav-badge">v2.4.1 LIVE</span>
-        </nav>
-    </header>
+    <!-- Main Container -->
+    <div class="relative z-10 flex flex-col min-h-screen">
 
-    <!-- HERO -->
-    <section class="hero rel">
-        <div class="hero-inner">
-            <!-- Left -->
-            <div>
-                <div class="hero-eyebrow fade-up visible">Minecraft PvP Mod · All-Time Tracking</div>
-                <h1 class="hero-title fade-up visible d1">
-                    <span class="line1">STATIFY.</span>
-                    <span class="line2">MOD/MODPACK.</span>
-
-                </h1>
-                <p class="hero-version fade-up visible d2">VERSION 2.4.1 · FABRIC ONLY · MC 1.21+</p>
-                <p class="hero-desc fade-up visible d2">
-                    <strong>Statify</strong> is the first PvP stats mod that tracks your <strong>all-time kill/death
-                        history</strong>
-                    - even retroactively pulling stats from before installation. Every kill. Every win. Every moment.
-                </p>
-                <div class="hero-cta fade-up visible d3">
-                    <a class="btn-install" href="Statify.jar" download>
-                        <span class="btn-icon">⚡</span> Install Mod
-                    </a>
-                    <a class="btn-jar" href="https://www.dropbox.com/scl/fi/kemiltcoibox23jgwfm75/Statify.zip?rlkey=cr8gam0yesxtkhg0kiylwmz9f&st=i4p4l2om&dl=1">
-                        <span style="font-size:13px;">📦</span> Download Modpack
-                    </a>
-                </div>
-                <div style="margin-top:14px;" class="fade-up visible d3">
-                    <button class="btn-secondary" onclick="openBtcModal()" style="padding:10px 20px; font-size:10px;">₿ Support Dev</button>
-                </div>
-            </div>
-
-            <!-- Right: Live Stats Panel -->
-            <div class="hero-panel fade-up visible d4">
-                <div class="panel-header">
-                    <span class="panel-title">// STATIFY OVERLAY</span>
-                    <span class="panel-live">TRACKING</span>
-                </div>
-                <div class="panel-player">
-                    <div class="player-skin">🎮</div>
-                    <div class="player-info">
-                        <div class="player-name">Notch_Slayer</div>
-                        <div class="player-status">● IN COMBAT · Hypixel SMP</div>
+        <!-- HEADER COMPONENT -->
+        <header class="sticky top-0 z-50 backdrop-blur-lg bg-black/20 border-b border-cyan-500/20">
+            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-violet-500/20 border border-cyan-400/30 flex items-center justify-center">
+                        <i data-lucide="shield" class="w-5 h-5 text-cyan-400"></i>
                     </div>
+                    <h1 class="font-mono text-lg md:text-xl tracking-wider text-white">
+                        SHITBOX
+                    </h1>
                 </div>
-                <div class="panel-stats">
-                    <div class="stat-cell">
-                        <div class="stat-label">All-Time K/D</div>
-                        <div class="stat-value gold">4.83</div>
-                        <div class="stat-sub">▲ +0.12 this week</div>
+
+                <!-- Status Chips -->
+                <div class="flex items-center gap-3">
+                    <div
+                        class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                        </span>
+                        <span id="status-text" class="font-mono text-xs text-emerald-300">SYNC: READY</span>
                     </div>
-                    <div class="stat-cell">
-                        <div class="stat-label">Total Kills</div>
-                        <div class="stat-value red">12,847</div>
-                        <div class="stat-sub">Since beta 1.7</div>
-                    </div>
-                    <div class="stat-cell">
-                        <div class="stat-label">Win Streak</div>
-                        <div class="stat-value">23🔥</div>
-                        <div class="stat-sub">Personal best: 41</div>
-                    </div>
-                    <div class="stat-cell">
-                        <div class="stat-label">ELO Rating</div>
-                        <div class="stat-value gold">2,340</div>
-                        <div class="stat-sub">Top 0.3% global</div>
-                    </div>
-                </div>
-                <div class="panel-history">
-                    <div class="history-label">// 30-day combat history</div>
-                    <div class="history-bar" id="histBar"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- FEATURES -->
-    <section class="section rel" id="features">
-        <div class="section-label">Core Features</div>
-        <h2 class="section-title fade-up">
-            Everything you need<br />
-            <span style="color: var(--red)">In one MODPACK</span>
-        </h2>
-        <p class="section-desc fade-up d1">
-            No other mod goes this deep. Statify pulls server history logs, cross-references UUID data, and reconstructs
-            your entire PvP career from day one.
-        </p>
-
-        <div class="feature-grid fade-up d2">
-            <div class="feature-card">
-                <span class="feature-icon">🕰️</span>
-                <div class="feature-name">Retroactive History Engine</div>
-                <div class="feature-desc">
-                    Install today, see your stats from day one. Statify's patented history engine scans server logs and
-                    UUID records to reconstruct kills, deaths, and match data - even years before installation.
-                </div>
-                <span class="feature-tag tag-red">Core Feature</span>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">📊</span>
-                <div class="feature-name">Live HUD Overlay</div>
-                <div class="feature-desc">
-                    A sleek in-game HUD shows real-time K/D, current streak, and session kills. Fully customizable
-                    position, opacity, and color. Zero performance impact with async rendering.
-                </div>
-                <span class="feature-tag tag-steel">Display</span>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">🏆</span>
-                <div class="feature-name">Global ELO Ranking</div>
-                <div class="feature-desc">
-                    Compete on a worldwide leaderboard powered by a custom ELO algorithm. Rankings factor in opponent
-                    difficulty, server population, and win streaks for the most accurate skill rating system in
-                    Minecraft.
-                </div>
-                <span class="feature-tag tag-gold">Competitive</span>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">⚔️</span>
-                <div class="feature-name">Combat Analytics</div>
-                <div class="feature-desc">
-                    Deep-dive stats: weapon preference breakdown, time-of-day performance, favorite biomes to fight in,
-                    kill distance tracking, and critical hit ratios. Know yourself like never before.
-                </div>
-                <span class="feature-tag tag-steel">Analytics</span>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">👥</span>
-                <div class="feature-name">Rival Tracker</div>
-                <div class="feature-desc">
-                    Automatically detects players you've killed or been killed by most. Track your nemesis head-to-head
-                    ratio, compare stats, and get notified when they join your server.
-                </div>
-                <span class="feature-tag tag-red">Social</span>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">🔗</span>
-                <div class="feature-name">Multi-Server Sync</div>
-                <div class="feature-desc">
-                    Your stats follow you across every server. Statify syncs data via a lightweight background service,
-                    merging stats from Hypixel, Mineplex, private SMPs - all into one unified profile.
-                </div>
-                <span class="feature-tag tag-gold">Cross-Server</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="how-section rel" id="how">
-        <div class="section-label">Installation</div>
-        <h2 class="section-title fade-up">
-            Up and running in<br />
-            <span style="color: var(--red)">4 steps.</span>
-        </h2>
-
-        <div class="steps">
-            <div class="step fade-up d1">
-                <div class="step-num">01</div>
-                <span class="step-icon">📦</span>
-                <div class="step-title">Download the Mod</div>
-                <div class="step-desc">Grab the latest .jar from the download section. Requires the Fabric loader for MC
-                    1.21+.</div>
-            </div>
-
-            <div class="step fade-up d2">
-                <div class="step-num">02</div>
-                <span class="step-icon">📂</span>
-                <div class="step-title">Drop in Mods Folder</div>
-                <div class="step-desc">
-                    Place the .jar file in your <code style="color: var(--red); font-size: 11px;">.minecraft/mods</code>
-                    folder. No additional config needed - plug and play.
-                </div>
-            </div>
-
-            <div class="step fade-up d3">
-                <div class="step-num">03</div>
-                <span class="step-icon">🚀</span>
-                <div class="step-title">Launch</div>
-                <div class="step-desc">Fire up Minecraft. Statify auto-authenticates with your Mojang UUID and begins
-                    the background history scan immediately.</div>
-            </div>
-
-            <div class="step fade-up d4">
-                <div class="step-num">04</div>
-                <span class="step-icon">📈</span>
-                <div class="step-title">Watch History Build</div>
-                <div class="step-desc">Within minutes, your all-time stats appear. The history engine continues scanning
-                    in the background - even recovering data from years ago.</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FPS BOOST SECTION -->
-    <section class="leaderboard-section rel" id="leaderboard">
-        <div class="section-label">Performance Boost</div>
-        <h2 class="section-title fade-up">
-            Statify Performance<br />
-            <span style="color: var(--gold)">Boost.</span>
-        </h2>
-        <p class="section-desc fade-up d1" style="max-width:520px; margin: 0 auto 64px;">
-            Ultimate MODPACK for both <strong> PERFORMANCE </strong> and PVP Experience 
-        </p>
-
-        <style>
-            .fps-arena {
-                display: grid;
-                grid-template-columns: 1fr auto 1fr;
-                gap: 0;
-                align-items: center;
-                max-width: 1000px;
-                margin: 0 auto;
-            }
-
-            /* ── BEFORE card ── */
-            .fps-card {
-                background: var(--surface);
-                border: 1px solid var(--border);
-                border-radius: 16px;
-                padding: 44px 40px 40px;
-                position: relative;
-                overflow: hidden;
-                transition: transform 0.3s;
-            }
-            .fps-card:hover { transform: translateY(-4px); }
-
-            .fps-card.before {
-                border-color: rgba(255,45,45,0.25);
-            }
-            .fps-card.before::before {
-                content: "";
-                position: absolute; inset: 0;
-                background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,45,45,0.07), transparent 70%);
-                pointer-events: none;
-            }
-            .fps-card.before::after {
-                content: "";
-                position: absolute; top: 0; left: 0; right: 0; height: 2px;
-                background: linear-gradient(90deg, transparent, var(--red), transparent);
-            }
-
-            .fps-card.after {
-                border-color: rgba(255,215,0,0.3);
-            }
-            .fps-card.after::before {
-                content: "";
-                position: absolute; inset: 0;
-                background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,215,0,0.08), transparent 70%);
-                pointer-events: none;
-            }
-            .fps-card.after::after {
-                content: "";
-                position: absolute; top: 0; left: 0; right: 0; height: 2px;
-                background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            }
-
-            .fps-tag {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                font-family: "Space Mono", monospace;
-                font-size: 9px;
-                letter-spacing: 3px;
-                text-transform: uppercase;
-                padding: 5px 12px;
-                border-radius: 3px;
-                margin-bottom: 32px;
-            }
-            .fps-tag.before-tag {
-                color: var(--red);
-                background: var(--red-dim);
-                border: 1px solid var(--border-hot);
-            }
-            .fps-tag.after-tag {
-                color: var(--gold);
-                background: var(--gold-dim);
-                border: 1px solid rgba(255,215,0,0.3);
-            }
-            .fps-tag-dot {
-                width: 5px; height: 5px;
-                border-radius: 50%;
-            }
-            .fps-tag.before-tag .fps-tag-dot { background: var(--red); }
-            .fps-tag.after-tag .fps-tag-dot { background: var(--gold); animation: pulse-dot 1.5s infinite; }
-
-            .fps-number {
-                font-family: "Orbitron", monospace;
-                font-weight: 900;
-                line-height: 1;
-                margin-bottom: 6px;
-                position: relative;
-                z-index: 1;
-            }
-            .fps-card.before .fps-number {
-                font-size: clamp(72px, 9vw, 108px);
-                color: var(--red);
-                text-shadow: 0 0 40px rgba(255,45,45,0.35);
-            }
-            .fps-card.after .fps-number {
-                font-size: clamp(72px, 9vw, 108px);
-                color: var(--gold);
-                text-shadow: 0 0 50px rgba(255,215,0,0.5);
-            }
-
-            .fps-unit {
-                font-family: "Space Mono", monospace;
-                font-size: 13px;
-                letter-spacing: 4px;
-                text-transform: uppercase;
-                color: var(--text-muted);
-                margin-bottom: 28px;
-            }
-
-            /* bar graph */
-            .fps-bars {
-                display: flex;
-                align-items: flex-end;
-                gap: 5px;
-                height: 52px;
-                margin-bottom: 24px;
-            }
-            .fps-bar {
-                flex: 1;
-                border-radius: 2px 2px 0 0;
-                position: relative;
-                transition: height 0.4s ease;
-            }
-            .fps-card.before .fps-bar { background: rgba(255,45,45,0.35); }
-            .fps-card.after  .fps-bar { background: rgba(255,215,0,0.45); }
-            .fps-card.after  .fps-bar:last-child,
-            .fps-card.after  .fps-bar:nth-last-child(2) {
-                background: rgba(255,215,0,0.75);
-                box-shadow: 0 0 8px rgba(255,215,0,0.4);
-            }
-
-            .fps-meta {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
-            .fps-meta-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                font-family: "Space Mono", monospace;
-                font-size: 10px;
-                letter-spacing: 1px;
-                color: var(--text-muted);
-                padding: 8px 12px;
-                background: var(--steel-dim);
-                border-radius: 6px;
-                border: 1px solid var(--border);
-            }
-            .fps-meta-val {
-                font-weight: 700;
-            }
-            .fps-card.before .fps-meta-val { color: var(--red); }
-            .fps-card.after  .fps-meta-val { color: var(--gold); }
-
-            /* ── ARROW middle ── */
-            .fps-arrow-col {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
-                padding: 0 20px;
-                position: relative;
-                z-index: 2;
-            }
-
-            .fps-arrow-wrap {
-                position: relative;
-                width: 80px;
-                height: 80px;
-            }
-
-            /* spinning ring */
-            .fps-arrow-wrap::before {
-                content: "";
-                position: absolute;
-                inset: -6px;
-                border-radius: 50%;
-                border: 1px solid transparent;
-                border-top-color: var(--red);
-                border-right-color: var(--gold);
-                animation: fps-spin 3s linear infinite;
-            }
-            .fps-arrow-wrap::after {
-                content: "";
-                position: absolute;
-                inset: -14px;
-                border-radius: 50%;
-                border: 1px dashed rgba(255,215,0,0.15);
-                animation: fps-spin 8s linear infinite reverse;
-            }
-            @keyframes fps-spin {
-                to { transform: rotate(360deg); }
-            }
-
-            .fps-arrow-svg {
-                width: 80px;
-                height: 80px;
-                position: relative;
-                z-index: 1;
-            }
-
-            /* pulsing glow behind arrow */
-            .fps-arrow-glow {
-                position: absolute;
-                inset: 0;
-                border-radius: 50%;
-                background: radial-gradient(circle, rgba(255,215,0,0.18) 0%, transparent 70%);
-                animation: fps-glow-pulse 2s ease-in-out infinite;
-            }
-            @keyframes fps-glow-pulse {
-                0%, 100% { transform: scale(1); opacity: 0.8; }
-                50% { transform: scale(1.25); opacity: 1; }
-            }
-
-            .fps-boost-badge {
-                font-family: "Orbitron", monospace;
-                font-weight: 900;
-                font-size: 11px;
-                letter-spacing: 2px;
-                color: var(--gold);
-                background: var(--gold-dim);
-                border: 1px solid rgba(255,215,0,0.3);
-                border-radius: 4px;
-                padding: 6px 14px;
-                white-space: nowrap;
-                text-align: center;
-                animation: fps-glow-pulse 2s ease-in-out infinite;
-            }
-
-            .fps-multiplier {
-                font-family: "Space Mono", monospace;
-                font-size: 9px;
-                letter-spacing: 2px;
-                color: var(--text-muted);
-                text-align: center;
-                white-space: nowrap;
-            }
-
-            @media (max-width: 768px) {
-                .fps-arena {
-                    grid-template-columns: 1fr;
-                    gap: 24px;
-                }
-                .fps-arrow-col {
-                    flex-direction: row;
-                    justify-content: center;
-                    padding: 0;
-                    transform: rotate(90deg);
-                }
-            }
-        </style>
-
-        <div class="fps-arena fade-up d1">
-
-            <!-- BEFORE -->
-            <div class="fps-card before">
-                <div class="fps-tag before-tag">
-                    <span class="fps-tag-dot"></span> Without Statify
-                </div>
-                <div class="fps-number" id="fps-before-num">26</div>
-                <div class="fps-unit">FPS</div>
-
-                <!-- mini bar chart: choppy low bars -->
-                <div class="fps-bars" id="fps-before-bars"></div>
-
-                <div class="fps-meta">
-                    <div class="fps-meta-row">
-                        <span>Avg FPS</span>
-                        <span class="fps-meta-val">26</span>
-                    </div>
-                    <div class="fps-meta-row">
-                        <span>1% Low</span>
-                        <span class="fps-meta-val">11</span>
-                    </div>
-                    <div class="fps-meta-row">
-                        <span>Frame time</span>
-                        <span class="fps-meta-val">38.4 ms</span>
+                    <div
+                        class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30">
+                        <i data-lucide="clock" class="w-3 h-3 text-cyan-400"></i>
+                        <span class="font-mono text-xs text-cyan-300">LIVE</span>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <!-- ARROW -->
-            <div class="fps-arrow-col">
-                <div class="fps-arrow-wrap">
-                    <div class="fps-arrow-glow"></div>
-                    <svg class="fps-arrow-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- arrow shaft -->
-                        <line x1="10" y1="40" x2="58" y2="40" stroke="url(#arrowGrad)" stroke-width="3" stroke-linecap="round"/>
-                        <!-- arrowhead -->
-                        <polyline points="46,26 62,40 46,54" stroke="url(#arrowGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <!-- spark lines -->
-                        <line x1="14" y1="28" x2="22" y2="28" stroke="rgba(255,45,45,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-                        <line x1="10" y1="33" x2="16" y2="33" stroke="rgba(255,45,45,0.3)" stroke-width="1" stroke-linecap="round"/>
-                        <line x1="14" y1="52" x2="22" y2="52" stroke="rgba(255,215,0,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-                        <line x1="10" y1="47" x2="16" y2="47" stroke="rgba(255,215,0,0.3)" stroke-width="1" stroke-linecap="round"/>
-                        <defs>
-                            <linearGradient id="arrowGrad" x1="10" y1="40" x2="68" y2="40" gradientUnits="userSpaceOnUse">
-                                <stop offset="0%" stop-color="#ff2d2d"/>
-                                <stop offset="100%" stop-color="#ffd700"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                </div>
-                <div class="fps-boost-badge">+758%</div>
-                <div class="fps-multiplier">8.6× faster</div>
-            </div>
+        <!-- MAIN CONTENT AREA -->
+        <main class="container mx-auto px-4 py-12 md:py-20 flex-grow">
 
-            <!-- AFTER -->
-            <div class="fps-card after">
-                <div class="fps-tag after-tag">
-                    <span class="fps-tag-dot"></span> With Statify
-                </div>
-                <div class="fps-number" id="fps-after-num">223</div>
-                <div class="fps-unit">FPS</div>
-
-                <!-- mini bar chart: tall consistent bars -->
-                <div class="fps-bars" id="fps-after-bars"></div>
-
-                <div class="fps-meta">
-                    <div class="fps-meta-row">
-                        <span>Avg FPS</span>
-                        <span class="fps-meta-val">223</span>
-                    </div>
-                    <div class="fps-meta-row">
-                        <span>1% Low</span>
-                        <span class="fps-meta-val">198</span>
-                    </div>
-                    <div class="fps-meta-row">
-                        <span>Frame time</span>
-                        <span class="fps-meta-val">4.5 ms</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Build before bars (choppy, low, uneven)
-            (function() {
-                const beforeHeights = [28,18,35,12,40,22,15,38,10,25,30,14,42,20,16,32,8,27,36,19];
-                const afterHeights  = [82,90,85,95,88,92,86,94,89,96,91,87,93,90,95,88,92,97,85,94];
-                const bb = document.getElementById("fps-before-bars");
-                const ab = document.getElementById("fps-after-bars");
-                if (bb) beforeHeights.forEach(h => {
-                    const d = document.createElement("div");
-                    d.className = "fps-bar";
-                    d.style.height = h + "%";
-                    bb.appendChild(d);
-                });
-                if (ab) afterHeights.forEach(h => {
-                    const d = document.createElement("div");
-                    d.className = "fps-bar";
-                    d.style.height = h + "%";
-                    ab.appendChild(d);
-                });
-            })();
-
-            // Count-up animation on scroll
-            function countUp(el, target, duration) {
-                let start = 0, step = target / (duration / 16);
-                const tick = () => {
-                    start = Math.min(start + step, target);
-                    el.textContent = Math.floor(start);
-                    if (start < target) requestAnimationFrame(tick);
-                };
-                requestAnimationFrame(tick);
-            }
-
-            const fpsObs = new IntersectionObserver(entries => {
-                entries.forEach(e => {
-                    if (e.isIntersecting) {
-                        countUp(document.getElementById("fps-before-num"), 26, 800);
-                        countUp(document.getElementById("fps-after-num"), 223, 1400);
-                        fpsObs.disconnect();
-                    }
-                });
-            }, { threshold: 0.4 });
-
-            const fpsArena = document.querySelector(".fps-arena");
-            if (fpsArena) fpsObs.observe(fpsArena);
-        </script>
-    </section>
-
-    <!-- BTC MODAL -->
-    <div id="btc-modal"
-        style="display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.85); backdrop-filter:blur(12px); align-items:center; justify-content:center; padding:24px;">
-        <div
-            style="background:var(--surface); border:1px solid rgba(255,215,0,0.3); border-radius:16px; max-width:520px; width:100%; padding:48px 40px; text-align:center; position:relative; box-shadow: 0 0 60px rgba(255,215,0,0.1);">
-            <div
-                style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, var(--gold), transparent); border-radius:16px 16px 0 0;">
-            </div>
-
-            <button onclick="closeBtcModal()"
-                style="position:absolute; top:16px; right:20px; background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer; line-height:1; transition:color 0.2s;"
-                onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-muted)'"
-                aria-label="Close">
-                ✕
-            </button>
-
-            <div style="font-size:48px; margin-bottom:16px;">₿</div>
-            <h3
-                style="font-family:'Orbitron',monospace; font-weight:900; font-size:22px; color:var(--gold); margin-bottom:8px; letter-spacing:2px;">
-                SUPPORT THE DEV</h3>
-            <p
-                style="font-family:'Space Mono',monospace; font-size:11px; color:var(--text-muted); letter-spacing:1px; margin-bottom:32px;">
-                Bitcoin · Taproot Address</p>
-
-            <div
-                style="width:160px; height:160px; margin:0 auto 28px; background:var(--surface2); border:1px solid rgba(255,215,0,0.2); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                <canvas id="btc-qr" width="150" height="150"></canvas>
-            </div>
-
-            <div id="btc-addr-box"
-                style="background:var(--surface2); border:1px solid rgba(255,215,0,0.25); border-radius:8px; padding:14px 16px; margin-bottom:20px; cursor:pointer; transition: border-color 0.2s;"
-                onclick="copyBtcAddr()" title="Click to copy">
+            <!-- HERO VIEW COMPONENT -->
+            <div id="hero-view" class="view-section visible-view max-w-6xl mx-auto">
+                <!-- Background Glow for Card -->
                 <div
-                    style="font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:2px; margin-bottom:6px; text-transform:uppercase;">
-                    BTC Address (click to copy)</div>
-                <div id="btc-addr-text"
-                    style="font-family:'Space Mono',monospace; font-size:11px; color:var(--gold); word-break:break-all; line-height:1.6;">
-                    bc1pg0nl950avm7v2wsctaa7vkn53gtas4en927xu7jjanz75amquynsjmqh6n
+                    class="absolute inset-0 bg-gradient-to-r from-cyan-500/15 to-violet-500/15 blur-3xl -z-10 rounded-full transform translate-y-10 scale-90">
+                </div>
+
+                <div
+                    class="relative bg-white/5 backdrop-blur-xl border border-cyan-500/20 rounded-3xl p-8 md:p-14 shadow-2xl shadow-cyan-900/20 overflow-hidden">
+                    <!-- Internal Grid Overlay -->
+                    <div class="absolute inset-0 bg-grid-sm pointer-events-none"></div>
+
+                    <div class="relative z-10 grid md:grid-cols-2 gap-8 md:gap-12">
+                        <!-- Left Column -->
+                        <div class="space-y-8">
+                            <div class="inline-block">
+                                <span
+                                    class="font-mono text-xs text-emerald-400 tracking-widest uppercase border border-emerald-500/30 px-2 py-1 rounded bg-emerald-500/5">
+                                    POWERPOINT BOX
+                                </span>
+                            </div>
+
+                            <h2
+                                class="text-5xl md:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+                                PowerBox
+                            </h2>
+
+                            <p class="text-slate-400 text-lg max-w-md leading-relaxed">
+                                Your secure box for PowerPoint access.
+                            </p>
+
+                            <div class="flex flex-col sm:flex-row gap-4 pt-2">
+                                <button onclick="switchView('subjects')"
+                                    class="group flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-400 hover:to-violet-400 text-white font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-cyan-500/50">
+                                    <i data-lucide="download-cloud" class="w-5 h-5 group-hover:animate-bounce"></i>
+                                    ACCESS DOWNLOADS
+                                </button>
+
+                                <button onclick="openPredictModal()"
+                                    class="group flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-amber-500/50">
+                                    <i data-lucide="sparkles" class="w-5 h-5 group-hover:animate-pulse"></i>
+                                    PREDICT MY SCORE
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Dual Timer Box -->
+                        <div class="space-y-6">
+                            <!-- PreCalc Timer -->
+                            <div
+                                class="bg-gradient-to-br from-cyan-900/20 to-violet-900/20 backdrop-blur-lg rounded-2xl p-6 border border-cyan-500/20">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <div class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></div>
+                                    <h3 class="font-mono text-sm text-cyan-300 uppercase tracking-wider">PreCalc CLEP
+                                    </h3>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-3 text-center">
+                                    <div class="bg-black/30 rounded-xl p-3 border border-cyan-500/10">
+                                        <div id="pc-days" class="text-3xl font-bold text-cyan-400 font-mono">00</div>
+                                        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wide">Days</div>
+                                    </div>
+                                    <div class="bg-black/30 rounded-xl p-3 border border-cyan-500/10">
+                                        <div id="pc-hours" class="text-3xl font-bold text-cyan-400 font-mono">00</div>
+                                        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wide">Hours</div>
+                                    </div>
+                                    <div class="bg-black/30 rounded-xl p-3 border border-cyan-500/10">
+                                        <div id="pc-minutes" class="text-3xl font-bold text-cyan-400 font-mono">00</div>
+                                        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wide">Mins</div>
+                                    </div>
+                                    <div class="bg-black/30 rounded-xl p-3 border border-cyan-500/10">
+                                        <div id="pc-seconds" class="text-3xl font-bold text-cyan-400 font-mono">00</div>
+                                        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wide">Secs</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chemistry Timer -->
+                            <div
+                                class="bg-gradient-to-br from-violet-900/20 to-cyan-900/20 backdrop-blur-lg rounded-2xl p-6 border border-violet-500/20">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <div class="w-3 h-3 rounded-full bg-violet-400 animate-pulse"></div>
+                                    <h3 class="font-mono text-sm text-violet-300 uppercase tracking-wider">Chemistry
+                                        CLEP</h3>
+                                </div>
+
+                                <div class="grid grid-cols-4 gap-3 text-center">
+                                    <div class="bg-black/30 rounded-xl p-3 border border-violet-500/10">
+                                        <div id="chem-days" class="text-3xl font-bold text-violet-400 font-mono">00
+                                        </div>
+                                        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wide">Days</div>
+                                    </div>
+                                    <div class="bg-black/30 rounded-xl p-3 border border-violet-500/10">
+                                        <div id="chem-hours" class="text-3xl font-bold text-violet-400 font-mono">00
+                                        </div>
+                                        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wide">Hours</div>
+                                    </div>
+                                    <div class="bg-black/30 rounded-xl p-3 border border-violet-500/10">
+                                        <div id="chem-minutes" class="text-3xl font-bold text-violet-400 font-mono">00
+                                        </div>
+                                        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wide">Mins</div>
+                                    </div>
+                                    <div class="bg-black/30 rounded-xl p-3 border border-violet-500/10">
+                                        <div id="chem-seconds" class="text-3xl font-bold text-violet-400 font-mono">00
+                                        </div>
+                                        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wide">Secs</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div id="btc-copy-msg"
-                style="font-family:'Space Mono',monospace; font-size:10px; color:#4ade80; letter-spacing:2px; height:16px; margin-bottom:16px; opacity:0; transition:opacity 0.3s;">
-                ✓ ADDRESS COPIED TO CLIPBOARD
+            <!-- SUBJECTS SELECTION VIEW -->
+            <div id="subjects-view" class="view-section hidden-view">
+                <div class="max-w-6xl mx-auto space-y-8">
+                    <!-- Header -->
+                    <div class="flex items-center gap-4">
+                        <button onclick="switchView('hero')"
+                            class="p-2 rounded-lg bg-slate-900/50 border border-slate-700/50 hover:border-cyan-500/30 transition-colors">
+                            <i data-lucide="arrow-left" class="w-5 h-5 text-cyan-400"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-3xl md:text-4xl font-bold text-white">
+                                Select Your Subject
+                            </h2>
+                            <p class="text-slate-400 mt-1">
+                                Choose a course to access study materials
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Subject Cards -->
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- CHEMISTRY CARD -->
+                        <div onclick="switchView('chemistry-hub')"
+                            class="group cursor-pointer relative bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-violet-500/10 backdrop-blur-xl border-2 border-emerald-500/30 rounded-3xl p-8 md:p-10 shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+                            <!-- Animated Background Elements -->
+                            <div
+                                class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all duration-500">
+                            </div>
+                            <div
+                                class="absolute bottom-0 left-0 w-48 h-48 bg-cyan-500/5 rounded-full blur-3xl group-hover:bg-cyan-500/10 transition-all duration-500">
+                            </div>
+
+                            <div class="relative z-10 space-y-6">
+                                <!-- Icon -->
+                                <div class="flex justify-center">
+                                    <div
+                                        class="w-24 h-24 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border-2 border-emerald-400/40 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                                        <i data-lucide="flask-conical" class="w-12 h-12 text-emerald-400"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Title -->
+                                <div class="text-center">
+                                    <h3
+                                        class="text-4xl font-bold bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent mb-3">
+                                        CHEMISTRY
+                                    </h3>
+                                    <p class="text-slate-300 text-lg">
+                                        Access all 20 chapters
+                                    </p>
+                                </div>
+
+                                <!-- Stats -->
+                                <div class="flex justify-center pt-4">
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-emerald-400">20</div>
+                                        <div class="text-xs text-slate-400 uppercase tracking-wider">Chapters</div>
+                                    </div>
+                                </div>
+
+                                <!-- Button -->
+                                <div class="pt-4">
+                                    <div
+                                        class="w-full py-4 px-6 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 group-hover:shadow-lg group-hover:shadow-emerald-500/50">
+                                        <span>ACCESS DOWNLOADS</span>
+                                        <i data-lucide="arrow-right"
+                                            class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PRE-CALCULUS CARD -->
+                        <div onclick="switchView('precalc-downloads')"
+                            class="group cursor-pointer relative bg-gradient-to-br from-violet-500/10 via-fuchsia-500/10 to-orange-500/10 backdrop-blur-xl border-2 border-violet-500/30 rounded-3xl p-8 md:p-10 shadow-2xl hover:shadow-violet-500/20 hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+                            <!-- Animated Background Elements -->
+                            <div
+                                class="absolute top-0 right-0 w-64 h-64 bg-violet-500/5 rounded-full blur-3xl group-hover:bg-violet-500/10 transition-all duration-500">
+                            </div>
+                            <div
+                                class="absolute bottom-0 left-0 w-48 h-48 bg-fuchsia-500/5 rounded-full blur-3xl group-hover:bg-fuchsia-500/10 transition-all duration-500">
+                            </div>
+
+                            <div class="relative z-10 space-y-6">
+                                <!-- Icon -->
+                                <div class="flex justify-center">
+                                    <div
+                                        class="w-24 h-24 rounded-3xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border-2 border-violet-400/40 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                                        <i data-lucide="calculator" class="w-12 h-12 text-violet-400"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Title -->
+                                <div class="text-center">
+                                    <h3
+                                        class="text-4xl font-bold bg-gradient-to-r from-violet-400 via-fuchsia-400 to-violet-400 bg-clip-text text-transparent mb-3">
+                                        PRE-CALCULUS
+                                    </h3>
+                                    <p class="text-slate-300 text-lg">
+                                        Access all 5 chapters
+                                    </p>
+                                </div>
+
+                                <!-- Stats -->
+                                <div class="flex justify-center pt-4">
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-violet-400">5</div>
+                                        <div class="text-xs text-slate-400 uppercase tracking-wider">Chapters</div>
+                                    </div>
+                                </div>
+
+                                <!-- Button -->
+                                <div class="pt-4">
+                                    <div
+                                        class="w-full py-4 px-6 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-bold rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 group-hover:shadow-lg group-hover:shadow-violet-500/50">
+                                        <span>ACCESS DOWNLOADS</span>
+                                        <i data-lucide="arrow-right"
+                                            class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ADDITIONAL RESOURCES CARD (smaller, glass) -->
+                    <div onclick="switchView('additional-resources')"
+                        class="group cursor-pointer relative backdrop-blur-xl bg-white/[0.03] border border-white/10 hover:border-amber-400/30 rounded-2xl px-8 py-5 shadow-lg hover:shadow-amber-500/10 hover:-translate-y-1 transition-all duration-400 overflow-hidden flex items-center justify-between gap-6">
+                        <!-- Subtle glow blob -->
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-orange-500/5 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                        </div>
+
+                        <div class="relative z-10 flex items-center gap-5">
+                            <!-- Icon -->
+                            <div
+                                class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-400/20 flex items-center justify-center group-hover:bg-amber-500/20 group-hover:border-amber-400/40 transition-all duration-300 shrink-0">
+                                <i data-lucide="library" class="w-6 h-6 text-amber-400"></i>
+                            </div>
+                            <!-- Text -->
+                            <div>
+                                <p class="font-bold text-white text-base tracking-wide">Additional Resources</p>
+                                <p class="text-slate-400 text-sm mt-0.5">Supplementary materials &amp; extras — 4 files
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Right side: just arrow -->
+                        <div class="relative z-10 flex items-center gap-3 shrink-0">
+                            <div class="hidden sm:flex items-center">
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-amber-400">4</div>
+                                    <div class="text-[10px] text-slate-500 uppercase tracking-wider">Files</div>
+                                </div>
+                            </div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-400/20 flex items-center justify-center group-hover:bg-amber-500/20 group-hover:border-amber-400/40 transition-all duration-300">
+                                <i data-lucide="chevron-right"
+                                    class="w-4 h-4 text-amber-400 group-hover:translate-x-0.5 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <p
-                style="font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); line-height:1.7; letter-spacing:0.5px;">
-                Every satoshi helps keep development alive.<br />Thank you for the support.
-            </p>
+            <!-- ADDITIONAL RESOURCES DOWNLOADS VIEW -->
+            <div id="additional-resources-view" class="view-section hidden-view">
+                <!-- Back Button -->
+                <button onclick="switchView('subjects')"
+                    class="group flex items-center gap-2 text-amber-400 hover:text-amber-300 transition-colors mb-8">
+                    <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                    <span class="font-mono text-sm uppercase tracking-wider">Back</span>
+                </button>
+
+                <!-- Downloads Header -->
+                <div class="mb-12 text-center">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                        Additional Resources
+                    </h2>
+                    <p class="text-slate-400 text-lg">
+                        Supplementary materials &amp; extra files
+                    </p>
+                </div>
+
+                <!-- Chapter Grid -->
+                <div id="additional-chapter-grid"
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                    <!-- JavaScript will generate cards here -->
+                </div>
+            </div>
+
+            <!-- PRE-CALCULUS DOWNLOADS VIEW -->
+            <div id="precalc-downloads-view" class="view-section hidden-view">
+                <!-- Back Button -->
+                <button onclick="switchView('subjects')"
+                    class="group flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors mb-8">
+                    <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                    <span class="font-mono text-sm uppercase tracking-wider">Back</span>
+                </button>
+
+                <!-- Downloads Header -->
+                <div class="mb-12 text-center">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                        Pre-Calculus Downloads
+                    </h2>
+                    <p class="text-slate-400 text-lg">
+                        Select any chapter below to download PowerPoint files
+                    </p>
+                </div>
+
+                <!-- Chapter Grid -->
+                <div id="precalc-chapter-grid"
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                    <!-- JavaScript will generate cards here -->
+                </div>
+            </div>
+
+            <!-- CHEMISTRY HUB VIEW -->
+            <div id="chemistry-hub-view" class="view-section hidden-view">
+                <!-- Back Button -->
+                <button onclick="switchView('subjects')"
+                    class="group flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors mb-10">
+                    <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                    <span class="font-mono text-sm uppercase tracking-wider">Back</span>
+                </button>
+
+                <!-- Hub Header -->
+                <div class="mb-12 text-center">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">Chemistry</h2>
+                    <p class="text-slate-400 text-lg">Choose a category to access materials</p>
+                </div>
+
+                <!-- Two Big Buttons -->
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+
+                    <!-- POWERPOINTS -->
+                    <div onclick="switchView('downloads')"
+                        class="group cursor-pointer relative bg-gradient-to-br from-emerald-500/10 via-cyan-500/5 to-transparent backdrop-blur-xl border-2 border-emerald-500/30 rounded-3xl p-10 shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-2 transition-all duration-400 overflow-hidden flex flex-col items-center gap-6 text-center">
+                        <div
+                            class="absolute top-0 right-0 w-56 h-56 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all duration-500">
+                        </div>
+                        <div
+                            class="relative z-10 w-20 h-20 rounded-2xl bg-emerald-500/15 border-2 border-emerald-400/40 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-400">
+                            <i data-lucide="presentation" class="w-10 h-10 text-emerald-400"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <h3
+                                class="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent mb-2">
+                                Powerpoints</h3>
+                            <p class="text-slate-400">All 20 chapter slides</p>
+                        </div>
+                        <div
+                            class="relative z-10 w-full py-3 px-6 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold rounded-2xl flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-emerald-500/40 transition-all duration-300">
+                            <span>ACCESS</span>
+                            <i data-lucide="arrow-right"
+                                class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
+                    <!-- OTHERS -->
+                    <div onclick="switchView('chemistry-others')"
+                        class="group cursor-pointer relative bg-gradient-to-br from-cyan-500/10 via-violet-500/5 to-transparent backdrop-blur-xl border-2 border-cyan-500/30 rounded-3xl p-10 shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all duration-400 overflow-hidden flex flex-col items-center gap-6 text-center">
+                        <div
+                            class="absolute top-0 right-0 w-56 h-56 bg-cyan-500/5 rounded-full blur-3xl group-hover:bg-cyan-500/10 transition-all duration-500">
+                        </div>
+                        <div
+                            class="relative z-10 w-20 h-20 rounded-2xl bg-cyan-500/15 border-2 border-cyan-400/40 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-400">
+                            <i data-lucide="files" class="w-10 h-10 text-cyan-400"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <h3
+                                class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent mb-2">
+                                Others</h3>
+                            <p class="text-slate-400">Extra resources &amp; files</p>
+                        </div>
+                        <div
+                            class="relative z-10 w-full py-3 px-6 bg-gradient-to-r from-cyan-500 to-violet-500 text-white font-bold rounded-2xl flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-cyan-500/40 transition-all duration-300">
+                            <span>ACCESS</span>
+                            <i data-lucide="arrow-right"
+                                class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CHEMISTRY OTHERS VIEW -->
+            <div id="chemistry-others-view" class="view-section hidden-view">
+                <!-- Back Button -->
+                <button onclick="switchView('chemistry-hub')"
+                    class="group flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors mb-8">
+                    <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                    <span class="font-mono text-sm uppercase tracking-wider">Back</span>
+                </button>
+                <div class="mb-12 text-center">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">Chemistry — Others</h2>
+                    <p class="text-slate-400 text-lg">Extra resources &amp; additional files</p>
+                </div>
+                <div id="chem-others-grid"
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                </div>
+            </div>
+
+            <!-- DOWNLOADS VIEW COMPONENT -->
+            <div id="downloads-view" class="view-section hidden-view">
+                <!-- Back Button -->
+                <button onclick="switchView('chemistry-hub')"
+                    class="group flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors mb-8">
+                    <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                    <span class="font-mono text-sm uppercase tracking-wider">Back</span>
+                </button>
+
+                <!-- Downloads Header -->
+                <div class="mb-12 text-center">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                        Chemistry Downloads
+                    </h2>
+                    <p class="text-slate-400 text-lg">
+                        Select any chapter below to download PowerPoint files
+                    </p>
+                </div>
+
+                <!-- Chapter Grid -->
+                <div id="chapter-grid"
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                    <!-- JavaScript will generate cards here -->
+                </div>
+            </div>
+
+        </main>
+
+        <!-- FOOTER -->
+
+    </div>
+
+    <!-- PREDICT SCORE MODAL - Step 1: Name Input -->
+    <div id="predict-modal-name" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 modal-backdrop">
+        <div
+            class="animate-slide-up bg-slate-900/95 backdrop-blur-xl border-2 border-cyan-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl glow">
+            <div class="text-center mb-8">
+                <div
+                    class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500/20 to-violet-500/20 border-2 border-cyan-400/50 mb-6 glow">
+                    <i data-lucide="user" class="w-10 h-10 text-cyan-400"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2">What's Your Name?</h3>
+                <p class="text-slate-400">Enter your name to begin the prediction</p>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <input type="text" id="student-name" placeholder="Enter your name..."
+                        class="w-full px-6 py-4 bg-slate-800/50 border-2 border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none transition-all text-lg"
+                        onkeypress="if(event.key==='Enter') goToClassSelection()" />
+                </div>
+
+                <div class="flex gap-4">
+                    <button onclick="closePredictModal()"
+                        class="flex-1 px-6 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl transition-all font-semibold">
+                        Cancel
+                    </button>
+                    <button onclick="goToClassSelection()"
+                        class="flex-1 px-6 py-4 bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-400 hover:to-violet-400 text-white rounded-xl transition-all font-semibold shadow-lg">
+                        Next →
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="rel" id="support">
-        <span class="footer-logo">STAT<span>IFY</span></span>
-        <div class="footer-links">
-            <a href="#" class="footer-link">GitHub</a>
-            <a href="#" class="footer-link">Discord</a>
-            <a href="#" class="footer-link">Modrinth</a>
-            <a href="#" class="footer-link">CurseForge</a>
+    <!-- PREDICT SCORE MODAL - Step 2: Class Selection -->
+    <div id="predict-modal-class" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 modal-backdrop">
+        <div
+            class="animate-slide-up bg-slate-900/95 backdrop-blur-xl border-2 border-violet-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl glow">
+            <div class="text-center mb-8">
+                <div
+                    class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-violet-500/20 to-cyan-500/20 border-2 border-violet-400/50 mb-6">
+                    <i data-lucide="graduation-cap" class="w-10 h-10 text-violet-400"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2">Select Your Class</h3>
+                <p class="text-slate-400">Which class are you in?</p>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <button onclick="selectClass('11A')" id="class-11a"
+                    class="w-full px-6 py-5 bg-slate-800/50 border-2 border-slate-700 hover:border-cyan-500 hover:bg-slate-800 rounded-xl text-white transition-all text-xl font-bold group">
+                    <div class="flex items-center justify-between">
+                        <span>Class 11A</span>
+                        <i data-lucide="chevron-right"
+                            class="w-6 h-6 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                </button>
+
+                <button onclick="selectClass('11B')" id="class-11b"
+                    class="w-full px-6 py-5 bg-slate-800/50 border-2 border-slate-700 hover:border-violet-500 hover:bg-slate-800 rounded-xl text-white transition-all text-xl font-bold group">
+                    <div class="flex items-center justify-between">
+                        <span>Class 11B</span>
+                        <i data-lucide="chevron-right"
+                            class="w-6 h-6 text-violet-400 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                </button>
+            </div>
+
+            <button onclick="startPrediction()" id="predict-btn" disabled
+                class="w-full px-6 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white rounded-xl transition-all font-bold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                🎯 Predict My Score
+            </button>
+
+            <button onclick="backToNameInput()"
+                class="w-full mt-4 px-6 py-3 text-slate-400 hover:text-white transition-all">
+                ← Back
+            </button>
         </div>
-        <span class="footer-copy">© 2026 Statify · Not affiliated with Mojang</span>
-    </footer>
+    </div>
 
+    <!-- PREDICT SCORE MODAL - Step 3: Subject Selection -->
+    <div id="predict-modal-subject" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 modal-backdrop">
+        <div
+            class="animate-slide-up bg-slate-900/95 backdrop-blur-xl border-2 border-emerald-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl glow">
+            <div class="text-center mb-8">
+                <div
+                    class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border-2 border-emerald-400/50 mb-6">
+                    <i data-lucide="book-open" class="w-10 h-10 text-emerald-400"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2">Select Your Subject</h3>
+                <p class="text-slate-400">Which subject would you like to predict?</p>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <button onclick="selectSubject('Chemistry')" id="subject-chemistry"
+                    class="w-full px-6 py-5 bg-slate-800/50 border-2 border-slate-700 hover:border-emerald-500 hover:bg-slate-800 rounded-xl text-white transition-all text-xl font-bold group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="flask-conical" class="w-6 h-6 text-emerald-400"></i>
+                            <span>Chemistry</span>
+                        </div>
+                        <i data-lucide="chevron-right"
+                            class="w-6 h-6 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                </button>
+
+                <button onclick="selectSubject('Pre-Calculus')" id="subject-precalc"
+                    class="w-full px-6 py-5 bg-slate-800/50 border-2 border-slate-700 hover:border-violet-500 hover:bg-slate-800 rounded-xl text-white transition-all text-xl font-bold group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="calculator" class="w-6 h-6 text-violet-400"></i>
+                            <span>Pre-Calculus</span>
+                        </div>
+                        <i data-lucide="chevron-right"
+                            class="w-6 h-6 text-violet-400 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                </button>
+            </div>
+
+            <button onclick="proceedToPrediction()" id="proceed-predict-btn" disabled
+                class="w-full px-6 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white rounded-xl transition-all font-bold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                🎯 Predict My Score
+            </button>
+
+            <button onclick="backToClassSelection()"
+                class="w-full mt-4 px-6 py-3 text-slate-400 hover:text-white transition-all">
+                ← Back
+            </button>
+        </div>
+    </div>
+
+    <!-- PREDICT SCORE MODAL - Step 4: Loading Animation -->
+    <div id="predict-modal-loading" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 modal-backdrop">
+        <div
+            class="animate-bounce-in bg-slate-900/95 backdrop-blur-xl border-2 border-amber-500/30 rounded-3xl p-12 max-w-md w-full shadow-2xl text-center">
+            <div class="mb-8">
+                <div
+                    class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-2 border-amber-400/50 mb-6 animate-pulse">
+                    <i data-lucide="zap" class="w-12 h-12 text-amber-400"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-4">Analyzing Your Data...</h3>
+                <p class="text-slate-400 text-lg mb-6">Using advanced AI algorithms</p>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="relative w-full h-4 bg-slate-800 rounded-full overflow-hidden mb-4">
+                <div class="absolute inset-0 shimmer"></div>
+                <div id="progress-bar"
+                    class="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all duration-300"
+                    style="width: 0%"></div>
+            </div>
+
+            <div class="space-y-2 text-sm text-slate-400 font-mono">
+                <p id="loading-text-1" class="opacity-0 transition-opacity">✓ Scanning study patterns...</p>
+                <p id="loading-text-2" class="opacity-0 transition-opacity">✓ Analyzing past performance...</p>
+                <p id="loading-text-3" class="opacity-0 transition-opacity">✓ Calculating probability matrix...</p>
+                <p id="loading-text-4" class="opacity-0 transition-opacity">✓ Generating prediction...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PREDICT SCORE MODAL - Step 5: Result Display -->
+    <div id="predict-modal-result" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 modal-backdrop">
+        <div class="animate-bounce-in bg-slate-900/95 backdrop-blur-xl border-2 rounded-3xl p-12 max-w-lg w-full shadow-2xl text-center"
+            id="result-container">
+            <div class="mb-8">
+                <div class="inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-br mb-6 animate-pulse"
+                    id="result-icon-container">
+                    <i data-lucide="trophy" class="w-14 h-14" id="result-icon"></i>
+                </div>
+                <h3 class="text-5xl font-bold mb-2" id="predicted-score">75</h3>
+                <p class="text-slate-400 text-lg mb-6">Your Predicted Score</p>
+            </div>
+
+            <div class="mb-8 p-6 rounded-2xl" id="message-container">
+                <p class="text-2xl font-bold mb-2" id="result-message">You're Chilling! 😎</p>
+                <p class="text-lg" id="result-submessage">No need to study hard!</p>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="tryAgain()"
+                    class="w-full px-6 py-4 bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-400 hover:to-violet-400 text-white rounded-xl transition-all font-bold text-lg shadow-lg">
+                    🔄 Try Again
+                </button>
+                <button onclick="closeResultModal()"
+                    class="w-full px-6 py-3 text-slate-400 hover:text-white transition-all">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initialize Lucide Icons -->
     <script>
-        // Custom cursor
-        const dot = document.getElementById("cursorDot");
-        const ring = document.getElementById("cursorRing");
-        let mx = 0, my = 0, rx = 0, ry = 0;
+        lucide.createIcons();
 
-        document.addEventListener("mousemove", e => {
-            mx = e.clientX; my = e.clientY;
-            dot.style.left = (mx - 4) + "px";
-            dot.style.top = (my - 4) + "px";
-        });
+        // Global variables for prediction
+        let studentName = '';
+        let selectedClass = '';
+        let selectedSubject = '';
 
-        function animRing() {
-            rx += (mx - rx - 15) * 0.12;
-            ry += (my - ry - 15) * 0.12;
-            ring.style.left = rx + "px";
-            ring.style.top = ry + "px";
-            requestAnimationFrame(animRing);
-        }
-        animRing();
+        // View Switching
+        function switchView(view) {
+            const heroView = document.getElementById('hero-view');
+            const subjectsView = document.getElementById('subjects-view');
+            const chemistryHubView = document.getElementById('chemistry-hub-view');
+            const chemistryOthersView = document.getElementById('chemistry-others-view');
+            const downloadsView = document.getElementById('downloads-view');
+            const precalcDownloadsView = document.getElementById('precalc-downloads-view');
+            const additionalResourcesView = document.getElementById('additional-resources-view');
 
-        document.querySelectorAll("a, button, .feature-card, .stat-cell, .lb-row, .step").forEach(el => {
-            el.addEventListener("mouseenter", () => {
-                dot.style.transform = "scale(2)";
-                ring.style.width = "50px";
-                ring.style.height = "50px";
-                ring.style.borderColor = "rgba(255,45,45,0.6)";
+            // Hide all views first
+            const allViews = [heroView, subjectsView, chemistryHubView, chemistryOthersView, downloadsView, precalcDownloadsView, additionalResourcesView];
+            allViews.forEach(view => {
+                view.classList.remove('visible-view');
+                view.classList.add('hidden-view');
             });
-            el.addEventListener("mouseleave", () => {
-                dot.style.transform = "scale(1)";
-                ring.style.width = "30px";
-                ring.style.height = "30px";
-                ring.style.borderColor = "rgba(255,45,45,0.4)";
-            });
-        });
 
-        // Build history bars
-        const bars = document.getElementById("histBar");
-        if (bars) {
-            const heights = [60, 40, 80, 30, 90, 70, 50, 85, 45, 55, 75, 95, 65, 35, 80, 70, 60, 90, 50, 40, 85, 30, 75, 60, 95, 45, 70, 55, 80, 40];
-            heights.forEach(h => {
-                const b = document.createElement("div");
-                b.className = "h-bar " + (h > 50 ? "win" : "loss");
-                b.style.height = h + "%";
-                bars.appendChild(b);
-            });
-        }
+            // Show the requested view
+            setTimeout(() => {
+                allViews.forEach(view => view.style.display = 'none');
 
-        // Scroll animations
-        const obs = new IntersectionObserver(entries => {
-            entries.forEach(e => {
-                if (e.isIntersecting) e.target.classList.add("visible");
-            });
-        }, { threshold: 0.15 });
+                let targetView;
+                if (view === 'hero') targetView = heroView;
+                else if (view === 'subjects') targetView = subjectsView;
+                else if (view === 'chemistry-hub') targetView = chemistryHubView;
+                else if (view === 'chemistry-others') targetView = chemistryOthersView;
+                else if (view === 'downloads') targetView = downloadsView;
+                else if (view === 'precalc-downloads') targetView = precalcDownloadsView;
+                else if (view === 'additional-resources') targetView = additionalResourcesView;
 
-        document.querySelectorAll(".fade-up:not(.visible)").forEach(el => obs.observe(el));
+                if (targetView) {
+                    targetView.style.display = 'block';
+                    void targetView.offsetWidth; // Trigger reflow
+                    targetView.classList.remove('hidden-view');
+                    targetView.classList.add('visible-view');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // BTC Modal
-        const BTC_ADDR = "bc1pg0nl950avm7v2wsctaa7vkn53gtas4en927xu7jjanz75amquynsjmqh6n";
-
-        function openBtcModal() {
-            const modal = document.getElementById("btc-modal");
-            modal.style.display = "flex";
-            document.body.style.overflow = "hidden";
-            drawQR();
+                    // Re-initialize icons after view change
+                    lucide.createIcons();
+                }
+            }, 300);
         }
 
-        function closeBtcModal() {
-            document.getElementById("btc-modal").style.display = "none";
-            document.body.style.overflow = "";
+        // --- PREDICT SCORE MODAL FUNCTIONS ---
+
+        function openPredictModal() {
+            const modal = document.getElementById('predict-modal-name');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-name').focus();
         }
 
-        document.getElementById("btc-modal").addEventListener("click", function (e) {
-            if (e.target === this) closeBtcModal();
-        });
-
-        function copyBtcAddr() {
-            navigator.clipboard.writeText(BTC_ADDR).then(() => {
-                const msg = document.getElementById("btc-copy-msg");
-                const box = document.getElementById("btc-addr-box");
-                msg.style.opacity = "1";
-                box.style.borderColor = "rgba(74,222,128,0.5)";
-                setTimeout(() => {
-                    msg.style.opacity = "0";
-                    box.style.borderColor = "rgba(255,215,0,0.25)";
-                }, 2500);
-            });
+        function closePredictModal() {
+            const modal = document.getElementById('predict-modal-name');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            studentName = '';
         }
 
-        function drawQR() {
-            const canvas = document.getElementById("btc-qr");
-            if (!canvas) return;
-            const ctx = canvas.getContext("2d");
-            const size = 150;
-            ctx.fillStyle = "#0b0f14";
-            ctx.fillRect(0, 0, size, size);
-            const cell = 6;
+        function goToClassSelection() {
+            const nameInput = document.getElementById('student-name').value.trim();
 
-            function finder(x, y) {
-                ctx.fillStyle = "#ffd700";
-                ctx.fillRect(x, y, cell * 7, cell * 7);
-                ctx.fillStyle = "#0b0f14";
-                ctx.fillRect(x + cell, y + cell, cell * 5, cell * 5);
-                ctx.fillStyle = "#ffd700";
-                ctx.fillRect(x + cell * 2, y + cell * 2, cell * 3, cell * 3);
+            if (!nameInput) {
+                alert('Please enter your name!');
+                return;
             }
 
-            finder(6, 6);
-            finder(size - 6 - cell * 7, 6);
-            finder(6, size - 6 - cell * 7);
+            studentName = nameInput;
 
-            ctx.fillStyle = "#ffd700";
-            const addr = BTC_ADDR;
+            // Hide name modal
+            const nameModal = document.getElementById('predict-modal-name');
+            nameModal.classList.remove('flex');
+            nameModal.classList.add('hidden');
 
-            for (let i = 0; i < addr.length * 3; i++) {
-                const code = addr.charCodeAt(i % addr.length);
-                const gx = ((code * (i + 3)) % 20) * cell + 3;
-                const gy = ((code * (i + 7)) % 20) * cell + 3;
+            // Show class selection modal
+            const classModal = document.getElementById('predict-modal-class');
+            classModal.classList.remove('hidden');
+            classModal.classList.add('flex');
 
-                const inTopLeft = gx < 54 && gy < 54;
-                const inTopRight = gx > size - 54 && gy < 54;
-                const inBottomLeft = gx < 54 && gy > size - 54;
+            // Reset class selection
+            selectedClass = '';
+            document.getElementById('class-11a').classList.remove('border-cyan-500', 'bg-cyan-500/20');
+            document.getElementById('class-11b').classList.remove('border-violet-500', 'bg-violet-500/20');
+            document.getElementById('predict-btn').disabled = true;
 
-                if (!inTopLeft && !inTopRight && !inBottomLeft) {
-                    ctx.fillRect(gx, gy, cell - 1, cell - 1);
-                }
-            }
+            lucide.createIcons();
         }
 
-        // Smooth scroll for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener("click", e => {
-                const href = a.getAttribute("href");
-                const target = href ? document.querySelector(href) : null;
-                if (target) {
-                    e.preventDefault();
-                    target.scrollIntoView({ behavior: "smooth", block: "start" });
+        function backToNameInput() {
+            const classModal = document.getElementById('predict-modal-class');
+            classModal.classList.remove('flex');
+            classModal.classList.add('hidden');
+
+            const nameModal = document.getElementById('predict-modal-name');
+            nameModal.classList.remove('hidden');
+            nameModal.classList.add('flex');
+
+            document.getElementById('student-name').value = studentName;
+        }
+
+        function backToClassSelection() {
+            const subjectModal = document.getElementById('predict-modal-subject');
+            subjectModal.classList.remove('flex');
+            subjectModal.classList.add('hidden');
+
+            const classModal = document.getElementById('predict-modal-class');
+            classModal.classList.remove('hidden');
+            classModal.classList.add('flex');
+        }
+
+        function selectSubject(subject) {
+            selectedSubject = subject;
+
+            // Reset both buttons
+            const btnChemistry = document.getElementById('subject-chemistry');
+            const btnPrecalc = document.getElementById('subject-precalc');
+
+            btnChemistry.classList.remove('border-emerald-500', 'bg-emerald-500/20');
+            btnPrecalc.classList.remove('border-violet-500', 'bg-violet-500/20');
+
+            // Highlight selected
+            if (subject === 'Chemistry') {
+                btnChemistry.classList.add('border-emerald-500', 'bg-emerald-500/20');
+            } else {
+                btnPrecalc.classList.add('border-violet-500', 'bg-violet-500/20');
+            }
+
+            // Enable proceed button
+            document.getElementById('proceed-predict-btn').disabled = false;
+        }
+
+        function proceedToPrediction() {
+            if (!selectedSubject) {
+                alert('Please select a subject!');
+                return;
+            }
+
+            // Hide subject modal
+            const subjectModal = document.getElementById('predict-modal-subject');
+            subjectModal.classList.remove('flex');
+            subjectModal.classList.add('hidden');
+
+            // Show loading modal
+            const loadingModal = document.getElementById('predict-modal-loading');
+            loadingModal.classList.remove('hidden');
+            loadingModal.classList.add('flex');
+
+            lucide.createIcons();
+
+            // Animate progress bar and loading texts
+            let progress = 0;
+            const progressBar = document.getElementById('progress-bar');
+            const loadingTexts = [
+                document.getElementById('loading-text-1'),
+                document.getElementById('loading-text-2'),
+                document.getElementById('loading-text-3'),
+                document.getElementById('loading-text-4')
+            ];
+
+            const progressInterval = setInterval(() => {
+                progress += 2;
+                progressBar.style.width = progress + '%';
+
+                if (progress === 25) loadingTexts[0].classList.add('opacity-100');
+                if (progress === 50) loadingTexts[1].classList.add('opacity-100');
+                if (progress === 75) loadingTexts[2].classList.add('opacity-100');
+                if (progress === 100) {
+                    loadingTexts[3].classList.add('opacity-100');
+                    clearInterval(progressInterval);
+
+                    // Show result after a brief delay
+                    setTimeout(() => {
+                        showResult();
+                    }, 500);
                 }
+            }, 40);
+        }
+
+        function selectClass(className) {
+            selectedClass = className;
+
+            // Reset both buttons
+            const btn11a = document.getElementById('class-11a');
+            const btn11b = document.getElementById('class-11b');
+
+            btn11a.classList.remove('border-cyan-500', 'bg-cyan-500/20');
+            btn11b.classList.remove('border-violet-500', 'bg-violet-500/20');
+
+            // Highlight selected
+            if (className === '11A') {
+                btn11a.classList.add('border-cyan-500', 'bg-cyan-500/20');
+            } else {
+                btn11b.classList.add('border-violet-500', 'bg-violet-500/20');
+            }
+
+            // Enable predict button
+            document.getElementById('predict-btn').disabled = false;
+        }
+
+        function startPrediction() {
+            if (!selectedClass) {
+                alert('Please select a class!');
+                return;
+            }
+
+            // Hide class modal
+            const classModal = document.getElementById('predict-modal-class');
+            classModal.classList.remove('flex');
+            classModal.classList.add('hidden');
+
+            // Show subject selection modal
+            const subjectModal = document.getElementById('predict-modal-subject');
+            subjectModal.classList.remove('hidden');
+            subjectModal.classList.add('flex');
+
+            // Reset subject selection
+            selectedSubject = '';
+            document.getElementById('subject-chemistry').classList.remove('border-emerald-500', 'bg-emerald-500/20');
+            document.getElementById('subject-precalc').classList.remove('border-violet-500', 'bg-violet-500/20');
+            document.getElementById('proceed-predict-btn').disabled = true;
+
+            lucide.createIcons();
+        }
+
+        function showResult() {
+            // Hide loading modal
+            const loadingModal = document.getElementById('predict-modal-loading');
+            loadingModal.classList.remove('flex');
+            loadingModal.classList.add('hidden');
+
+            // Reset loading animation
+            document.getElementById('progress-bar').style.width = '0%';
+            document.querySelectorAll('[id^="loading-text-"]').forEach(el => {
+                el.classList.remove('opacity-100');
             });
+
+            // Generate random score between 45-80
+            const score = Math.floor(Math.random() * (80 - 45 + 1)) + 45;
+
+            // Show result modal
+            const resultModal = document.getElementById('predict-modal-result');
+            const scoreElement = document.getElementById('predicted-score');
+            const messageElement = document.getElementById('result-message');
+            const submessageElement = document.getElementById('result-submessage');
+            const resultContainer = document.getElementById('result-container');
+            const messageContainer = document.getElementById('message-container');
+            const iconContainer = document.getElementById('result-icon-container');
+            const icon = document.getElementById('result-icon');
+
+            scoreElement.textContent = score;
+
+            // Customize based on score
+            if (score <= 60) {
+                // Low score - red theme
+                resultContainer.classList.add('border-red-500/30');
+                resultContainer.classList.remove('border-emerald-500/30');
+                iconContainer.classList.add('from-red-500/20', 'to-orange-500/20', 'border-red-400/50', 'glow-red');
+                iconContainer.classList.remove('from-emerald-500/20', 'to-green-500/20', 'border-emerald-400/50', 'glow-green');
+                icon.className = 'w-14 h-14 text-red-400';
+                icon.setAttribute('data-lucide', 'alert-circle');
+                messageContainer.classList.add('bg-red-500/10', 'border-2', 'border-red-500/30');
+                messageContainer.classList.remove('bg-emerald-500/10', 'border-emerald-500/30');
+                messageElement.textContent = "Better Go Study! 📚";
+                messageElement.className = "text-2xl font-bold mb-2 text-red-400";
+                submessageElement.textContent = "You might want to hit those books, " + studentName + "!";
+                submessageElement.className = "text-lg text-red-300";
+            } else {
+                // High score - green theme
+                resultContainer.classList.add('border-emerald-500/30');
+                resultContainer.classList.remove('border-red-500/30');
+                iconContainer.classList.add('from-emerald-500/20', 'to-green-500/20', 'border-emerald-400/50', 'glow-green');
+                iconContainer.classList.remove('from-red-500/20', 'to-orange-500/20', 'border-red-400/50', 'glow-red');
+                icon.className = 'w-14 h-14 text-emerald-400';
+                icon.setAttribute('data-lucide', 'trophy');
+                messageContainer.classList.add('bg-emerald-500/10', 'border-2', 'border-emerald-500/30');
+                messageContainer.classList.remove('bg-red-500/10', 'border-red-500/30');
+                messageElement.textContent = "You're Chilling! 😎";
+                messageElement.className = "text-2xl font-bold mb-2 text-emerald-400";
+                submessageElement.textContent = "No need to stress, " + studentName + "! You got this!";
+                submessageElement.className = "text-lg text-emerald-300";
+            }
+
+            resultModal.classList.remove('hidden');
+            resultModal.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function tryAgain() {
+            const resultModal = document.getElementById('predict-modal-result');
+            resultModal.classList.remove('flex');
+            resultModal.classList.add('hidden');
+
+            // Reset and show name modal
+            studentName = '';
+            selectedClass = '';
+            selectedSubject = '';
+            openPredictModal();
+        }
+
+        function closeResultModal() {
+            const resultModal = document.getElementById('predict-modal-result');
+            resultModal.classList.remove('flex');
+            resultModal.classList.add('hidden');
+
+            // Reset
+            studentName = '';
+            selectedClass = '';
+            selectedSubject = '';
+        }
+
+        // --- SMART DUAL COUNTDOWN TIMER LOGIC ---
+
+        // Helper function to get next occurrence of a specific date
+        function getNextTargetDate(month, day, hour) {
+            const now = new Date();
+            let target = new Date(now.getFullYear(), month, day, hour, 0, 0);
+            // If date has passed this year, move to next year
+            if (now > target) {
+                target.setFullYear(target.getFullYear() + 1);
+            }
+            return target;
+        }
+
+        // PreCalc: March 29, 9 AM (Month 2 = March)
+        const preCalcDate = getNextTargetDate(2, 29, 9);
+        const preCalcTarget = preCalcDate.getTime();
+
+        // Chemistry: April 23, 11 AM (Month 3 = April)
+        const chemDate = getNextTargetDate(3, 23, 11);
+        const chemTarget = chemDate.getTime();
+
+        const x = setInterval(function () {
+            const now = new Date().getTime();
+
+            // --- PreCalc Calculations ---
+            const pcDistance = preCalcTarget - now;
+            const pcDays = Math.floor(pcDistance / (1000 * 60 * 60 * 24));
+            const pcHours = Math.floor((pcDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const pcMinutes = Math.floor((pcDistance % (1000 * 60 * 60)) / (1000 * 60));
+            const pcSeconds = Math.floor((pcDistance % (1000 * 60)) / 1000);
+
+            // --- Chemistry Calculations ---
+            const chemDistance = chemTarget - now;
+            const chemDays = Math.floor(chemDistance / (1000 * 60 * 60 * 24));
+            const chemHours = Math.floor((chemDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const chemMinutes = Math.floor((chemDistance % (1000 * 60 * 60)) / (1000 * 60));
+            const chemSeconds = Math.floor((chemDistance % (1000 * 60)) / 1000);
+
+            // --- Update PreCalc DOM ---
+            const elPcDays = document.getElementById("pc-days");
+            const elPcHours = document.getElementById("pc-hours");
+            const elPcMinutes = document.getElementById("pc-minutes");
+            const elPcSeconds = document.getElementById("pc-seconds");
+
+            if (elPcDays) elPcDays.innerHTML = pcDays < 10 ? "0" + pcDays : pcDays;
+            if (elPcHours) elPcHours.innerHTML = pcHours < 10 ? "0" + pcHours : pcHours;
+            if (elPcMinutes) elPcMinutes.innerHTML = pcMinutes < 10 ? "0" + pcMinutes : pcMinutes;
+            if (elPcSeconds) elPcSeconds.innerHTML = pcSeconds < 10 ? "0" + pcSeconds : pcSeconds;
+
+            // --- Update Chemistry DOM ---
+            const elChemDays = document.getElementById("chem-days");
+            const elChemHours = document.getElementById("chem-hours");
+            const elChemMinutes = document.getElementById("chem-minutes");
+            const elChemSeconds = document.getElementById("chem-seconds");
+
+            if (elChemDays) elChemDays.innerHTML = chemDays < 10 ? "0" + chemDays : chemDays;
+            if (elChemHours) elChemHours.innerHTML = chemHours < 10 ? "0" + chemHours : chemHours;
+            if (elChemMinutes) elChemMinutes.innerHTML = chemMinutes < 10 ? "0" + chemMinutes : chemMinutes;
+            if (elChemSeconds) elChemSeconds.innerHTML = chemSeconds < 10 ? "0" + chemSeconds : chemSeconds;
+
+            if (pcDistance < 0 && chemDistance < 0) clearInterval(x);
+        }, 1000);
+
+        // ==========================================================
+        // ✅ MULTI-PART CHAPTER CONFIGURATION (CH4/10/12/19 => 2 parts, CH20 => 3 parts)
+        // ==========================================================
+
+        const chapterData = {
+            1: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/jxwlym2c52yt09p3a80zg/Version_V1.3.exe?rlkey=ufi4ynuwii2dir6em5w9zoidj&st=v3wgd350&dl=1" }],
+            2: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/ijwae08kq4p6xq73g4jdj/chapter2.pptx?rlkey=b7efja5ek0uehhhb99il59zvf&st=p2942v85&dl=1" }],
+            3: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/91a7prvw2njwwlovgtmre/chapter3.pptx?rlkey=pui0rdobuoqlh8khq6mth9xhn&st=wz1bvsb5&dl=1" }],
+
+            4: [
+                { label: "Part 1", url: "https://www.dropbox.com/scl/fi/1ra6bsbivu6q8n6fjsg31/chapter4_part1.pptx?rlkey=fm96sh0n48393egqg0ja8dvpn&st=am2e72v9&dl=1" },
+                { label: "Part 2", url: "https://www.dropbox.com/scl/fi/k5tmmukw6uvt30m2craw3/chapter4_part2.pptx?rlkey=9cf7zx1gbti788jm1ys8pbw51&st=k4gceb8l&dl=1" }
+            ],
+
+            5: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/xucvm17ompw4dby8c8rie/chapter5.pptx?rlkey=cnc8kgm3ulwzi0y4qynbyuyvh&st=8swbmgwk&dl=1" }],
+            6: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/w6vwmmkhm8fcfqb80gt2q/chapter6.pptx?rlkey=ljje6lbzttfk4fe5i2e1eai9b&st=favgelga&dl=1" }],
+            7: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/b20k50vrn0fkrpy396uff/chapter7.pptx?rlkey=pvuc3oe1bh6v7i4lcpic6388f&st=qrwsgmvg&dl=1" }],
+            8: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/2wz5n90t8d9f5km9abkju/chapter8.pptx?rlkey=q8w13277wqv2up8phrojze05o&st=sygfqu4j&dl=1" }],
+            9: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/tgkaflkx3syzcqsge5cd2/chapter9.pptx?rlkey=glnw1rbwab78yep1orry9ctpy&st=f3bccos5&dl=1" }],
+
+            10: [
+                { label: "Part 1", url: "https://www.dropbox.com/scl/fi/q0vuo6sdgtgalmq72fltk/chapter10_part1.pptx?rlkey=3v5yvdmzdkhsy692jjehj869t&st=up623qej&dl=1" },
+                { label: "Part 2", url: "https://www.dropbox.com/scl/fi/qrxz3sxq1ujafnb2u4qwd/chapter10_part2.pptx?rlkey=g2fkrqaetn3sc1hdl347tsct9&st=mpndbu00&dl=1" }
+            ],
+
+            11: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/chu66y05dy7xzclv5kw27/chapter11.pptx?rlkey=bui7il9zygy9l5qrm2a2rp5ln&st=ph3w4h7m&dl=1" }],
+
+            12: [
+                { label: "Part 1", url: "https://www.dropbox.com/scl/fi/h6trbbjwu9c01k3q38fh6/chapter12_part1.pptx?rlkey=0bqw0tps11nz5oi1q29qvhfjy&st=6grt8hly&dl=1" },
+                { label: "Part 2", url: "https://www.dropbox.com/scl/fi/oidmw7h8m2hpy72tugq8b/chapter12_part2.pptx?rlkey=187d1qih9xq4mma7gnazib77c&st=81kg4zd7&dl=1" }
+            ],
+
+            13: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/wm8psy3gwb1am6aewust2/chapter13.pptx?rlkey=jdxim8inrgfch88y472d7cu8c&st=h2ns4qxn&dl=1" }],
+            14: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/h3e7xbpu8twv7bmg3pxc7/chapter14.pptx?rlkey=mvfoq8s98klh3knbdqut12nvf&st=1x32nmkp&dl=1" }],
+            15: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/u5fnoeubj5amxvk8o073c/chapter15.pptx?rlkey=33lypffkoscisjzjghjibx2i3&st=g04yakft&dl=1" }],
+            16: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/s07npngmbjryxs9b01nv3/chapter16.pptx?rlkey=9st3vlchph0wr4wi1nqx2owcy&st=bl6v17qg&dl=1" }],
+            17: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/qu0o7xxsx9npytmwim2aq/chapter17.pptx?rlkey=njz631qipe0y0w1qgjxy2lg84&st=skn32rl8&dl=1" }],
+            18: [{ label: "Part 1", url: "https://www.dropbox.com/scl/fi/huv3bt77j49kiflh0szzk/chapter18.pptx?rlkey=wyx49kmkhhtpvdulrjis8bc2v&st=ms6btdt9&dl=1" }],
+
+            19: [
+                { label: "Part 1", url: "https://www.dropbox.com/scl/fi/1dud76dsxas6c5tjmpb45/chapter19_part-1.pptx?rlkey=ufw68mgvr1izmf9luwsxx5a26&st=khr70k98&dl=1" },
+                { label: "Part 2", url: "https://www.dropbox.com/scl/fi/ikdzwbrud6mhi0ymvqhbg/chapter19_part-2.pptx?rlkey=y07sbyd1gcirw8w5kvyzodaoj&st=gk7eqwcj&dl=1" }
+            ],
+
+            20: [
+                { label: "Part 1", url: "https://www.dropbox.com/scl/fi/vtx5frn3rauf5lj9tpcb7/chapter20_part1.pptx?rlkey=1l3d8zzyjp1pbp6dwxheaw1ge&st=4oopix8x&dl=1" },
+                { label: "Part 2", url: "https://www.dropbox.com/scl/fi/yp6pwa4da28cpj2ydp6pw/chapter20_part2.pptx?rlkey=bb3fhpag3u0273uo6ssfm64ln&st=4drqv0kg&dl=1" },
+                { label: "Part 3", url: "https://www.dropbox.com/scl/fi/f6y8gu1y1mvaii7tkkrzt/chapter20_part3.pptx?rlkey=6are2f4ukabo0rtk2m1t7r3pd&st=en0xcj8d&dl=1" }
+            ]
+        };
+
+        // Ensure chapters 1..20 exist (fallback if you forgot one)
+        for (let i = 1; i <= 20; i++) {
+            if (!chapterData[i]) chapterData[i] = [];
+        }
+
+        // ==========================================================
+        // ✅ CHAPTER GRID (Single file => direct download)
+        // ✅ Multi-part => hover dropdown + tap/click toggle
+        // ==========================================================
+
+        const chapterGrid = document.getElementById('chapter-grid');
+
+        function buildPartButtons(parts) {
+            return parts.map((part, idx) => `
+            <button
+                onclick="event.stopPropagation(); window.open('${part.url}', '_blank')"
+                class="w-full py-2 px-4 bg-violet-500/10 hover:bg-violet-500/30 text-violet-200 rounded-xl text-sm font-semibold transition-all flex items-center justify-between gap-2">
+                <span>${part.label}</span>
+                <span class="text-violet-300/70 font-mono text-xs">#${idx + 1}</span>
+            </button>
+        `).join('');
+        }
+
+        function renderChapterCard(i) {
+            const parts = chapterData[i] || [];
+            const isMulti = parts.length > 1;
+            const hasSingle = parts.length === 1;
+
+            const card = document.createElement('div');
+            card.className = "group relative isolate z-0 hover:z-50 bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-lg hover:shadow-violet-500/10 hover:-translate-y-1 transition-all duration-300 hover:border-violet-500/30";
+
+            const dropdownId = `dropdown-${i}`;
+            const btnId = `btn-${i}`;
+
+            const actionButtonHTML = hasSingle
+                ? `
+                <button onclick="downloadChapter(${i})"
+                    class="w-full py-3 px-6 bg-violet-500 hover:bg-violet-400 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-violet-500/25">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    DOWNLOAD
+                </button>
+              `
+                : isMulti
+                    ? `
+                    <button id="${btnId}" onclick="toggleDropdown(${i})"
+                        class="w-full py-3 px-6 bg-gradient-to-r from-violet-500/90 to-fuchsia-500/90 hover:from-violet-400 hover:to-fuchsia-400 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-violet-500/25">
+                        <i data-lucide="layers" class="w-4 h-4"></i>
+                        PARTS (${parts.length})
+                    </button>
+                  `
+                    : `
+                    <button onclick="downloadChapter(${i})"
+                        class="w-full py-3 px-6 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2">
+                        <i data-lucide="lock" class="w-4 h-4"></i>
+                        NOT AVAILABLE
+                    </button>
+                  `;
+
+            const dropdownHTML = isMulti ? `
+            <!-- Hover dropdown (desktop) + toggled dropdown (mobile) -->
+            <div id="${dropdownId}"
+     class="absolute left-4 right-4 top-[calc(100%-10px)] mt-4 z-[999]
+            opacity-0 invisible translate-y-2
+            group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+            transition-all duration-300"
+            >
+                <div class="bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-2xl shadow-2xl p-3 space-y-2">
+                    <div class="flex items-center justify-between px-2 pb-2">
+                        <div class="text-xs font-mono text-slate-300 tracking-wider">CHAPTER ${i} • DOWNLOAD PARTS</div>
+                        <button onclick="event.stopPropagation(); closeDropdown(${i})"
+                                class="md:hidden text-slate-400 hover:text-white transition"
+                                title="Close">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    ${buildPartButtons(parts)}
+                    </div>
+                </div>
+            </div>
+        ` : "";
+
+            card.innerHTML = `
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center group-hover:bg-violet-500/20 group-hover:border-violet-500/40 transition-all">
+                    <i data-lucide="${isMulti ? 'folders' : 'folder-open'}" class="w-8 h-8 text-violet-400"></i>
+                </div>
+            </div>
+
+            <h3 class="text-center font-bold text-xl text-white mb-2 tracking-wide">
+                CHAPTER ${i}
+            </h3>
+
+            <div class="text-center mb-6">
+                ${isMulti
+                    ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/30 text-fuchsia-200 text-xs font-mono">
+                                <i data-lucide="sparkles" class="w-3 h-3"></i>
+                                MULTI-PART
+                           </span>`
+                    : hasSingle
+                        ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-200 text-xs font-mono">
+                                    <i data-lucide="file" class="w-3 h-3"></i>
+                                    SINGLE FILE
+                               </span>`
+                        : `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/60 border border-slate-700/60 text-slate-300 text-xs font-mono">
+                                    <i data-lucide="slash" class="w-3 h-3"></i>
+                                    MISSING
+                               </span>`
+                }
+            </div>
+
+            <div class="relative">
+                ${actionButtonHTML}
+                ${dropdownHTML}
+            </div>
+        `;
+
+            chapterGrid.appendChild(card);
+        }
+
+        for (let i = 1; i <= 20; i++) renderChapterCard(i);
+
+        // ==========================================================
+        // ✅ PRE-CALCULUS CHAPTER DATA (5 chapters)
+        // ==========================================================
+
+        const precalcChapterData = {
+            1: [{ label: "Part 1", url: "" }],
+            2: [{ label: "Part 1", url: "" }],
+            3: [{ label: "Part 1", url: "" }],
+            4: [{ label: "Part 1", url: "" }],
+            5: [{ label: "Part 1", url: "" }]
+        };
+
+        const precalcChapterGrid = document.getElementById('precalc-chapter-grid');
+
+        function buildPrecalcPartButtons(parts) {
+            return parts.map((part, idx) => `
+            <button
+                onclick="event.stopPropagation(); window.open('${part.url}', '_blank')"
+                class="w-full py-2 px-4 bg-fuchsia-500/10 hover:bg-fuchsia-500/30 text-fuchsia-200 rounded-xl text-sm font-semibold transition-all flex items-center justify-between gap-2">
+                <span>${part.label}</span>
+                <span class="text-fuchsia-300/70 font-mono text-xs">#${idx + 1}</span>
+            </button>
+        `).join('');
+        }
+
+        function renderPrecalcChapterCard(i) {
+            const parts = precalcChapterData[i] || [];
+            const isMulti = parts.length > 1;
+            const hasSingle = parts.length === 1;
+
+            const card = document.createElement('div');
+            card.className = "group relative isolate z-0 hover:z-50 bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-lg hover:shadow-fuchsia-500/10 hover:-translate-y-1 transition-all duration-300 hover:border-fuchsia-500/30";
+
+            const dropdownId = `pc-dropdown-${i}`;
+            const btnId = `pc-btn-${i}`;
+
+            const actionButtonHTML = hasSingle
+                ? `
+                <button onclick="downloadPrecalcChapter(${i})"
+                    class="w-full py-3 px-6 bg-fuchsia-500 hover:bg-fuchsia-400 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-fuchsia-500/25">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    DOWNLOAD
+                </button>
+              `
+                : isMulti
+                    ? `
+                    <button id="${btnId}" onclick="togglePrecalcDropdown(${i})"
+                        class="w-full py-3 px-6 bg-gradient-to-r from-violet-500/90 to-fuchsia-500/90 hover:from-violet-400 hover:to-fuchsia-400 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-fuchsia-500/25">
+                        <i data-lucide="layers" class="w-4 h-4"></i>
+                        PARTS (${parts.length})
+                    </button>
+                  `
+                    : `
+                    <button
+                        class="w-full py-3 px-6 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2">
+                        <i data-lucide="lock" class="w-4 h-4"></i>
+                        NOT AVAILABLE
+                    </button>
+                  `;
+
+            const dropdownHTML = isMulti ? `
+            <div id="${dropdownId}"
+     class="absolute left-4 right-4 top-[calc(100%-10px)] mt-4 z-[999]
+            opacity-0 invisible translate-y-2
+            group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+            transition-all duration-300"
+            >
+                <div class="bg-slate-900/95 backdrop-blur-xl border border-fuchsia-500/30 rounded-2xl shadow-2xl p-3 space-y-2">
+                    <div class="flex items-center justify-between px-2 pb-2">
+                        <div class="text-xs font-mono text-slate-300 tracking-wider">CHAPTER ${i} • DOWNLOAD PARTS</div>
+                        <button onclick="event.stopPropagation(); closePrecalcDropdown(${i})"
+                                class="md:hidden text-slate-400 hover:text-white transition"
+                                title="Close">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    ${buildPrecalcPartButtons(parts)}
+                    </div>
+                </div>
+            </div>
+        ` : "";
+
+            card.innerHTML = `
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center group-hover:bg-fuchsia-500/20 group-hover:border-fuchsia-500/40 transition-all">
+                    <i data-lucide="${isMulti ? 'folders' : 'folder-open'}" class="w-8 h-8 text-fuchsia-400"></i>
+                </div>
+            </div>
+
+            <h3 class="text-center font-bold text-xl text-white mb-2 tracking-wide">
+                CHAPTER ${i}
+            </h3>
+
+            <div class="text-center mb-6">
+                ${isMulti
+                    ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/30 text-fuchsia-200 text-xs font-mono">
+                                <i data-lucide="sparkles" class="w-3 h-3"></i>
+                                MULTI-PART
+                           </span>`
+                    : hasSingle
+                        ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-200 text-xs font-mono">
+                                    <i data-lucide="file" class="w-3 h-3"></i>
+                                    SINGLE FILE
+                               </span>`
+                        : `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/60 border border-slate-700/60 text-slate-300 text-xs font-mono">
+                                    <i data-lucide="slash" class="w-3 h-3"></i>
+                                    MISSING
+                               </span>`
+                }
+            </div>
+
+            <div class="relative">
+                ${actionButtonHTML}
+                ${dropdownHTML}
+            </div>
+        `;
+
+            precalcChapterGrid.appendChild(card);
+        }
+
+        for (let i = 1; i <= 5; i++) renderPrecalcChapterCard(i);
+
+        function downloadPrecalcChapter(num) {
+            const parts = precalcChapterData[num] || [];
+            if (parts.length === 1) {
+                if (parts[0].url) { window.open(parts[0].url, '_blank'); return; }
+            }
+            if (parts.length > 1) { togglePrecalcDropdown(num); return; }
+            alert(`Download link for Pre-Calculus Chapter ${num} is not available yet.`);
+        }
+
+        function togglePrecalcDropdown(num) {
+            const el = document.getElementById(`pc-dropdown-${num}`);
+            if (!el) return;
+            const isOpen = el.classList.contains('force-open');
+            closeAllPrecalcDropdowns();
+            if (!isOpen) {
+                el.classList.add('force-open');
+                el.classList.remove('opacity-0', 'invisible', 'translate-y-2');
+                el.classList.add('opacity-100', 'visible', 'translate-y-0');
+            }
+            lucide.createIcons();
+        }
+
+        function closePrecalcDropdown(num) {
+            const el = document.getElementById(`pc-dropdown-${num}`);
+            if (!el) return;
+            el.classList.remove('force-open');
+            el.classList.add('opacity-0', 'invisible', 'translate-y-2');
+            el.classList.remove('opacity-100', 'visible', 'translate-y-0');
+        }
+
+        function closeAllPrecalcDropdowns() {
+            for (let i = 1; i <= 5; i++) closePrecalcDropdown(i);
+        }
+
+        // ==========================================================
+        // ✅ ADDITIONAL RESOURCES CHAPTER DATA (4 files)
+        // ==========================================================
+
+        const additionalChapterData = {
+            1: [{ label: "Chapter 1", url: "" }],
+            2: [{ label: "Chapter 2", url: "" }],
+            3: [{ label: "Chapter 3", url: "" }],
+            4: [{ label: "Chapter 4", url: "" }]
+        };
+
+        const additionalChapterGrid = document.getElementById('additional-chapter-grid');
+
+        function buildAdditionalPartButtons(parts) {
+            return parts.map((part, idx) => `
+                <button
+                    onclick="event.stopPropagation(); window.open('${part.url}', '_blank')"
+                    class="w-full py-2 px-4 bg-amber-500/10 hover:bg-amber-500/30 text-amber-200 rounded-xl text-sm font-semibold transition-all flex items-center justify-between gap-2">
+                    <span>${part.label}</span>
+                    <span class="text-amber-300/70 font-mono text-xs">#${idx + 1}</span>
+                </button>
+            `).join('');
+        }
+
+        function renderAdditionalChapterCard(i) {
+            const parts = additionalChapterData[i] || [];
+            const isMulti = parts.length > 1;
+            const hasSingle = parts.length === 1;
+
+            const card = document.createElement('div');
+            card.className = "group relative isolate z-0 hover:z-50 bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-lg hover:shadow-amber-500/10 hover:-translate-y-1 transition-all duration-300 hover:border-amber-500/30";
+
+            const dropdownId = `ar-dropdown-${i}`;
+            const btnId = `ar-btn-${i}`;
+
+            const actionButtonHTML = hasSingle
+                ? `
+                    <button onclick="downloadAdditionalChapter(${i})"
+                        class="w-full py-3 px-6 bg-amber-500 hover:bg-amber-400 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-amber-500/25">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        DOWNLOAD
+                    </button>
+                  `
+                : isMulti
+                    ? `
+                        <button id="${btnId}" onclick="toggleAdditionalDropdown(${i})"
+                            class="w-full py-3 px-6 bg-gradient-to-r from-amber-500/90 to-orange-500/90 hover:from-amber-400 hover:to-orange-400 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-amber-500/25">
+                            <i data-lucide="layers" class="w-4 h-4"></i>
+                            PARTS (${parts.length})
+                        </button>
+                      `
+                    : `
+                        <button
+                            class="w-full py-3 px-6 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2">
+                            <i data-lucide="lock" class="w-4 h-4"></i>
+                            NOT AVAILABLE
+                        </button>
+                      `;
+
+            const dropdownHTML = isMulti ? `
+                <div id="${dropdownId}"
+                     class="absolute left-4 right-4 top-[calc(100%-10px)] mt-4 z-[999]
+                            opacity-0 invisible translate-y-2
+                            group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+                            transition-all duration-300">
+                    <div class="bg-slate-900/95 backdrop-blur-xl border border-amber-500/30 rounded-2xl shadow-2xl p-3 space-y-2">
+                        <div class="flex items-center justify-between px-2 pb-2">
+                            <div class="text-xs font-mono text-slate-300 tracking-wider">FILE ${i} • DOWNLOAD PARTS</div>
+                            <button onclick="event.stopPropagation(); closeAdditionalDropdown(${i})"
+                                    class="md:hidden text-slate-400 hover:text-white transition"
+                                    title="Close">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        ${buildAdditionalPartButtons(parts)}
+                    </div>
+                </div>
+            ` : "";
+
+            card.innerHTML = `
+                <div class="flex justify-center mb-6">
+                    <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group-hover:bg-amber-500/20 group-hover:border-amber-500/40 transition-all">
+                        <i data-lucide="${isMulti ? 'folders' : 'folder-open'}" class="w-8 h-8 text-amber-400"></i>
+                    </div>
+                </div>
+
+                <h3 class="text-center font-bold text-xl text-white mb-2 tracking-wide">
+                    FILE ${i}
+                </h3>
+
+                <div class="text-center mb-6">
+                    ${isMulti
+                    ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs font-mono">
+                                    <i data-lucide="sparkles" class="w-3 h-3"></i>
+                                    MULTI-PART
+                               </span>`
+                    : hasSingle
+                        ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-200 text-xs font-mono">
+                                        <i data-lucide="file" class="w-3 h-3"></i>
+                                        SINGLE FILE
+                                   </span>`
+                        : `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/60 border border-slate-700/60 text-slate-300 text-xs font-mono">
+                                        <i data-lucide="slash" class="w-3 h-3"></i>
+                                        MISSING
+                                   </span>`
+                }
+                </div>
+
+                <div class="relative">
+                    ${actionButtonHTML}
+                    ${dropdownHTML}
+                </div>
+            `;
+
+            additionalChapterGrid.appendChild(card);
+        }
+
+        for (let i = 1; i <= 4; i++) renderAdditionalChapterCard(i);
+
+        function downloadAdditionalChapter(num) {
+            const parts = additionalChapterData[num] || [];
+            if (parts.length === 1) {
+                if (parts[0].url) { window.open(parts[0].url, '_blank'); return; }
+            }
+            if (parts.length > 1) { toggleAdditionalDropdown(num); return; }
+            alert(`Download link for Additional Resource ${num} is not available yet.`);
+        }
+
+        function toggleAdditionalDropdown(num) {
+            const el = document.getElementById(`ar-dropdown-${num}`);
+            if (!el) return;
+            const isOpen = el.classList.contains('force-open');
+            closeAllAdditionalDropdowns();
+            if (!isOpen) {
+                el.classList.add('force-open');
+                el.classList.remove('opacity-0', 'invisible', 'translate-y-2');
+                el.classList.add('opacity-100', 'visible', 'translate-y-0');
+            }
+            lucide.createIcons();
+        }
+
+        function closeAdditionalDropdown(num) {
+            const el = document.getElementById(`ar-dropdown-${num}`);
+            if (!el) return;
+            el.classList.remove('force-open');
+            el.classList.add('opacity-0', 'invisible', 'translate-y-2');
+            el.classList.remove('opacity-100', 'visible', 'translate-y-0');
+        }
+
+        function closeAllAdditionalDropdowns() {
+            for (let i = 1; i <= 4; i++) closeAdditionalDropdown(i);
+        }
+
+        // ==========================================================
+        // ✅ CHEMISTRY OTHERS DATA (10 files)
+        // ==========================================================
+
+        const chemOthersData = {
+            1: [{ label: "Part 1", url: "" }],
+            2: [{ label: "Part 1", url: "" }],
+            3: [{ label: "Part 1", url: "" }],
+            4: [{ label: "Part 1", url: "" }],
+            5: [{ label: "Part 1", url: "" }],
+            6: [{ label: "Part 1", url: "" }],
+            7: [{ label: "Part 1", url: "" }],
+            8: [{ label: "Part 1", url: "" }],
+            9: [{ label: "Part 1", url: "" }],
+            10: [{ label: "Part 1", url: "" }]
+        };
+
+        const chemOthersGrid = document.getElementById('chem-others-grid');
+
+        function buildChemOthersPartButtons(parts) {
+            return parts.map((part, idx) => `
+                <button
+                    onclick="event.stopPropagation(); window.open('${part.url}', '_blank')"
+                    class="w-full py-2 px-4 bg-cyan-500/10 hover:bg-cyan-500/30 text-cyan-200 rounded-xl text-sm font-semibold transition-all flex items-center justify-between gap-2">
+                    <span>${part.label}</span>
+                    <span class="text-cyan-300/70 font-mono text-xs">#${idx + 1}</span>
+                </button>
+            `).join('');
+        }
+
+        function renderChemOthersCard(i) {
+            const parts = chemOthersData[i] || [];
+            const isMulti = parts.length > 1;
+            const hasSingle = parts.length === 1;
+
+            const card = document.createElement('div');
+            card.className = "group relative isolate z-0 hover:z-50 bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 hover:border-cyan-500/30";
+
+            const dropdownId = `co-dropdown-${i}`;
+            const btnId = `co-btn-${i}`;
+
+            const actionButtonHTML = hasSingle
+                ? `
+                    <button onclick="downloadChemOthers(${i})"
+                        class="w-full py-3 px-6 bg-cyan-500 hover:bg-cyan-400 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-cyan-500/25">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        DOWNLOAD
+                    </button>
+                  `
+                : isMulti
+                    ? `
+                        <button id="${btnId}" onclick="toggleChemOthersDropdown(${i})"
+                            class="w-full py-3 px-6 bg-gradient-to-r from-cyan-500/90 to-emerald-500/90 hover:from-cyan-400 hover:to-emerald-400 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-cyan-500/25">
+                            <i data-lucide="layers" class="w-4 h-4"></i>
+                            PARTS (${parts.length})
+                        </button>
+                      `
+                    : `
+                        <button
+                            class="w-full py-3 px-6 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2">
+                            <i data-lucide="lock" class="w-4 h-4"></i>
+                            NOT AVAILABLE
+                        </button>
+                      `;
+
+            const dropdownHTML = isMulti ? `
+                <div id="${dropdownId}"
+                     class="absolute left-4 right-4 top-[calc(100%-10px)] mt-4 z-[999]
+                            opacity-0 invisible translate-y-2
+                            group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+                            transition-all duration-300">
+                    <div class="bg-slate-900/95 backdrop-blur-xl border border-cyan-500/30 rounded-2xl shadow-2xl p-3 space-y-2">
+                        <div class="flex items-center justify-between px-2 pb-2">
+                            <div class="text-xs font-mono text-slate-300 tracking-wider">FILE ${i} • DOWNLOAD PARTS</div>
+                            <button onclick="event.stopPropagation(); closeChemOthersDropdown(${i})"
+                                    class="md:hidden text-slate-400 hover:text-white transition"
+                                    title="Close">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        ${buildChemOthersPartButtons(parts)}
+                    </div>
+                </div>
+            ` : "";
+
+            card.innerHTML = `
+                <div class="flex justify-center mb-6">
+                    <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/20 group-hover:border-cyan-500/40 transition-all">
+                        <i data-lucide="${isMulti ? 'folders' : 'folder-open'}" class="w-8 h-8 text-cyan-400"></i>
+                    </div>
+                </div>
+
+                <h3 class="text-center font-bold text-xl text-white mb-2 tracking-wide">
+                    FILE ${i}
+                </h3>
+
+                <div class="text-center mb-6">
+                    ${isMulti
+                    ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-200 text-xs font-mono">
+                                    <i data-lucide="sparkles" class="w-3 h-3"></i>
+                                    MULTI-PART
+                               </span>`
+                    : hasSingle
+                        ? `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-200 text-xs font-mono">
+                                        <i data-lucide="file" class="w-3 h-3"></i>
+                                        SINGLE FILE
+                                   </span>`
+                        : `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/60 border border-slate-700/60 text-slate-300 text-xs font-mono">
+                                        <i data-lucide="slash" class="w-3 h-3"></i>
+                                        MISSING
+                                   </span>`
+                }
+                </div>
+
+                <div class="relative">
+                    ${actionButtonHTML}
+                    ${dropdownHTML}
+                </div>
+            `;
+
+            chemOthersGrid.appendChild(card);
+        }
+
+        for (let i = 1; i <= 10; i++) renderChemOthersCard(i);
+
+        function downloadChemOthers(num) {
+            const parts = chemOthersData[num] || [];
+            if (parts.length === 1) {
+                if (parts[0].url) { window.open(parts[0].url, '_blank'); return; }
+            }
+            if (parts.length > 1) { toggleChemOthersDropdown(num); return; }
+            alert(`Download link for Chemistry Others File ${num} is not available yet.`);
+        }
+
+        function toggleChemOthersDropdown(num) {
+            const el = document.getElementById(`co-dropdown-${num}`);
+            if (!el) return;
+            const isOpen = el.classList.contains('force-open');
+            closeAllChemOthersDropdowns();
+            if (!isOpen) {
+                el.classList.add('force-open');
+                el.classList.remove('opacity-0', 'invisible', 'translate-y-2');
+                el.classList.add('opacity-100', 'visible', 'translate-y-0');
+            }
+            lucide.createIcons();
+        }
+
+        function closeChemOthersDropdown(num) {
+            const el = document.getElementById(`co-dropdown-${num}`);
+            if (!el) return;
+            el.classList.remove('force-open');
+            el.classList.add('opacity-0', 'invisible', 'translate-y-2');
+            el.classList.remove('opacity-100', 'visible', 'translate-y-0');
+        }
+
+        function closeAllChemOthersDropdowns() {
+            for (let i = 1; i <= 10; i++) closeChemOthersDropdown(i);
+        }
+
+        // Re-initialize icons after adding dynamic content
+        lucide.createIcons();
+
+        // ==========================================================
+        // ✅ DOWNLOAD HANDLERS
+        // ==========================================================
+
+        function downloadChapter(num) {
+            const parts = chapterData[num] || [];
+            if (parts.length === 1) {
+                window.open(parts[0].url, '_blank');
+                return;
+            }
+            if (parts.length > 1) {
+                // On multi-part, just open dropdown for convenience
+                toggleDropdown(num);
+                return;
+            }
+            alert(`Download link for Chapter ${num} is not available yet.`);
+        }
+
+        // ==========================================================
+        // ✅ MOBILE: CLICK/TAP TO TOGGLE DROPDOWN
+        // (desktop hover already works via group-hover classes)
+        // ==========================================================
+
+        function toggleDropdown(num) {
+            const el = document.getElementById(`dropdown-${num}`);
+            if (!el) return;
+
+            // If currently hidden due to hover classes, we force visible by swapping classes
+            const isOpen = el.classList.contains('force-open');
+            closeAllDropdowns();
+
+            if (!isOpen) {
+                el.classList.add('force-open');
+                el.classList.remove('opacity-0', 'invisible', 'translate-y-2');
+                el.classList.add('opacity-100', 'visible', 'translate-y-0');
+            }
+            lucide.createIcons();
+        }
+
+        function closeDropdown(num) {
+            const el = document.getElementById(`dropdown-${num}`);
+            if (!el) return;
+            el.classList.remove('force-open');
+            // restore the baseline hidden state (hover will still show on desktop)
+            el.classList.add('opacity-0', 'invisible', 'translate-y-2');
+            el.classList.remove('opacity-100', 'visible', 'translate-y-0');
+        }
+
+        function closeAllDropdowns() {
+            for (let i = 1; i <= 20; i++) closeDropdown(i);
+        }
+
+        // Close dropdowns when clicking outside (mobile-friendly)
+        document.addEventListener('click', (e) => {
+            // If user clicked a PARTS button or inside dropdown, do nothing
+            const clickedInsideDropdown = e.target.closest('[id^="dropdown-"]') || e.target.closest('[id^="pc-dropdown-"]') || e.target.closest('[id^="ar-dropdown-"]') || e.target.closest('[id^="co-dropdown-"]');
+            const clickedPartsBtn = e.target.closest('[id^="btn-"]') || e.target.closest('[id^="pc-btn-"]') || e.target.closest('[id^="ar-btn-"]') || e.target.closest('[id^="co-btn-"]');
+            if (clickedInsideDropdown || clickedPartsBtn) return;
+            closeAllDropdowns();
+            closeAllPrecalcDropdowns();
+            closeAllAdditionalDropdowns();
+            closeAllChemOthersDropdowns();
         });
     </script>
+
 </body>
 
 </html>
