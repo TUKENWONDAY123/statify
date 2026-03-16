@@ -921,8 +921,8 @@ function renderUsers(users) {
       + '<div class="user-card-meta">Joined ' + ago(new Date((u.created_at||'').replace(' ','T')+'Z').getTime()) + '</div>'
       + '</div>'
       + (!isSelf ? '<div class="user-card-actions">'
-        + '<button class="user-action-btn kick" onclick="kickUser('' + esc(u.username) + '',this)" ' + (!u.online?'disabled title="Not logged in"':'') + '>Kick</button>'
-        + '<button class="user-action-btn del" onclick="deleteUser('' + esc(u.username) + '',this)">Delete</button>'
+        + '<button class="user-action-btn kick" onclick="kickUser(\'' + u.username + '\',this)" ' + (!u.online?'disabled title="Not logged in"':'') + '>Kick</button>'
+        + '<button class="user-action-btn del" onclick="deleteUser(\'' + u.username + '\',this)">Delete</button>'
         + '</div>' : '<div style="font-size:0.72rem;color:var(--muted);padding:0 0.5rem">You</div>')
       + '</div>';
   }).join('');
