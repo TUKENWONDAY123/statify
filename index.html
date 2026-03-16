@@ -1,1584 +1,2020 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLEP Precalculus — Practice Questions</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #1a1108;
-    --paper: #f5efe4;
-    --paper-dark: #ede4d3;
-    --accent: #b5411a;
-    --accent-light: #e8c4b0;
-    --gold: #c9922a;
-    --rule: #c8b99a;
-    --correct-bg: #e8f3e8;
-    --correct-border: #4a8c4a;
-    --shadow: rgba(26,17,8,0.12);
-  }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <title>Statify</title>
 
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-size: 17px;
-    line-height: 1.7;
-    min-height: 100vh;
-  }
+    <!-- Favicon -->
+    <link rel="icon" href="./image.png?v=1" type="image/png">
+    <link rel="shortcut icon" href="./image.png?v=1" type="image/png">
 
-  /* Subtle paper texture */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(200,185,154,0.18) 28px),
-      repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(200,185,154,0.07) 28px);
-    pointer-events: none;
-    z-index: 0;
-  }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
 
-  /* ── Header ── */
-  header {
-    position: relative;
-    background: var(--ink);
-    color: var(--paper);
-    padding: 3.5rem 2rem 2.8rem;
-    text-align: center;
-    overflow: hidden;
-  }
-  header::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--gold), var(--accent));
-  }
-  header .subtitle {
-    font-family: 'Source Serif 4', serif;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-size: 0.78rem;
-    color: var(--rule);
-    margin-bottom: 0.6rem;
-  }
-  header h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    font-size: clamp(2rem, 5vw, 3.4rem);
-    letter-spacing: -0.01em;
-    line-height: 1.1;
-    color: var(--paper);
-  }
-  header h1 em {
-    font-style: italic;
-    color: var(--gold);
-  }
-  header .meta {
-    margin-top: 1rem;
-    font-size: 0.82rem;
-    color: var(--rule);
-    letter-spacing: 0.08em;
-  }
-  .badge {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 0.22rem 0.7rem;
-    border-radius: 2px;
-    margin: 0 0.25rem;
-  }
+    <style>
+        :root {
+            --bg: #050709;
+            --surface: #0b0f14;
+            --surface2: #111820;
+            --red: #ff2d2d;
+            --red-glow: rgba(255, 45, 45, 0.4);
+            --red-dim: rgba(255, 45, 45, 0.12);
+            --gold: #ffd700;
+            --gold-glow: rgba(255, 215, 0, 0.35);
+            --gold-dim: rgba(255, 215, 0, 0.1);
+            --steel: #8fa3b8;
+            --steel-dim: rgba(143, 163, 184, 0.08);
+            --white: #f0f4f8;
+            --text-muted: #4a5a6a;
+            --border: rgba(143, 163, 184, 0.1);
+            --border-hot: rgba(255, 45, 45, 0.3);
+        }
 
-  /* ── Nav / progress ── */
-  .progress-bar-wrap {
-    background: var(--paper-dark);
-    border-bottom: 1px solid var(--rule);
-    padding: 0.55rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.78rem;
-    color: var(--gold);
-    font-family: 'Source Serif 4', serif;
-    letter-spacing: 0.06em;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-  }
-  .progress-bar {
-    flex: 1;
-    height: 3px;
-    background: var(--rule);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--gold));
-    width: 0%;
-    transition: width 0.4s ease;
-    border-radius: 2px;
-  }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  /* ── Main layout ── */
-  main {
-    position: relative;
-    z-index: 1;
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem 6rem;
-  }
+        html {
+            scroll-behavior: smooth;
+        }
 
-  /* ── Section dividers ── */
-  .section-heading {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 3.5rem 0 1.5rem;
-  }
-  .section-heading::before,
-  .section-heading::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--rule);
-  }
-  .section-heading span {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 0.88rem;
-    color: var(--gold);
-    white-space: nowrap;
-    letter-spacing: 0.08em;
-  }
+        body {
+            background: var(--bg);
+            color: var(--white);
+            font-family: "Syne", sans-serif;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
 
-  /* ── Question card ── */
-  .question-card {
-    background: #fff;
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    margin-bottom: 1.6rem;
-    box-shadow: 0 2px 12px var(--shadow);
-    overflow: hidden;
-    transition: box-shadow 0.2s;
-  }
-  .question-card:hover {
-    box-shadow: 0 4px 22px var(--shadow);
-  }
+        /* PIXEL NOISE OVERLAY */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: 0.4;
+        }
 
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 0;
-    background: var(--paper-dark);
-    border-bottom: 1px solid var(--rule);
-  }
-  .q-number {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    font-size: 1.5rem;
-    color: var(--accent);
-    min-width: 52px;
-    padding: 0.9rem 0 0.9rem 1.2rem;
-    line-height: 1;
-  }
-  .q-section-tag {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-left: auto;
-    padding: 0.9rem 1.1rem;
-    align-self: center;
-  }
+        /* SCANLINES */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.07) 2px,
+                    rgba(0, 0, 0, 0.07) 4px);
+            pointer-events: none;
+        }
 
-  .card-body {
-    padding: 1.3rem 1.6rem 0.4rem;
-  }
-  .question-text {
-    font-size: 1.02rem;
-    line-height: 1.75;
-    color: var(--ink);
-    margin-bottom: 1rem;
-  }
+        /* GRID BG */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(255, 45, 45, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 45, 45, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            background-position: center center;
+        }
 
-  /* ── Answer options ── */
-  .options {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.45rem;
-    margin-bottom: 1rem;
-  }
-  .option {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.52rem 0.85rem;
-    border: 1px solid transparent;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-    font-size: 0.97rem;
-    user-select: none;
-  }
-  .option:hover {
-    background: var(--paper);
-    border-color: var(--rule);
-  }
-  .option.selected {
-    background: var(--accent-light);
-    border-color: var(--accent);
-  }
-  .option.correct {
-    background: var(--correct-bg);
-    border-color: var(--correct-border);
-  }
-  .option-letter {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px; height: 24px;
-    border: 1.5px solid var(--rule);
-    border-radius: 50%;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--gold);
-    flex-shrink: 0;
-    font-family: 'Playfair Display', serif;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
-  }
-  .option.selected .option-letter {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-  .option.correct .option-letter {
-    background: var(--correct-border);
-    border-color: var(--correct-border);
-    color: #fff;
-  }
+        .grid-bg::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 20%, rgba(255, 45, 45, 0.06), transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(255, 215, 0, 0.04), transparent 60%);
+        }
 
-  /* ── Free-response ── */
-  .free-response {
-    margin-bottom: 1rem;
-  }
-  .free-response label {
-    display: block;
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.4rem;
-  }
-  .free-response input {
-    border: 1.5px solid var(--rule);
-    border-radius: 3px;
-    padding: 0.5rem 0.9rem;
-    font-family: 'Source Serif 4', serif;
-    font-size: 1rem;
-    color: var(--ink);
-    background: var(--paper);
-    width: 160px;
-    transition: border-color 0.15s;
-  }
-  .free-response input:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
+        /* LAYOUT */
+        .rel {
+            position: relative;
+            z-index: 2;
+        }
 
-  /* ── Answer reveal ── */
-  .answer-reveal {
-    display: none;
-    background: var(--paper-dark);
-    border-top: 1px dashed var(--rule);
-    padding: 0.7rem 1.6rem;
-    font-size: 0.88rem;
-    color: var(--correct-border);
-    font-style: italic;
-  }
-  .answer-reveal.show {
-    display: block;
-  }
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 48px;
+            background: rgba(5, 7, 9, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
 
-  /* ── Card footer ── */
-  .card-footer {
-    padding: 0.5rem 1.6rem 0.9rem;
-    display: flex;
-    gap: 0.6rem;
-    justify-content: flex-end;
-  }
-  .btn {
-    font-family: 'Source Serif 4', serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.38rem 1rem;
-    border: 1.5px solid var(--rule);
-    border-radius: 2px;
-    cursor: pointer;
-    background: transparent;
-    color: var(--ink);
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
-  }
-  .btn:hover { background: var(--paper-dark); border-color: var(--gold); color: var(--gold); }
-  .btn-reveal { border-color: var(--accent); color: var(--accent); }
-  .btn-reveal:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
 
-  /* ── Math rendering helpers ── */
-  .frac {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    vertical-align: middle;
-    font-size: 0.92em;
-    line-height: 1.2;
-    margin: 0 0.15em;
-  }
-  .frac .num, .frac .den {
-    display: block;
-    text-align: center;
-    padding: 0 0.2em;
-  }
-  .frac .bar {
-    display: block;
-    width: 100%;
-    height: 1.2px;
-    background: currentColor;
-    margin: 1px 0;
-  }
-  .math-expr {
-    font-style: italic;
-  }
-  .sqrt-wrap {
-    display: inline-block;
-    border-top: 1.5px solid currentColor;
-    padding: 0 0.15em 0 0.08em;
-    margin-left: 0.15em;
-    vertical-align: middle;
-    font-size: 0.96em;
-  }
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--red-dim);
+            border: 1px solid var(--border-hot);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
 
-  /* ── Scrollbar ── */
-  ::-webkit-scrollbar { width: 7px; }
-  ::-webkit-scrollbar-track { background: var(--paper-dark); }
-  ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+        .logo-icon::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255, 45, 45, 0.3));
+        }
 
-  /* ── Footer ── */
-  footer {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 2rem;
-    font-size: 0.78rem;
-    color: var(--rule);
-    letter-spacing: 0.1em;
-    border-top: 1px solid var(--rule);
-  }
+        .logo-text {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 18px;
+            letter-spacing: 3px;
+            color: var(--white);
+        }
 
-  /* Responsive */
-  @media (max-width: 600px) {
-    main { padding: 1.5rem 0.9rem 4rem; }
-    .card-body { padding: 1rem 1rem 0.3rem; }
-    .card-footer { padding: 0.4rem 1rem 0.7rem; }
-    .q-number { min-width: 40px; font-size: 1.2rem; }
-  }
-</style>
+        .logo-text span {
+            color: var(--red);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+        }
+
+        nav a {
+            font-family: "Space Mono", monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--steel);
+            text-decoration: none;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--red);
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--white);
+        }
+
+        nav a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-badge {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            background: var(--red-dim);
+            border: 1px solid var(--border-hot);
+            border-radius: 3px;
+            color: var(--red);
+            text-transform: uppercase;
+            animation: pulse-badge 2s infinite;
+        }
+
+        @keyframes pulse-badge {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 48px 80px;
+            position: relative;
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--red);
+            border: 1px solid var(--border-hot);
+            background: var(--red-dim);
+            padding: 6px 14px;
+            border-radius: 3px;
+            margin-bottom: 28px;
+        }
+
+        .hero-eyebrow::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.4);
+                opacity: 0.6;
+            }
+        }
+
+        .hero-title {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: clamp(42px, 5vw, 68px);
+            line-height: 1.05;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .hero-title .line1 {
+            color: var(--white);
+            display: block;
+        }
+
+        .hero-title .line2 {
+            display: block;
+            background: linear-gradient(90deg, var(--red), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(255, 45, 45, 0.5));
+        }
+
+        .hero-version {
+            font-family: "Space Mono", monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            line-height: 1.75;
+            color: var(--steel);
+            max-width: 480px;
+            margin-bottom: 44px;
+        }
+
+        .hero-desc strong {
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            background: var(--red);
+            color: #fff;
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid var(--red);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px var(--red-glow), 0 0 60px rgba(255, 45, 45, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary .btn-icon {
+            font-size: 16px;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 28px;
+            background: transparent;
+            color: var(--steel);
+            font-family: "Space Mono", monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        /* INSTALL (GOLD) BUTTON */
+        .btn-install {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--gold), #ffb300);
+            color: #0a0800;
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-install::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-install:hover {
+            box-shadow: 0 0 30px var(--gold-glow), 0 0 60px rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-install:hover::before {
+            opacity: 1;
+        }
+
+        .btn-install .btn-icon {
+            font-size: 16px;
+        }
+
+        /* JAR DOWNLOAD (red ghost) */
+        .btn-jar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 22px;
+            background: transparent;
+            color: var(--steel);
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-jar:hover {
+            border-color: var(--red);
+            color: var(--red);
+            box-shadow: 0 0 16px var(--red-glow);
+        }
+
+        /* HERO STATS PANEL */
+        .hero-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
+        }
+
+        .panel-header {
+            padding: 16px 24px;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-title {
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--steel);
+        }
+
+        .panel-live {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--red);
+        }
+
+        .panel-live::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        .panel-player {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .player-skin {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #3a4a5a, #1a2a3a);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 1px solid var(--border);
+            image-rendering: pixelated;
+        }
+
+        .player-name {
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--white);
+        }
+
+        .player-status {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--red);
+            margin-top: 3px;
+        }
+
+        .panel-stats {
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-cell {
+            background: var(--steel-dim);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 14px 16px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .stat-cell:hover {
+            border-color: rgba(255, 45, 45, 0.25);
+            background: var(--red-dim);
+        }
+
+        .stat-label {
+            font-family: "Space Mono", monospace;
+            font-size: 8px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--white);
+        }
+
+        .stat-value.gold {
+            color: var(--gold);
+            filter: drop-shadow(0 0 6px var(--gold-glow));
+        }
+
+        .stat-value.red {
+            color: var(--red);
+            filter: drop-shadow(0 0 6px var(--red-glow));
+        }
+
+        .stat-sub {
+            font-family: "Space Mono", monospace;
+            font-size: 8px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .panel-history {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .history-label {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .history-bar {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+            height: 40px;
+        }
+
+        .h-bar {
+            flex: 1;
+            border-radius: 2px 2px 0 0;
+            position: relative;
+            transition: opacity 0.2s;
+        }
+
+        .h-bar:hover {
+            opacity: 0.8;
+        }
+
+        .h-bar.win {
+            background: var(--red);
+        }
+
+        .h-bar.loss {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+        }
+
+        /* FEATURES SECTION */
+        .section {
+            padding: 120px 48px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-label::before {
+            content: "";
+            display: inline-block;
+            width: 30px;
+            height: 1px;
+            background: var(--red);
+        }
+
+        .section-title {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: clamp(28px, 3.5vw, 48px);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .section-desc {
+            font-size: 16px;
+            color: var(--steel);
+            line-height: 1.75;
+            max-width: 560px;
+            margin-bottom: 64px;
+        }
+
+        /* FEATURE GRID */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 36px 32px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .feature-card:hover {
+            background: var(--surface2);
+        }
+
+        .feature-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--red);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 20px;
+            display: block;
+            filter: drop-shadow(0 0 8px rgba(255, 45, 45, 0.4));
+        }
+
+        .feature-name {
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            color: var(--white);
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: var(--steel);
+            line-height: 1.7;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            margin-top: 14px;
+            font-family: "Space Mono", monospace;
+            font-size: 8px;
+            letter-spacing: 2px;
+            padding: 3px 8px;
+            border-radius: 2px;
+            text-transform: uppercase;
+        }
+
+        .tag-red {
+            background: var(--red-dim);
+            border: 1px solid var(--border-hot);
+            color: var(--red);
+        }
+
+        .tag-gold {
+            background: var(--gold-dim);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            color: var(--gold);
+        }
+
+        .tag-steel {
+            background: var(--steel-dim);
+            border: 1px solid var(--border);
+            color: var(--steel);
+        }
+
+        /* HOW IT WORKS */
+        .how-section {
+            padding: 80px 48px 120px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            position: relative;
+            margin-top: 60px;
+        }
+
+        .steps::before {
+            content: "";
+            position: absolute;
+            top: 40px;
+            left: 60px;
+            right: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        .step {
+            padding: 0 24px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-num {
+            width: 80px;
+            height: 80px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 24px;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .step:hover .step-num {
+            border-color: var(--red);
+            color: var(--red);
+            box-shadow: 0 0 20px var(--red-glow);
+            background: var(--red-dim);
+        }
+
+        .step-icon {
+            font-size: 28px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .step-title {
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: var(--steel);
+            line-height: 1.65;
+        }
+
+        /* LEADERBOARD */
+        .leaderboard-section {
+            padding: 0 48px 120px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .leaderboard-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        .lb-header {
+            padding: 20px 32px;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .lb-title {
+            font-family: "Orbitron", monospace;
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: var(--gold);
+        }
+
+        .lb-note {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .lb-row {
+            display: grid;
+            grid-template-columns: 50px 1fr 100px 100px 100px 100px;
+            align-items: center;
+            padding: 16px 32px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+            gap: 16px;
+        }
+
+        .lb-row:last-child {
+            border-bottom: none;
+        }
+
+        .lb-row:hover {
+            background: var(--steel-dim);
+        }
+
+        .lb-row.first {
+            background: rgba(255, 215, 0, 0.04);
+        }
+
+        .lb-row.first:hover {
+            background: rgba(255, 215, 0, 0.08);
+        }
+
+        .lb-rank {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .lb-rank.r1 {
+            color: var(--gold);
+            filter: drop-shadow(0 0 8px var(--gold-glow));
+        }
+
+        .lb-rank.r2 {
+            color: #c0c0c0;
+        }
+
+        .lb-rank.r3 {
+            color: #cd7f32;
+        }
+
+        .lb-rank.other {
+            color: var(--text-muted);
+        }
+
+        .lb-player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lb-avatar {
+            font-size: 22px;
+        }
+
+        .lb-pname {
+            font-family: "Syne", sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--white);
+        }
+
+        .lb-guild {
+            font-family: "Space Mono", monospace;
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .lb-val {
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .lb-val.kd {
+            color: var(--red);
+        }
+
+        .lb-val.kills {
+            color: var(--white);
+        }
+
+        .lb-val.wins {
+            color: #4ade80;
+        }
+
+        .lb-val.elo {
+            color: var(--gold);
+        }
+
+        .lb-col-header {
+            font-family: "Space Mono", monospace;
+            font-size: 8px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            text-align: right;
+            text-transform: uppercase;
+        }
+
+        .lb-col-header.left {
+            text-align: left;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-logo {
+            font-family: "Orbitron", monospace;
+            font-weight: 900;
+            font-size: 16px;
+            letter-spacing: 3px;
+        }
+
+        .footer-logo span {
+            color: var(--red);
+        }
+
+        .footer-copy {
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-link {
+            font-family: "Space Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--red);
+        }
+
+        /* DIVIDER */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 0 48px;
+        }
+
+        /* SCROLL ANIMATIONS */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .d1 {
+            transition-delay: 0.1s;
+        }
+
+        .d2 {
+            transition-delay: 0.2s;
+        }
+
+        .d3 {
+            transition-delay: 0.3s;
+        }
+
+        .d4 {
+            transition-delay: 0.4s;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            header {
+                padding: 16px 24px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 24px 60px;
+            }
+
+            .hero-inner {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .hero-panel {
+                display: none;
+            }
+
+            .section,
+            .how-section,
+            .leaderboard-section {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+
+            .steps::before {
+                display: none;
+            }
+
+            .lb-row {
+                grid-template-columns: 40px 1fr 80px 80px;
+                gap: 12px;
+            }
+
+            .lb-row .lb-val.wins,
+            .lb-row .lb-val.elo {
+                display: none;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+        }
+
+        /* CURSOR GLOW */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--red);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+            box-shadow: 0 0 12px var(--red-glow);
+        }
+
+        .cursor-ring {
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(255, 45, 45, 0.4);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.15s, width 0.2s, height 0.2s;
+        }
+    </style>
 </head>
+
 <body>
+    <div class="grid-bg"></div>
 
-<header>
-  <p class="subtitle">College Level Examination Program</p>
-  <h1>CLEP <em>Precalculus</em></h1>
-  <p class="meta">
-    <span class="badge">Section 1</span>
-    <span class="badge">Section 2</span>
-    &nbsp;48 Practice Questions
-  </p>
-</header>
+    <!-- Custom cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
 
-<div class="progress-bar-wrap">
-  <span id="progress-label">0 / 48 answered</span>
-  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-</div>
+    <!-- HEADER -->
+    <header class="rel">
+        <a href="#" class="logo">
+            <div class="logo-icon">⚔️</div>
+            <span class="logo-text">STAT<span>IFY</span></span>
+        </a>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#how">How It Works</a>
+            <a href="#leaderboard">Leaderboard</a>
+            <a href="#support">Support</a>
+            <span class="nav-badge">v2.4.1 LIVE</span>
+        </nav>
+    </header>
 
-<main>
+    <!-- HERO -->
+    <section class="hero rel">
+        <div class="hero-inner">
+            <!-- Left -->
+            <div>
+                <div class="hero-eyebrow fade-up visible">Minecraft PvP Mod · All-Time Tracking</div>
+                <h1 class="hero-title fade-up visible d1">
+                    <span class="line1">STATIFY.</span>
+                    <span class="line2">MOD/MODPACK.</span>
 
-<!-- ═══════════════════ SECTION 1 ═══════════════════ -->
-<div class="section-heading"><span>Section 1 — Questions 1–25</span></div>
+                </h1>
+                <p class="hero-version fade-up visible d2">VERSION 2.4.1 · FABRIC ONLY · MC 1.21+</p>
+                <p class="hero-desc fade-up visible d2">
+                    <strong>Statify</strong> is the first PvP stats mod that tracks your <strong>all-time kill/death
+                        history</strong>
+                    - even retroactively pulling stats from before installation. Every kill. Every win. Every moment.
+                </p>
+                <div class="hero-cta fade-up visible d3">
+                    <a class="btn-install" href="Statify.jar" download>
+                        <span class="btn-icon">⚡</span> Install Mod
+                    </a>
+                    <a class="btn-jar" href="https://www.dropbox.com/scl/fi/kemiltcoibox23jgwfm75/Statify.zip?rlkey=cr8gam0yesxtkhg0kiylwmz9f&st=i4p4l2om&dl=1">
+                        <span style="font-size:13px;">📦</span> Download Modpack
+                    </a>
+                </div>
+                <div style="margin-top:14px;" class="fade-up visible d3">
+                    <button class="btn-secondary" onclick="openBtcModal()" style="padding:10px 20px; font-size:10px;">₿ Support Dev</button>
+                </div>
+            </div>
 
-<!-- Q1 -->
-<div class="question-card" id="q1">
-  <div class="card-header">
-    <div class="q-number">1</div>
-    <div class="q-section-tag">Functions</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">f(x) = x² − 2x</span> and <span class="math-expr">g(x) = 4x</span>,
-      which of the following is equal to
-      <span class="math-expr">
-        <span class="frac"><span class="num">f</span><span class="bar"></span><span class="den">g</span></span>(x)
-      </span>
-      for <span class="math-expr">x ≠ 0</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="1" data-correct="false"><span class="option-letter">A</span>
-        <span class="math-expr">x² − <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">2</span></span></span>
-      </li>
-      <li class="option" data-q="1" data-correct="false"><span class="option-letter">B</span>
-        <span class="math-expr">4x² − 2</span>
-      </li>
-      <li class="option" data-q="1" data-correct="false"><span class="option-letter">C</span>
-        <span class="math-expr"><span class="frac"><span class="num">x²</span><span class="bar"></span><span class="den">4</span></span> − 2x</span>
-      </li>
-      <li class="option" data-q="1" data-correct="true"><span class="option-letter">D</span>
-        <span class="math-expr"><span class="frac"><span class="num">x²</span><span class="bar"></span><span class="den">4</span></span> − <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">2</span></span></span>
-      </li>
-      <li class="option" data-q="1" data-correct="false"><span class="option-letter">E</span>
-        <span class="math-expr"><span class="frac"><span class="num">x</span><span class="bar"></span><span class="den">4</span></span> − <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">2</span></span></span>
-      </li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q1">✓ Correct Answer: D — <span class="math-expr">x²/4 − 1/2</span></div>
-  <div class="card-footer">
-    <button class="btn btn-reveal" onclick="revealAnswer('q1')">Show Answer</button>
-  </div>
-</div>
+            <!-- Right: Live Stats Panel -->
+            <div class="hero-panel fade-up visible d4">
+                <div class="panel-header">
+                    <span class="panel-title">// STATIFY OVERLAY</span>
+                    <span class="panel-live">TRACKING</span>
+                </div>
+                <div class="panel-player">
+                    <div class="player-skin">🎮</div>
+                    <div class="player-info">
+                        <div class="player-name">Notch_Slayer</div>
+                        <div class="player-status">● IN COMBAT · Hypixel SMP</div>
+                    </div>
+                </div>
+                <div class="panel-stats">
+                    <div class="stat-cell">
+                        <div class="stat-label">All-Time K/D</div>
+                        <div class="stat-value gold">4.83</div>
+                        <div class="stat-sub">▲ +0.12 this week</div>
+                    </div>
+                    <div class="stat-cell">
+                        <div class="stat-label">Total Kills</div>
+                        <div class="stat-value red">12,847</div>
+                        <div class="stat-sub">Since beta 1.7</div>
+                    </div>
+                    <div class="stat-cell">
+                        <div class="stat-label">Win Streak</div>
+                        <div class="stat-value">23🔥</div>
+                        <div class="stat-sub">Personal best: 41</div>
+                    </div>
+                    <div class="stat-cell">
+                        <div class="stat-label">ELO Rating</div>
+                        <div class="stat-value gold">2,340</div>
+                        <div class="stat-sub">Top 0.3% global</div>
+                    </div>
+                </div>
+                <div class="panel-history">
+                    <div class="history-label">// 30-day combat history</div>
+                    <div class="history-bar" id="histBar"></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- Q2 -->
-<div class="question-card" id="q2">
-  <div class="card-header">
-    <div class="q-number">2</div>
-    <div class="q-section-tag">Trigonometry / Law of Cosines</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      A ship, located at point <em>S</em>, is 20 miles due south of a buoy at point <em>B</em>. The ship sails at 16 miles per hour along a straight course that is 70° east of north. After 5 hours, what is the distance, in miles, between the ship and the buoy?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="2" data-correct="false"><span class="option-letter">A</span>61.39</li>
-      <li class="option" data-q="2" data-correct="false"><span class="option-letter">B</span>75.53</li>
-      <li class="option" data-q="2" data-correct="false"><span class="option-letter">C</span>77.46</li>
-      <li class="option" data-q="2" data-correct="true"><span class="option-letter">D</span>88.85</li>
-      <li class="option" data-q="2" data-correct="false"><span class="option-letter">E</span>99.03</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q2">✓ Correct Answer: D — 88.85 miles</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q2')">Show Answer</button></div>
-</div>
+    <div class="divider"></div>
 
-<!-- Q3 -->
-<div class="question-card" id="q3">
-  <div class="card-header">
-    <div class="q-number">3</div>
-    <div class="q-section-tag">Inequalities / Regions</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The shaded region in the figure is bounded by the y-axis, the line <span class="math-expr">y = 2</span>, and the curve <span class="math-expr">y = <span class="sqrt-wrap">x</span></span>. If a point lies in the interior of the shaded region with coordinates <span class="math-expr">(x, y)</span>, which of the following must be true?
-    </p>
-    <p style="margin: 0.3rem 0 0.8rem 1rem; font-size:0.94rem;">
-      I. &nbsp;<span class="math-expr">x &lt; 4</span><br>
-      II. &nbsp;<span class="math-expr"><span class="sqrt-wrap">x</span> &lt; y</span><br>
-      III. &nbsp;<span class="math-expr">x &lt; y</span>
-    </p>
-    <ul class="options">
-      <li class="option" data-q="3" data-correct="false"><span class="option-letter">A</span>I only</li>
-      <li class="option" data-q="3" data-correct="true"><span class="option-letter">B</span>II only</li>
-      <li class="option" data-q="3" data-correct="false"><span class="option-letter">C</span>I and II only</li>
-      <li class="option" data-q="3" data-correct="false"><span class="option-letter">D</span>II and III only</li>
-      <li class="option" data-q="3" data-correct="false"><span class="option-letter">E</span>I, II, and III</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q3">✓ Correct Answer: B — II only</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q3')">Show Answer</button></div>
-</div>
+    <!-- FEATURES -->
+    <section class="section rel" id="features">
+        <div class="section-label">Core Features</div>
+        <h2 class="section-title fade-up">
+            Everything you need<br />
+            <span style="color: var(--red)">In one MODPACK</span>
+        </h2>
+        <p class="section-desc fade-up d1">
+            No other mod goes this deep. Statify pulls server history logs, cross-references UUID data, and reconstructs
+            your entire PvP career from day one.
+        </p>
 
-<!-- Q4 -->
-<div class="question-card" id="q4">
-  <div class="card-header">
-    <div class="q-number">4</div>
-    <div class="q-section-tag">Logarithms</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">log<sub>4</sub> x = <span class="frac"><span class="num">3</span><span class="bar"></span><span class="den">2</span></span></span>, what is the value of <span class="math-expr">x</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="4" data-correct="false"><span class="option-letter">A</span><span class="math-expr"><span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">8</span></span></span></li>
-      <li class="option" data-q="4" data-correct="false"><span class="option-letter">B</span><span class="math-expr"><span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">6</span></span></span></li>
-      <li class="option" data-q="4" data-correct="false"><span class="option-letter">C</span>6</li>
-      <li class="option" data-q="4" data-correct="true"><span class="option-letter">D</span>8</li>
-      <li class="option" data-q="4" data-correct="false"><span class="option-letter">E</span><span class="math-expr"><span class="sqrt-wrap">16</span></span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q4">✓ Correct Answer: D — 8</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q4')">Show Answer</button></div>
-</div>
+        <div class="feature-grid fade-up d2">
+            <div class="feature-card">
+                <span class="feature-icon">🕰️</span>
+                <div class="feature-name">Retroactive History Engine</div>
+                <div class="feature-desc">
+                    Install today, see your stats from day one. Statify's patented history engine scans server logs and
+                    UUID records to reconstruct kills, deaths, and match data - even years before installation.
+                </div>
+                <span class="feature-tag tag-red">Core Feature</span>
+            </div>
 
-<!-- Q5 -->
-<div class="question-card" id="q5">
-  <div class="card-header">
-    <div class="q-number">5</div>
-    <div class="q-section-tag">Radicals / Exponents</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">a ≥ 0</span>, then
-      <span class="math-expr"><span class="sqrt-wrap">a³ · <span class="sqrt-wrap">a⁵</span></span></span> =
-    </p>
-    <ul class="options">
-      <li class="option" data-q="5" data-correct="false"><span class="option-letter">A</span><span class="math-expr">a</span></li>
-      <li class="option" data-q="5" data-correct="false"><span class="option-letter">B</span><span class="math-expr">a²</span></li>
-      <li class="option" data-q="5" data-correct="true"><span class="option-letter">C</span><span class="math-expr">a³</span></li>
-      <li class="option" data-q="5" data-correct="false"><span class="option-letter">D</span><span class="math-expr">a<span class="sqrt-wrap">a</span></span></li>
-      <li class="option" data-q="5" data-correct="false"><span class="option-letter">E</span><span class="math-expr">a²<span class="sqrt-wrap">a</span></span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q5">✓ Correct Answer: C — a³</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q5')">Show Answer</button></div>
-</div>
+            <div class="feature-card">
+                <span class="feature-icon">📊</span>
+                <div class="feature-name">Live HUD Overlay</div>
+                <div class="feature-desc">
+                    A sleek in-game HUD shows real-time K/D, current streak, and session kills. Fully customizable
+                    position, opacity, and color. Zero performance impact with async rendering.
+                </div>
+                <span class="feature-tag tag-steel">Display</span>
+            </div>
 
-<!-- Q6 -->
-<div class="question-card" id="q6">
-  <div class="card-header">
-    <div class="q-number">6</div>
-    <div class="q-section-tag">Radicals / Simplification</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">w</span>, <span class="math-expr">x</span>, and <span class="math-expr">y</span> are positive numbers, then
-      <span class="math-expr">
-        <span class="sqrt-wrap"><span class="frac"><span class="num">32wx²y</span><span class="bar"></span><span class="den">2w³x²</span></span></span>
-      </span> =
-    </p>
-    <ul class="options">
-      <li class="option" data-q="6" data-correct="false"><span class="option-letter">A</span><span class="math-expr">4x²<span class="sqrt-wrap">5w</span></span></li>
-      <li class="option" data-q="6" data-correct="false"><span class="option-letter">B</span><span class="math-expr"><span class="frac"><span class="num">8<span class="sqrt-wrap">y</span></span><span class="bar"></span><span class="den">x²<span class="sqrt-wrap">w</span></span></span></span></li>
-      <li class="option" data-q="6" data-correct="false"><span class="option-letter">C</span><span class="math-expr"><span class="frac"><span class="num">4<span class="sqrt-wrap">y</span></span><span class="bar"></span><span class="den">x·w</span></span></span></li>
-      <li class="option" data-q="6" data-correct="true"><span class="option-letter">D</span><span class="math-expr"><span class="frac"><span class="num">4<span class="sqrt-wrap">y</span></span><span class="bar"></span><span class="den">x²<span class="sqrt-wrap">w</span></span></span></span></li>
-      <li class="option" data-q="6" data-correct="false"><span class="option-letter">E</span><span class="math-expr"><span class="frac"><span class="num">4<span class="sqrt-wrap">y</span></span><span class="bar"></span><span class="den">x³<span class="sqrt-wrap">w</span></span></span></span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q6">✓ Correct Answer: D — 4√y / (x²√w)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q6')">Show Answer</button></div>
-</div>
+            <div class="feature-card">
+                <span class="feature-icon">🏆</span>
+                <div class="feature-name">Global ELO Ranking</div>
+                <div class="feature-desc">
+                    Compete on a worldwide leaderboard powered by a custom ELO algorithm. Rankings factor in opponent
+                    difficulty, server population, and win streaks for the most accurate skill rating system in
+                    Minecraft.
+                </div>
+                <span class="feature-tag tag-gold">Competitive</span>
+            </div>
 
-<!-- Q7 -->
-<div class="question-card" id="q7">
-  <div class="card-header">
-    <div class="q-number">7</div>
-    <div class="q-section-tag">Piecewise Functions</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      Let the function <span class="math-expr">f</span> be defined by:
-      <span class="math-expr">
-        f(x) =
-        <span style="font-style:normal; font-size:1.1rem">⎧</span>
-        <span style="display:inline-flex;flex-direction:column;gap:0.2rem;vertical-align:middle;margin:0 0.4rem">
-          <span><span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x−2</span></span> &nbsp;if x ≤ 1</span>
-          <span>x² − 4 &nbsp;&nbsp;if x > 1</span>
-        </span>
-      </span>
-    </p>
-    <p class="question-text">What is the value of <span class="math-expr">f(3) + f(−3)</span>?</p>
-    <div class="free-response">
-      <label>Your answer</label>
-      <input type="number" step="any" placeholder="Enter a number" id="input-q7" oninput="markAnswered('q7')">
+            <div class="feature-card">
+                <span class="feature-icon">⚔️</span>
+                <div class="feature-name">Combat Analytics</div>
+                <div class="feature-desc">
+                    Deep-dive stats: weapon preference breakdown, time-of-day performance, favorite biomes to fight in,
+                    kill distance tracking, and critical hit ratios. Know yourself like never before.
+                </div>
+                <span class="feature-tag tag-steel">Analytics</span>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">👥</span>
+                <div class="feature-name">Rival Tracker</div>
+                <div class="feature-desc">
+                    Automatically detects players you've killed or been killed by most. Track your nemesis head-to-head
+                    ratio, compare stats, and get notified when they join your server.
+                </div>
+                <span class="feature-tag tag-red">Social</span>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🔗</span>
+                <div class="feature-name">Multi-Server Sync</div>
+                <div class="feature-desc">
+                    Your stats follow you across every server. Statify syncs data via a lightweight background service,
+                    merging stats from Hypixel, Mineplex, private SMPs - all into one unified profile.
+                </div>
+                <span class="feature-tag tag-gold">Cross-Server</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-section rel" id="how">
+        <div class="section-label">Installation</div>
+        <h2 class="section-title fade-up">
+            Up and running in<br />
+            <span style="color: var(--red)">4 steps.</span>
+        </h2>
+
+        <div class="steps">
+            <div class="step fade-up d1">
+                <div class="step-num">01</div>
+                <span class="step-icon">📦</span>
+                <div class="step-title">Download the Mod</div>
+                <div class="step-desc">Grab the latest .jar from the download section. Requires the Fabric loader for MC
+                    1.21+.</div>
+            </div>
+
+            <div class="step fade-up d2">
+                <div class="step-num">02</div>
+                <span class="step-icon">📂</span>
+                <div class="step-title">Drop in Mods Folder</div>
+                <div class="step-desc">
+                    Place the .jar file in your <code style="color: var(--red); font-size: 11px;">.minecraft/mods</code>
+                    folder. No additional config needed - plug and play.
+                </div>
+            </div>
+
+            <div class="step fade-up d3">
+                <div class="step-num">03</div>
+                <span class="step-icon">🚀</span>
+                <div class="step-title">Launch</div>
+                <div class="step-desc">Fire up Minecraft. Statify auto-authenticates with your Mojang UUID and begins
+                    the background history scan immediately.</div>
+            </div>
+
+            <div class="step fade-up d4">
+                <div class="step-num">04</div>
+                <span class="step-icon">📈</span>
+                <div class="step-title">Watch History Build</div>
+                <div class="step-desc">Within minutes, your all-time stats appear. The history engine continues scanning
+                    in the background - even recovering data from years ago.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FPS BOOST SECTION -->
+    <section class="leaderboard-section rel" id="leaderboard">
+        <div class="section-label">Performance Boost</div>
+        <h2 class="section-title fade-up">
+            Statify Performance<br />
+            <span style="color: var(--gold)">Boost.</span>
+        </h2>
+        <p class="section-desc fade-up d1" style="max-width:520px; margin: 0 auto 64px;">
+            Ultimate MODPACK for both <strong> PERFORMANCE </strong> and PVP Experience 
+        </p>
+
+        <style>
+            .fps-arena {
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                gap: 0;
+                align-items: center;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            /* ── BEFORE card ── */
+            .fps-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                padding: 44px 40px 40px;
+                position: relative;
+                overflow: hidden;
+                transition: transform 0.3s;
+            }
+            .fps-card:hover { transform: translateY(-4px); }
+
+            .fps-card.before {
+                border-color: rgba(255,45,45,0.25);
+            }
+            .fps-card.before::before {
+                content: "";
+                position: absolute; inset: 0;
+                background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,45,45,0.07), transparent 70%);
+                pointer-events: none;
+            }
+            .fps-card.before::after {
+                content: "";
+                position: absolute; top: 0; left: 0; right: 0; height: 2px;
+                background: linear-gradient(90deg, transparent, var(--red), transparent);
+            }
+
+            .fps-card.after {
+                border-color: rgba(255,215,0,0.3);
+            }
+            .fps-card.after::before {
+                content: "";
+                position: absolute; inset: 0;
+                background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,215,0,0.08), transparent 70%);
+                pointer-events: none;
+            }
+            .fps-card.after::after {
+                content: "";
+                position: absolute; top: 0; left: 0; right: 0; height: 2px;
+                background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            }
+
+            .fps-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-family: "Space Mono", monospace;
+                font-size: 9px;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                padding: 5px 12px;
+                border-radius: 3px;
+                margin-bottom: 32px;
+            }
+            .fps-tag.before-tag {
+                color: var(--red);
+                background: var(--red-dim);
+                border: 1px solid var(--border-hot);
+            }
+            .fps-tag.after-tag {
+                color: var(--gold);
+                background: var(--gold-dim);
+                border: 1px solid rgba(255,215,0,0.3);
+            }
+            .fps-tag-dot {
+                width: 5px; height: 5px;
+                border-radius: 50%;
+            }
+            .fps-tag.before-tag .fps-tag-dot { background: var(--red); }
+            .fps-tag.after-tag .fps-tag-dot { background: var(--gold); animation: pulse-dot 1.5s infinite; }
+
+            .fps-number {
+                font-family: "Orbitron", monospace;
+                font-weight: 900;
+                line-height: 1;
+                margin-bottom: 6px;
+                position: relative;
+                z-index: 1;
+            }
+            .fps-card.before .fps-number {
+                font-size: clamp(72px, 9vw, 108px);
+                color: var(--red);
+                text-shadow: 0 0 40px rgba(255,45,45,0.35);
+            }
+            .fps-card.after .fps-number {
+                font-size: clamp(72px, 9vw, 108px);
+                color: var(--gold);
+                text-shadow: 0 0 50px rgba(255,215,0,0.5);
+            }
+
+            .fps-unit {
+                font-family: "Space Mono", monospace;
+                font-size: 13px;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+                color: var(--text-muted);
+                margin-bottom: 28px;
+            }
+
+            /* bar graph */
+            .fps-bars {
+                display: flex;
+                align-items: flex-end;
+                gap: 5px;
+                height: 52px;
+                margin-bottom: 24px;
+            }
+            .fps-bar {
+                flex: 1;
+                border-radius: 2px 2px 0 0;
+                position: relative;
+                transition: height 0.4s ease;
+            }
+            .fps-card.before .fps-bar { background: rgba(255,45,45,0.35); }
+            .fps-card.after  .fps-bar { background: rgba(255,215,0,0.45); }
+            .fps-card.after  .fps-bar:last-child,
+            .fps-card.after  .fps-bar:nth-last-child(2) {
+                background: rgba(255,215,0,0.75);
+                box-shadow: 0 0 8px rgba(255,215,0,0.4);
+            }
+
+            .fps-meta {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .fps-meta-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-family: "Space Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 1px;
+                color: var(--text-muted);
+                padding: 8px 12px;
+                background: var(--steel-dim);
+                border-radius: 6px;
+                border: 1px solid var(--border);
+            }
+            .fps-meta-val {
+                font-weight: 700;
+            }
+            .fps-card.before .fps-meta-val { color: var(--red); }
+            .fps-card.after  .fps-meta-val { color: var(--gold); }
+
+            /* ── ARROW middle ── */
+            .fps-arrow-col {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+                padding: 0 20px;
+                position: relative;
+                z-index: 2;
+            }
+
+            .fps-arrow-wrap {
+                position: relative;
+                width: 80px;
+                height: 80px;
+            }
+
+            /* spinning ring */
+            .fps-arrow-wrap::before {
+                content: "";
+                position: absolute;
+                inset: -6px;
+                border-radius: 50%;
+                border: 1px solid transparent;
+                border-top-color: var(--red);
+                border-right-color: var(--gold);
+                animation: fps-spin 3s linear infinite;
+            }
+            .fps-arrow-wrap::after {
+                content: "";
+                position: absolute;
+                inset: -14px;
+                border-radius: 50%;
+                border: 1px dashed rgba(255,215,0,0.15);
+                animation: fps-spin 8s linear infinite reverse;
+            }
+            @keyframes fps-spin {
+                to { transform: rotate(360deg); }
+            }
+
+            .fps-arrow-svg {
+                width: 80px;
+                height: 80px;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* pulsing glow behind arrow */
+            .fps-arrow-glow {
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(255,215,0,0.18) 0%, transparent 70%);
+                animation: fps-glow-pulse 2s ease-in-out infinite;
+            }
+            @keyframes fps-glow-pulse {
+                0%, 100% { transform: scale(1); opacity: 0.8; }
+                50% { transform: scale(1.25); opacity: 1; }
+            }
+
+            .fps-boost-badge {
+                font-family: "Orbitron", monospace;
+                font-weight: 900;
+                font-size: 11px;
+                letter-spacing: 2px;
+                color: var(--gold);
+                background: var(--gold-dim);
+                border: 1px solid rgba(255,215,0,0.3);
+                border-radius: 4px;
+                padding: 6px 14px;
+                white-space: nowrap;
+                text-align: center;
+                animation: fps-glow-pulse 2s ease-in-out infinite;
+            }
+
+            .fps-multiplier {
+                font-family: "Space Mono", monospace;
+                font-size: 9px;
+                letter-spacing: 2px;
+                color: var(--text-muted);
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            @media (max-width: 768px) {
+                .fps-arena {
+                    grid-template-columns: 1fr;
+                    gap: 24px;
+                }
+                .fps-arrow-col {
+                    flex-direction: row;
+                    justify-content: center;
+                    padding: 0;
+                    transform: rotate(90deg);
+                }
+            }
+        </style>
+
+        <div class="fps-arena fade-up d1">
+
+            <!-- BEFORE -->
+            <div class="fps-card before">
+                <div class="fps-tag before-tag">
+                    <span class="fps-tag-dot"></span> Without Statify
+                </div>
+                <div class="fps-number" id="fps-before-num">26</div>
+                <div class="fps-unit">FPS</div>
+
+                <!-- mini bar chart: choppy low bars -->
+                <div class="fps-bars" id="fps-before-bars"></div>
+
+                <div class="fps-meta">
+                    <div class="fps-meta-row">
+                        <span>Avg FPS</span>
+                        <span class="fps-meta-val">26</span>
+                    </div>
+                    <div class="fps-meta-row">
+                        <span>1% Low</span>
+                        <span class="fps-meta-val">11</span>
+                    </div>
+                    <div class="fps-meta-row">
+                        <span>Frame time</span>
+                        <span class="fps-meta-val">38.4 ms</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ARROW -->
+            <div class="fps-arrow-col">
+                <div class="fps-arrow-wrap">
+                    <div class="fps-arrow-glow"></div>
+                    <svg class="fps-arrow-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- arrow shaft -->
+                        <line x1="10" y1="40" x2="58" y2="40" stroke="url(#arrowGrad)" stroke-width="3" stroke-linecap="round"/>
+                        <!-- arrowhead -->
+                        <polyline points="46,26 62,40 46,54" stroke="url(#arrowGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <!-- spark lines -->
+                        <line x1="14" y1="28" x2="22" y2="28" stroke="rgba(255,45,45,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+                        <line x1="10" y1="33" x2="16" y2="33" stroke="rgba(255,45,45,0.3)" stroke-width="1" stroke-linecap="round"/>
+                        <line x1="14" y1="52" x2="22" y2="52" stroke="rgba(255,215,0,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+                        <line x1="10" y1="47" x2="16" y2="47" stroke="rgba(255,215,0,0.3)" stroke-width="1" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="arrowGrad" x1="10" y1="40" x2="68" y2="40" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#ff2d2d"/>
+                                <stop offset="100%" stop-color="#ffd700"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="fps-boost-badge">+758%</div>
+                <div class="fps-multiplier">8.6× faster</div>
+            </div>
+
+            <!-- AFTER -->
+            <div class="fps-card after">
+                <div class="fps-tag after-tag">
+                    <span class="fps-tag-dot"></span> With Statify
+                </div>
+                <div class="fps-number" id="fps-after-num">223</div>
+                <div class="fps-unit">FPS</div>
+
+                <!-- mini bar chart: tall consistent bars -->
+                <div class="fps-bars" id="fps-after-bars"></div>
+
+                <div class="fps-meta">
+                    <div class="fps-meta-row">
+                        <span>Avg FPS</span>
+                        <span class="fps-meta-val">223</span>
+                    </div>
+                    <div class="fps-meta-row">
+                        <span>1% Low</span>
+                        <span class="fps-meta-val">198</span>
+                    </div>
+                    <div class="fps-meta-row">
+                        <span>Frame time</span>
+                        <span class="fps-meta-val">4.5 ms</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Build before bars (choppy, low, uneven)
+            (function() {
+                const beforeHeights = [28,18,35,12,40,22,15,38,10,25,30,14,42,20,16,32,8,27,36,19];
+                const afterHeights  = [82,90,85,95,88,92,86,94,89,96,91,87,93,90,95,88,92,97,85,94];
+                const bb = document.getElementById("fps-before-bars");
+                const ab = document.getElementById("fps-after-bars");
+                if (bb) beforeHeights.forEach(h => {
+                    const d = document.createElement("div");
+                    d.className = "fps-bar";
+                    d.style.height = h + "%";
+                    bb.appendChild(d);
+                });
+                if (ab) afterHeights.forEach(h => {
+                    const d = document.createElement("div");
+                    d.className = "fps-bar";
+                    d.style.height = h + "%";
+                    ab.appendChild(d);
+                });
+            })();
+
+            // Count-up animation on scroll
+            function countUp(el, target, duration) {
+                let start = 0, step = target / (duration / 16);
+                const tick = () => {
+                    start = Math.min(start + step, target);
+                    el.textContent = Math.floor(start);
+                    if (start < target) requestAnimationFrame(tick);
+                };
+                requestAnimationFrame(tick);
+            }
+
+            const fpsObs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        countUp(document.getElementById("fps-before-num"), 26, 800);
+                        countUp(document.getElementById("fps-after-num"), 223, 1400);
+                        fpsObs.disconnect();
+                    }
+                });
+            }, { threshold: 0.4 });
+
+            const fpsArena = document.querySelector(".fps-arena");
+            if (fpsArena) fpsObs.observe(fpsArena);
+        </script>
+    </section>
+
+    <!-- BTC MODAL -->
+    <div id="btc-modal"
+        style="display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.85); backdrop-filter:blur(12px); align-items:center; justify-content:center; padding:24px;">
+        <div
+            style="background:var(--surface); border:1px solid rgba(255,215,0,0.3); border-radius:16px; max-width:520px; width:100%; padding:48px 40px; text-align:center; position:relative; box-shadow: 0 0 60px rgba(255,215,0,0.1);">
+            <div
+                style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, var(--gold), transparent); border-radius:16px 16px 0 0;">
+            </div>
+
+            <button onclick="closeBtcModal()"
+                style="position:absolute; top:16px; right:20px; background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer; line-height:1; transition:color 0.2s;"
+                onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-muted)'"
+                aria-label="Close">
+                ✕
+            </button>
+
+            <div style="font-size:48px; margin-bottom:16px;">₿</div>
+            <h3
+                style="font-family:'Orbitron',monospace; font-weight:900; font-size:22px; color:var(--gold); margin-bottom:8px; letter-spacing:2px;">
+                SUPPORT THE DEV</h3>
+            <p
+                style="font-family:'Space Mono',monospace; font-size:11px; color:var(--text-muted); letter-spacing:1px; margin-bottom:32px;">
+                Bitcoin · Taproot Address</p>
+
+            <div
+                style="width:160px; height:160px; margin:0 auto 28px; background:var(--surface2); border:1px solid rgba(255,215,0,0.2); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                <canvas id="btc-qr" width="150" height="150"></canvas>
+            </div>
+
+            <div id="btc-addr-box"
+                style="background:var(--surface2); border:1px solid rgba(255,215,0,0.25); border-radius:8px; padding:14px 16px; margin-bottom:20px; cursor:pointer; transition: border-color 0.2s;"
+                onclick="copyBtcAddr()" title="Click to copy">
+                <div
+                    style="font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:2px; margin-bottom:6px; text-transform:uppercase;">
+                    BTC Address (click to copy)</div>
+                <div id="btc-addr-text"
+                    style="font-family:'Space Mono',monospace; font-size:11px; color:var(--gold); word-break:break-all; line-height:1.6;">
+                    bc1pg0nl950avm7v2wsctaa7vkn53gtas4en927xu7jjanz75amquynsjmqh6n
+                </div>
+            </div>
+
+            <div id="btc-copy-msg"
+                style="font-family:'Space Mono',monospace; font-size:10px; color:#4ade80; letter-spacing:2px; height:16px; margin-bottom:16px; opacity:0; transition:opacity 0.3s;">
+                ✓ ADDRESS COPIED TO CLIPBOARD
+            </div>
+
+            <p
+                style="font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); line-height:1.7; letter-spacing:0.5px;">
+                Every satoshi helps keep development alive.<br />Thank you for the support.
+            </p>
+        </div>
     </div>
-  </div>
-  <div class="answer-reveal" id="reveal-q7">✓ Correct Answer: 4.8 &nbsp;(f(3) = 5, f(−3) = −1/5 → 5 − 0.2 = 4.8)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q7')">Show Answer</button></div>
-</div>
 
-<!-- Q8 -->
-<div class="question-card" id="q8">
-  <div class="card-header">
-    <div class="q-number">8</div>
-    <div class="q-section-tag">Lines / Coordinate Geometry</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      Which of the following is an equation of the line in the xy-plane that is parallel to the y-axis and passes through the point <span class="math-expr">(5, −2)</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="8" data-correct="true"><span class="option-letter">A</span><span class="math-expr">x = 5</span></li>
-      <li class="option" data-q="8" data-correct="false"><span class="option-letter">B</span><span class="math-expr">y = 5</span></li>
-      <li class="option" data-q="8" data-correct="false"><span class="option-letter">C</span><span class="math-expr">x = −2</span></li>
-      <li class="option" data-q="8" data-correct="false"><span class="option-letter">D</span><span class="math-expr">y = −2</span></li>
-      <li class="option" data-q="8" data-correct="false"><span class="option-letter">E</span><span class="math-expr">x + y = 3</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q8">✓ Correct Answer: A — x = 5</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q8')">Show Answer</button></div>
-</div>
+    <!-- FOOTER -->
+    <footer class="rel" id="support">
+        <span class="footer-logo">STAT<span>IFY</span></span>
+        <div class="footer-links">
+            <a href="#" class="footer-link">GitHub</a>
+            <a href="#" class="footer-link">Discord</a>
+            <a href="#" class="footer-link">Modrinth</a>
+            <a href="#" class="footer-link">CurseForge</a>
+        </div>
+        <span class="footer-copy">© 2026 Statify · Not affiliated with Mojang</span>
+    </footer>
 
-<!-- Q9 -->
-<div class="question-card" id="q9">
-  <div class="card-header">
-    <div class="q-number">9</div>
-    <div class="q-section-tag">Law of Sines</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      A balloon floats above and between two points <em>A</em> and <em>B</em> on the ground. The angles of elevation from each point to the balloon are 48° and 53°, respectively, and the line-of-sight distance to the balloon from <em>A</em> is 18 feet. What is the distance from <em>A</em> to <em>B</em>, to the nearest foot?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="9" data-correct="false"><span class="option-letter">A</span>13 ft</li>
-      <li class="option" data-q="9" data-correct="false"><span class="option-letter">B</span>14 ft</li>
-      <li class="option" data-q="9" data-correct="true"><span class="option-letter">C</span>22 ft</li>
-      <li class="option" data-q="9" data-correct="false"><span class="option-letter">D</span>24 ft</li>
-      <li class="option" data-q="9" data-correct="false"><span class="option-letter">E</span>It cannot be determined from the information given.</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q9">✓ Correct Answer: C — 22 ft</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q9')">Show Answer</button></div>
-</div>
+    <script>
+        // Custom cursor
+        const dot = document.getElementById("cursorDot");
+        const ring = document.getElementById("cursorRing");
+        let mx = 0, my = 0, rx = 0, ry = 0;
 
-<!-- Q10 -->
-<div class="question-card" id="q10">
-  <div class="card-header">
-    <div class="q-number">10</div>
-    <div class="q-section-tag">Trig Identities</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">f(x) = cos²x</span> and <span class="math-expr">g(x) = sin²x</span>, which of the following defines the function <span class="math-expr">h</span>, where <span class="math-expr">h(x) = 1</span> for all <span class="math-expr">x</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="10" data-correct="false"><span class="option-letter">A</span><span class="math-expr">f − g</span></li>
-      <li class="option" data-q="10" data-correct="true"><span class="option-letter">B</span><span class="math-expr">f + g</span></li>
-      <li class="option" data-q="10" data-correct="false"><span class="option-letter">C</span><span class="math-expr"><span class="frac"><span class="num">f</span><span class="bar"></span><span class="den">g</span></span></span></li>
-      <li class="option" data-q="10" data-correct="false"><span class="option-letter">D</span><span class="math-expr">fg</span></li>
-      <li class="option" data-q="10" data-correct="false"><span class="option-letter">E</span><span class="math-expr">f² + g²</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q10">✓ Correct Answer: B — f + g (Pythagorean identity)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q10')">Show Answer</button></div>
-</div>
+        document.addEventListener("mousemove", e => {
+            mx = e.clientX; my = e.clientY;
+            dot.style.left = (mx - 4) + "px";
+            dot.style.top = (my - 4) + "px";
+        });
 
-<!-- Q11 -->
-<div class="question-card" id="q11">
-  <div class="card-header">
-    <div class="q-number">11</div>
-    <div class="q-section-tag">Function Transformations</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      Let <span class="math-expr">f</span> be the function defined by <span class="math-expr">f(x) = 4x + 12</span>. If <span class="math-expr">g(x) = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">2</span></span>f(2x)</span>, which of the following is an expression for the function <span class="math-expr">g</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="11" data-correct="false"><span class="option-letter">A</span><span class="math-expr">g(x) = 2x + 6</span></li>
-      <li class="option" data-q="11" data-correct="false"><span class="option-letter">B</span><span class="math-expr">g(x) = 2x + 12</span></li>
-      <li class="option" data-q="11" data-correct="true"><span class="option-letter">C</span><span class="math-expr">g(x) = 4x + 6</span></li>
-      <li class="option" data-q="11" data-correct="false"><span class="option-letter">D</span><span class="math-expr">g(x) = 4x + 12</span></li>
-      <li class="option" data-q="11" data-correct="false"><span class="option-letter">E</span><span class="math-expr">g(x) = 8x + 24</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q11">✓ Correct Answer: C — g(x) = 4x + 6</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q11')">Show Answer</button></div>
-</div>
+        function animRing() {
+            rx += (mx - rx - 15) * 0.12;
+            ry += (my - ry - 15) * 0.12;
+            ring.style.left = rx + "px";
+            ring.style.top = ry + "px";
+            requestAnimationFrame(animRing);
+        }
+        animRing();
 
-<!-- Q12 -->
-<div class="question-card" id="q12">
-  <div class="card-header">
-    <div class="q-number">12</div>
-    <div class="q-section-tag">Composite Functions</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The surface area of a spherical balloon of radius <span class="math-expr">r</span> is given by <span class="math-expr">f(r) = 4πr²</span>. As the balloon is inflated, the radius is given by <span class="math-expr">g(t) = <span class="frac"><span class="num">3t</span><span class="bar"></span><span class="den">t + 1</span></span></span>, where <span class="math-expr">t</span> represents inflation time. Which of the following best describes the composite function <span class="math-expr">f ∘ g</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="12" data-correct="true"><span class="option-letter">A</span>The surface area of the balloon as a function of inflation time</li>
-      <li class="option" data-q="12" data-correct="false"><span class="option-letter">B</span>The radius of the balloon as a function of inflation time</li>
-      <li class="option" data-q="12" data-correct="false"><span class="option-letter">C</span>The radius of the balloon as a function of the balloon's surface area</li>
-      <li class="option" data-q="12" data-correct="false"><span class="option-letter">D</span>The inflation time as a function of the balloon's surface area</li>
-      <li class="option" data-q="12" data-correct="false"><span class="option-letter">E</span>The inflation time as a function of the balloon's radius</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q12">✓ Correct Answer: A</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q12')">Show Answer</button></div>
-</div>
+        document.querySelectorAll("a, button, .feature-card, .stat-cell, .lb-row, .step").forEach(el => {
+            el.addEventListener("mouseenter", () => {
+                dot.style.transform = "scale(2)";
+                ring.style.width = "50px";
+                ring.style.height = "50px";
+                ring.style.borderColor = "rgba(255,45,45,0.6)";
+            });
+            el.addEventListener("mouseleave", () => {
+                dot.style.transform = "scale(1)";
+                ring.style.width = "30px";
+                ring.style.height = "30px";
+                ring.style.borderColor = "rgba(255,45,45,0.4)";
+            });
+        });
 
-<!-- Q13 -->
-<div class="question-card" id="q13">
-  <div class="card-header">
-    <div class="q-number">13</div>
-    <div class="q-section-tag">Sinusoidal Models</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The temperature, in °F, of a room <span class="math-expr">t</span> hours after midnight varies according to
-      <span class="math-expr">T(t) = A sin<span class="frac" style="font-size:0.8em"><span class="num">πt</span><span class="bar"></span><span class="den">12</span></span> + B</span>,
-      where <span class="math-expr">A</span> and <span class="math-expr">B</span> are positive constants. The maximum temperature is 70°F and the greatest difference in temperature is 10°F. What is the value of <span class="math-expr">B</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="13" data-correct="false"><span class="option-letter">A</span>10</li>
-      <li class="option" data-q="13" data-correct="true"><span class="option-letter">B</span>65</li>
-      <li class="option" data-q="13" data-correct="false"><span class="option-letter">C</span>70</li>
-      <li class="option" data-q="13" data-correct="false"><span class="option-letter">D</span>75</li>
-      <li class="option" data-q="13" data-correct="false"><span class="option-letter">E</span>80</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q13">✓ Correct Answer: B — 65</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q13')">Show Answer</button></div>
-</div>
+        // Build history bars
+        const bars = document.getElementById("histBar");
+        if (bars) {
+            const heights = [60, 40, 80, 30, 90, 70, 50, 85, 45, 55, 75, 95, 65, 35, 80, 70, 60, 90, 50, 40, 85, 30, 75, 60, 95, 45, 70, 55, 80, 40];
+            heights.forEach(h => {
+                const b = document.createElement("div");
+                b.className = "h-bar " + (h > 50 ? "win" : "loss");
+                b.style.height = h + "%";
+                bars.appendChild(b);
+            });
+        }
 
-<!-- Q14 -->
-<div class="question-card" id="q14">
-  <div class="card-header">
-    <div class="q-number">14</div>
-    <div class="q-section-tag">Modeling / Rates</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      Manuel drove 100 miles total. The first part of the trip was at 60 mph; the rest at 40 mph. If <span class="math-expr">n</span> is the number of miles before heavy traffic, which function <span class="math-expr">T</span> gives the total hours driven?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="14" data-correct="false"><span class="option-letter">A</span>
-        <span class="math-expr">T(n) = <span class="frac"><span class="num">n</span><span class="bar"></span><span class="den">60</span></span> + <span class="frac"><span class="num">100 − n</span><span class="bar"></span><span class="den">40</span></span></span>
-      </li>
-      <li class="option" data-q="14" data-correct="true"><span class="option-letter">B</span>
-        <span class="math-expr">T(n) = <span class="frac"><span class="num">n</span><span class="bar"></span><span class="den">40</span></span> + <span class="frac"><span class="num">100 − n</span><span class="bar"></span><span class="den">60</span></span></span>
-      </li>
-      <li class="option" data-q="14" data-correct="false"><span class="option-letter">C</span><span class="math-expr">T(n) = 60n + 40(100 − n)</span></li>
-      <li class="option" data-q="14" data-correct="false"><span class="option-letter">D</span><span class="math-expr">T(n) = 40n + 60(100 − n)</span></li>
-      <li class="option" data-q="14" data-correct="false"><span class="option-letter">E</span>
-        <span class="math-expr">T(n) = <span class="frac"><span class="num">n(100 − n)</span><span class="bar"></span><span class="den">(40)(60)</span></span></span>
-      </li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q14">✓ Correct Answer: B</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q14')">Show Answer</button></div>
-</div>
+        // Scroll animations
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) e.target.classList.add("visible");
+            });
+        }, { threshold: 0.15 });
 
-<!-- Q15 -->
-<div class="question-card" id="q15">
-  <div class="card-header">
-    <div class="q-number">15</div>
-    <div class="q-section-tag">Graphing Trig Functions</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      Which of the following could be a portion of the graph of the function <span class="math-expr">f(x) = −1 + tan x</span>?
-    </p>
-    <p style="font-style:italic; color:var(--gold); font-size:0.88rem; margin-top:0.4rem;">
-      [Five graph options displayed on original exam — the third option (graph shifted down 1 unit) is correct.]
-    </p>
-    <ul class="options">
-      <li class="option" data-q="15" data-correct="false"><span class="option-letter">A</span>Graph A — standard tan x (no shift)</li>
-      <li class="option" data-q="15" data-correct="false"><span class="option-letter">B</span>Graph B — tan x shifted left</li>
-      <li class="option" data-q="15" data-correct="true"><span class="option-letter">C</span>Graph C — tan x shifted down by 1 unit ✓</li>
-      <li class="option" data-q="15" data-correct="false"><span class="option-letter">D</span>Graph D — reflected tan</li>
-      <li class="option" data-q="15" data-correct="false"><span class="option-letter">E</span>Graph E — tan x shifted right</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q15">✓ Correct Answer: C — Graph shifted 1 unit downward</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q15')">Show Answer</button></div>
-</div>
+        document.querySelectorAll(".fade-up:not(.visible)").forEach(el => obs.observe(el));
 
-<!-- Q16 -->
-<div class="question-card" id="q16">
-  <div class="card-header">
-    <div class="q-number">16</div>
-    <div class="q-section-tag">Conics</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      <span style="display:block; text-align:center; font-style:italic; margin-bottom:0.6rem; font-size:1.05rem;">9y² − 4x² + 18y + 8x = 31</span>
-      Which of the following is the graph in the xy-plane of the equation shown?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="16" data-correct="false"><span class="option-letter">A</span>A circle</li>
-      <li class="option" data-q="16" data-correct="false"><span class="option-letter">B</span>An ellipse that is not a circle</li>
-      <li class="option" data-q="16" data-correct="false"><span class="option-letter">C</span>A parabola</li>
-      <li class="option" data-q="16" data-correct="true"><span class="option-letter">D</span>A hyperbola</li>
-      <li class="option" data-q="16" data-correct="false"><span class="option-letter">E</span>Two straight lines</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q16">✓ Correct Answer: D — A hyperbola (opposite sign coefficients)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q16')">Show Answer</button></div>
-</div>
+        // BTC Modal
+        const BTC_ADDR = "bc1pg0nl950avm7v2wsctaa7vkn53gtas4en927xu7jjanz75amquynsjmqh6n";
 
-<!-- Q17 -->
-<div class="question-card" id="q17">
-  <div class="card-header">
-    <div class="q-number">17</div>
-    <div class="q-section-tag">Trig / Quadrants</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The angle <span class="math-expr">θ</span> is in standard position. If <span class="math-expr">cos θ > 0</span> and <span class="math-expr">tan θ &lt; 0</span>, which of the following is true?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="17" data-correct="false"><span class="option-letter">A</span><span class="math-expr">0 &lt; θ &lt; <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">2</span></span></span></li>
-      <li class="option" data-q="17" data-correct="false"><span class="option-letter">B</span><span class="math-expr"><span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">2</span></span> &lt; θ &lt; π</span></li>
-      <li class="option" data-q="17" data-correct="false"><span class="option-letter">C</span><span class="math-expr">π &lt; θ &lt; <span class="frac"><span class="num">3π</span><span class="bar"></span><span class="den">2</span></span></span></li>
-      <li class="option" data-q="17" data-correct="true"><span class="option-letter">D</span><span class="math-expr"><span class="frac"><span class="num">3π</span><span class="bar"></span><span class="den">2</span></span> &lt; θ &lt; 2π</span></li>
-      <li class="option" data-q="17" data-correct="false"><span class="option-letter">E</span><span class="math-expr">2π &lt; θ &lt; <span class="frac"><span class="num">9π</span><span class="bar"></span><span class="den">4</span></span></span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q17">✓ Correct Answer: D — Quadrant IV (cos > 0, tan < 0)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q17')">Show Answer</button></div>
-</div>
+        function openBtcModal() {
+            const modal = document.getElementById("btc-modal");
+            modal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+            drawQR();
+        }
 
-<!-- Q18 -->
-<div class="question-card" id="q18">
-  <div class="card-header">
-    <div class="q-number">18</div>
-    <div class="q-section-tag">Graphing / x-intercepts</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The figure shows the graphs of the quadratic function <span class="math-expr">f</span> and the linear function <span class="math-expr">g</span>. What are all the x-intercepts of the graph of <span class="math-expr">y = f(x) − g(x)</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="18" data-correct="false"><span class="option-letter">A</span>1</li>
-      <li class="option" data-q="18" data-correct="false"><span class="option-letter">B</span>1 and 3</li>
-      <li class="option" data-q="18" data-correct="true"><span class="option-letter">C</span>1 and 5</li>
-      <li class="option" data-q="18" data-correct="false"><span class="option-letter">D</span>−2 and 3</li>
-      <li class="option" data-q="18" data-correct="false"><span class="option-letter">E</span>−2, 1, 3, and 5</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q18">✓ Correct Answer: C — 1 and 5</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q18')">Show Answer</button></div>
-</div>
+        function closeBtcModal() {
+            document.getElementById("btc-modal").style.display = "none";
+            document.body.style.overflow = "";
+        }
 
-<!-- Q19 -->
-<div class="question-card" id="q19">
-  <div class="card-header">
-    <div class="q-number">19</div>
-    <div class="q-section-tag">Trig Identities</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">Which of the following are trigonometric identities?</p>
-    <p style="margin: 0.3rem 0 0.8rem 1rem; font-size:0.94rem; line-height:2;">
-      I. &nbsp;<span class="math-expr"><span class="frac"><span class="num">sin x</span><span class="bar"></span><span class="den">cos y</span></span> = tan<span class="frac" style="font-size:0.8em"><span class="num">x</span><span class="bar"></span><span class="den">y</span></span></span><br>
-      II. &nbsp;<span class="math-expr">cos(−t) = −cos(t)</span><br>
-      III. &nbsp;<span class="math-expr">sin(x²) = (sin x)²</span>
-    </p>
-    <ul class="options">
-      <li class="option" data-q="19" data-correct="true"><span class="option-letter">A</span>None</li>
-      <li class="option" data-q="19" data-correct="false"><span class="option-letter">B</span>I only</li>
-      <li class="option" data-q="19" data-correct="false"><span class="option-letter">C</span>II only</li>
-      <li class="option" data-q="19" data-correct="false"><span class="option-letter">D</span>I and III</li>
-      <li class="option" data-q="19" data-correct="false"><span class="option-letter">E</span>II and III</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q19">✓ Correct Answer: A — None (all three are false identities)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q19')">Show Answer</button></div>
-</div>
+        document.getElementById("btc-modal").addEventListener("click", function (e) {
+            if (e.target === this) closeBtcModal();
+        });
 
-<!-- Q20 -->
-<div class="question-card" id="q20">
-  <div class="card-header">
-    <div class="q-number">20</div>
-    <div class="q-section-tag">Rational Equations</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      What is the least value of <span class="math-expr">x</span> that satisfies the equation
-      <span class="math-expr"><span class="frac"><span class="num">3x² + 13x − 10</span><span class="bar"></span><span class="den">x + 7</span></span> = 0</span>?
-    </p>
-    <div class="free-response">
-      <label>Your answer</label>
-      <input type="number" step="any" placeholder="Enter a number" id="input-q20" oninput="markAnswered('q20')">
-    </div>
-  </div>
-  <div class="answer-reveal" id="reveal-q20">✓ Correct Answer: −5 &nbsp;(factor: (3x − 2)(x + 5) = 0; x = 2/3 or x = −5; least is −5)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q20')">Show Answer</button></div>
-</div>
+        function copyBtcAddr() {
+            navigator.clipboard.writeText(BTC_ADDR).then(() => {
+                const msg = document.getElementById("btc-copy-msg");
+                const box = document.getElementById("btc-addr-box");
+                msg.style.opacity = "1";
+                box.style.borderColor = "rgba(74,222,128,0.5)";
+                setTimeout(() => {
+                    msg.style.opacity = "0";
+                    box.style.borderColor = "rgba(255,215,0,0.25)";
+                }, 2500);
+            });
+        }
 
-<!-- Q21 -->
-<div class="question-card" id="q21">
-  <div class="card-header">
-    <div class="q-number">21</div>
-    <div class="q-section-tag">Function Transformations</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The figure shows a portion of the graph of a function <span class="math-expr">g</span>. If <span class="math-expr">h</span> is the function such that <span class="math-expr">g(x) = h(x + 3)</span> for all values of <span class="math-expr">x</span>, what is the y-intercept of the graph of <span class="math-expr">h</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="21" data-correct="false"><span class="option-letter">A</span>0</li>
-      <li class="option" data-q="21" data-correct="true"><span class="option-letter">B</span>1</li>
-      <li class="option" data-q="21" data-correct="false"><span class="option-letter">C</span>2</li>
-      <li class="option" data-q="21" data-correct="false"><span class="option-letter">D</span>3</li>
-      <li class="option" data-q="21" data-correct="false"><span class="option-letter">E</span>6</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q21">✓ Correct Answer: B — 1</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q21')">Show Answer</button></div>
-</div>
+        function drawQR() {
+            const canvas = document.getElementById("btc-qr");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            const size = 150;
+            ctx.fillStyle = "#0b0f14";
+            ctx.fillRect(0, 0, size, size);
+            const cell = 6;
 
-<!-- Q22 -->
-<div class="question-card" id="q22">
-  <div class="card-header">
-    <div class="q-number">22</div>
-    <div class="q-section-tag">Systems of Equations</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      <span style="display:block;text-align:center;font-style:italic;margin-bottom:0.5rem;">
-        x + y = 1<br>2x − 3y = 3
-      </span>
-      If the ordered pair <span class="math-expr">(x, y)</span> is the solution to the system above, what is the value of <span class="math-expr">x − y</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="22" data-correct="false"><span class="option-letter">A</span><span class="math-expr"><span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">5</span></span></span></li>
-      <li class="option" data-q="22" data-correct="false"><span class="option-letter">B</span><span class="math-expr"><span class="frac"><span class="num">3</span><span class="bar"></span><span class="den">5</span></span></span></li>
-      <li class="option" data-q="22" data-correct="true"><span class="option-letter">C</span><span class="math-expr"><span class="frac"><span class="num">7</span><span class="bar"></span><span class="den">5</span></span></span></li>
-      <li class="option" data-q="22" data-correct="false"><span class="option-letter">D</span><span class="math-expr"><span class="frac"><span class="num">9</span><span class="bar"></span><span class="den">5</span></span></span></li>
-      <li class="option" data-q="22" data-correct="false"><span class="option-letter">E</span><span class="math-expr"><span class="frac"><span class="num">11</span><span class="bar"></span><span class="den">5</span></span></span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q22">✓ Correct Answer: C — 7/5</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q22')">Show Answer</button></div>
-</div>
+            function finder(x, y) {
+                ctx.fillStyle = "#ffd700";
+                ctx.fillRect(x, y, cell * 7, cell * 7);
+                ctx.fillStyle = "#0b0f14";
+                ctx.fillRect(x + cell, y + cell, cell * 5, cell * 5);
+                ctx.fillStyle = "#ffd700";
+                ctx.fillRect(x + cell * 2, y + cell * 2, cell * 3, cell * 3);
+            }
 
-<!-- Q23 -->
-<div class="question-card" id="q23">
-  <div class="card-header">
-    <div class="q-number">23</div>
-    <div class="q-section-tag">Polynomial Operations</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      Which of the following is equal to <span class="math-expr">(2x − 5)(3 + 4k)</span>?
-      <br><span style="font-size:0.82rem; color:var(--gold); font-style:italic;">(Original image was low resolution; the selected answer was −5x + 1.)</span>
-    </p>
-    <ul class="options">
-      <li class="option" data-q="23" data-correct="true"><span class="option-letter">A</span><span class="math-expr">−5x + 1</span> (selected on exam)</li>
-      <li class="option" data-q="23" data-correct="false"><span class="option-letter">B</span><span class="math-expr">2x + 1</span></li>
-      <li class="option" data-q="23" data-correct="false"><span class="option-letter">C</span><span class="math-expr">2x + 2</span></li>
-      <li class="option" data-q="23" data-correct="false"><span class="option-letter">D</span><span class="math-expr">4x + 1</span></li>
-      <li class="option" data-q="23" data-correct="false"><span class="option-letter">E</span><span class="math-expr">6x + 29</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q23">✓ Answer recorded as −5x + 1 (image was low resolution)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q23')">Show Answer</button></div>
-</div>
+            finder(6, 6);
+            finder(size - 6 - cell * 7, 6);
+            finder(6, size - 6 - cell * 7);
 
-<!-- Q24 -->
-<div class="question-card" id="q24">
-  <div class="card-header">
-    <div class="q-number">24</div>
-    <div class="q-section-tag">Lines / Parallel</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The graph of line <span class="math-expr">n</span> is shown above. Which of the following is an equation of the line that is parallel to <span class="math-expr">n</span> and contains the point <span class="math-expr">(2, −3)</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="24" data-correct="false"><span class="option-letter">A</span><span class="math-expr">y + 3 = −<span class="frac"><span class="num">5</span><span class="bar"></span><span class="den">2</span></span>(x + 2)</span></li>
-      <li class="option" data-q="24" data-correct="false"><span class="option-letter">B</span><span class="math-expr">y + 3 = <span class="frac"><span class="num">5</span><span class="bar"></span><span class="den">2</span></span>(x + 2)</span></li>
-      <li class="option" data-q="24" data-correct="false"><span class="option-letter">C</span><span class="math-expr">y + 3 = −<span class="frac"><span class="num">5</span><span class="bar"></span><span class="den">4</span></span>(x − 2)</span></li>
-      <li class="option" data-q="24" data-correct="true"><span class="option-letter">D</span><span class="math-expr">y + 3 = −<span class="frac"><span class="num">5</span><span class="bar"></span><span class="den">2</span></span>(x − 2)</span></li>
-      <li class="option" data-q="24" data-correct="false"><span class="option-letter">E</span><span class="math-expr">y + 3 = <span class="frac"><span class="num">5</span><span class="bar"></span><span class="den">2</span></span>(x − 2)</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q24">✓ Correct Answer: D</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q24')">Show Answer</button></div>
-</div>
+            ctx.fillStyle = "#ffd700";
+            const addr = BTC_ADDR;
 
-<!-- Q25 -->
-<div class="question-card" id="q25">
-  <div class="card-header">
-    <div class="q-number">25</div>
-    <div class="q-section-tag">Trig Evaluation</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">f(x) = 2cos(3x)</span>, then <span class="math-expr">f<span class="frac" style="font-size:0.85em"><span class="num">π</span><span class="bar"></span><span class="den">18</span></span></span> =
-    </p>
-    <ul class="options">
-      <li class="option" data-q="25" data-correct="false"><span class="option-letter">A</span>0</li>
-      <li class="option" data-q="25" data-correct="false"><span class="option-letter">B</span><span class="math-expr"><span class="frac"><span class="num"><span class="sqrt-wrap">3</span></span><span class="bar"></span><span class="den">2</span></span></span></li>
-      <li class="option" data-q="25" data-correct="false"><span class="option-letter">C</span>1</li>
-      <li class="option" data-q="25" data-correct="true"><span class="option-letter">D</span><span class="math-expr"><span class="sqrt-wrap">3</span></span></li>
-      <li class="option" data-q="25" data-correct="false"><span class="option-letter">E</span><span class="math-expr">2<span class="sqrt-wrap">2</span></span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q25">✓ Correct Answer: D — √3</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q25')">Show Answer</button></div>
-</div>
+            for (let i = 0; i < addr.length * 3; i++) {
+                const code = addr.charCodeAt(i % addr.length);
+                const gx = ((code * (i + 3)) % 20) * cell + 3;
+                const gy = ((code * (i + 7)) % 20) * cell + 3;
 
-<!-- ═══════════════════ SECTION 2 ═══════════════════ -->
-<div class="section-heading"><span>Section 2 — Questions 26–48</span></div>
+                const inTopLeft = gx < 54 && gy < 54;
+                const inTopRight = gx > size - 54 && gy < 54;
+                const inBottomLeft = gx < 54 && gy > size - 54;
 
-<!-- Q26 -->
-<div class="question-card" id="q26">
-  <div class="card-header">
-    <div class="q-number">26</div>
-    <div class="q-section-tag">Trig / Periods</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">Which of the following trigonometric functions has the greatest period?</p>
-    <ul class="options">
-      <li class="option" data-q="26" data-correct="true"><span class="option-letter">A</span><span class="math-expr">cos<span class="frac" style="font-size:0.85em"><span class="num">x</span><span class="bar"></span><span class="den">2</span></span></span></li>
-      <li class="option" data-q="26" data-correct="false"><span class="option-letter">B</span><span class="math-expr">2 cos x</span></li>
-      <li class="option" data-q="26" data-correct="false"><span class="option-letter">C</span><span class="math-expr">cos(2x)</span></li>
-      <li class="option" data-q="26" data-correct="false"><span class="option-letter">D</span><span class="math-expr">5 cos(3x)</span></li>
-      <li class="option" data-q="26" data-correct="false"><span class="option-letter">E</span><span class="math-expr">cos(4x)</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q26">✓ Correct Answer: A — cos(x/2) has period 4π</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q26')">Show Answer</button></div>
-</div>
+                if (!inTopLeft && !inTopRight && !inBottomLeft) {
+                    ctx.fillRect(gx, gy, cell - 1, cell - 1);
+                }
+            }
+        }
 
-<!-- Q27 -->
-<div class="question-card" id="q27">
-  <div class="card-header">
-    <div class="q-number">27</div>
-    <div class="q-section-tag">Average Rate of Change</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      When a certain company sells <span class="math-expr">n</span> items, its total sales revenue is modeled by <span class="math-expr">R(n) = −(n − 30)² + 1,200</span>. What is the average rate of change of the total sales revenue when the number of items sold increases from 20 to 28?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="27" data-correct="false"><span class="option-letter">A</span>$14 per item</li>
-      <li class="option" data-q="27" data-correct="false"><span class="option-letter">B</span>$42 per item</li>
-      <li class="option" data-q="27" data-correct="false"><span class="option-letter">C</span>$85 per item</li>
-      <li class="option" data-q="27" data-correct="false"><span class="option-letter">D</span>$1,142 per item</li>
-      <li class="option" data-q="27" data-correct="false"><span class="option-letter">E</span>$2,284 per item</li>
-    </ul>
-    <p style="font-size:0.8rem; color:var(--gold); font-style:italic; margin-top:0.4rem;">(See Q28 for same question with interval 20 to 26)</p>
-  </div>
-  <div class="answer-reveal" id="reveal-q27">✓ Average rate of change from 20→28: [R(28)−R(20)] / 8 = $18 per item (check your computation)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q27')">Show Answer</button></div>
-</div>
-
-<!-- Q28 -->
-<div class="question-card" id="q28">
-  <div class="card-header">
-    <div class="q-number">28</div>
-    <div class="q-section-tag">Average Rate of Change</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      When a certain company sells <span class="math-expr">n</span> items, its total sales revenue is modeled by <span class="math-expr">R(n) = −(n − 30)² + 1,200</span>. What is the average rate of change of the total sales revenue when the number of items sold increases from 20 to 26?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="28" data-correct="true"><span class="option-letter">A</span>$14 per item</li>
-      <li class="option" data-q="28" data-correct="false"><span class="option-letter">B</span>$42 per item</li>
-      <li class="option" data-q="28" data-correct="false"><span class="option-letter">C</span>$85 per item</li>
-      <li class="option" data-q="28" data-correct="false"><span class="option-letter">D</span>$1,142 per item</li>
-      <li class="option" data-q="28" data-correct="false"><span class="option-letter">E</span>$2,284 per item</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q28">✓ Correct Answer: A — $14 per item</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q28')">Show Answer</button></div>
-</div>
-
-<!-- Q29 -->
-<div class="question-card" id="q29">
-  <div class="card-header">
-    <div class="q-number">29</div>
-    <div class="q-section-tag">Linear Functions / Inequalities</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      <span style="display:block;text-align:center;font-style:italic;margin-bottom:0.5rem;">
-        f(x) = mx + 10 &nbsp;&nbsp;&nbsp; g(x) = kx − 10
-      </span>
-      For the functions above, <span class="math-expr">m</span> and <span class="math-expr">k</span> are constants where <span class="math-expr">m &lt; 0</span> and <span class="math-expr">k > 0</span>. If the graphs intersect at the point <span class="math-expr">(6, 3)</span>, what are all values of <span class="math-expr">x</span> such that <span class="math-expr">f(x) &lt; g(x)</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="29" data-correct="false"><span class="option-letter">A</span><span class="math-expr">x &lt; 3</span></li>
-      <li class="option" data-q="29" data-correct="false"><span class="option-letter">B</span><span class="math-expr">x &lt; 6</span></li>
-      <li class="option" data-q="29" data-correct="false"><span class="option-letter">C</span><span class="math-expr">x > 3</span></li>
-      <li class="option" data-q="29" data-correct="true"><span class="option-letter">D</span><span class="math-expr">x > 6</span></li>
-      <li class="option" data-q="29" data-correct="false"><span class="option-letter">E</span><span class="math-expr">x > 10</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q29">✓ Correct Answer: D — x > 6</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q29')">Show Answer</button></div>
-</div>
-
-<!-- Q30 -->
-<div class="question-card" id="q30">
-  <div class="card-header">
-    <div class="q-number">30</div>
-    <div class="q-section-tag">Inverse Functions</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">f(x) = <span class="sqrt-wrap">x − 3</span> + 4</span>, then <span class="math-expr">f⁻¹</span>, the inverse function of <span class="math-expr">f</span>, is defined by which of the following?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="30" data-correct="false"><span class="option-letter">A</span><span class="math-expr">f⁻¹(x) = (x + 4)² − 3</span>, for <span class="math-expr">x ≥ 0</span></li>
-      <li class="option" data-q="30" data-correct="false"><span class="option-letter">B</span><span class="math-expr">f⁻¹(x) = (x + 3)² − 4</span>, for <span class="math-expr">x ≥ 0</span></li>
-      <li class="option" data-q="30" data-correct="false"><span class="option-letter">C</span><span class="math-expr">f⁻¹(x) = (x + 3)² − 4</span>, for <span class="math-expr">x ≥ 3</span></li>
-      <li class="option" data-q="30" data-correct="false"><span class="option-letter">D</span><span class="math-expr">f⁻¹(x) = (x − 4)² − 3</span>, for <span class="math-expr">x ≥ 3</span></li>
-      <li class="option" data-q="30" data-correct="true"><span class="option-letter">E</span><span class="math-expr">f⁻¹(x) = (x − 4)² + 3</span>, for <span class="math-expr">x ≥ 4</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q30">✓ Correct Answer: E</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q30')">Show Answer</button></div>
-</div>
-
-<!-- Q31 -->
-<div class="question-card" id="q31">
-  <div class="card-header">
-    <div class="q-number">31</div>
-    <div class="q-section-tag">Difference Quotient</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">f(x) = x² − x</span>, then
-      <span class="math-expr"><span class="frac"><span class="num">f(x + 2) − f(x)</span><span class="bar"></span><span class="den">2</span></span></span> =
-    </p>
-    <ul class="options">
-      <li class="option" data-q="31" data-correct="false"><span class="option-letter">A</span>1</li>
-      <li class="option" data-q="31" data-correct="false"><span class="option-letter">B</span>4x</li>
-      <li class="option" data-q="31" data-correct="true"><span class="option-letter">C</span><span class="math-expr">2x + 1</span></li>
-      <li class="option" data-q="31" data-correct="false"><span class="option-letter">D</span><span class="math-expr">4x + 2</span></li>
-      <li class="option" data-q="31" data-correct="false"><span class="option-letter">E</span><span class="math-expr">x² − x</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q31">✓ Correct Answer: C — 2x + 1</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q31')">Show Answer</button></div>
-</div>
-
-<!-- Q32 -->
-<div class="question-card" id="q32">
-  <div class="card-header">
-    <div class="q-number">32</div>
-    <div class="q-section-tag">Rational Functions / Graphing</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The figure shows the graph of a function <span class="math-expr">g</span> in the xy-plane. Which of the following could define <span class="math-expr">g</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="32" data-correct="false"><span class="option-letter">A</span><span class="math-expr">g(x) = <span class="frac"><span class="num">2</span><span class="bar"></span><span class="den">x + 3</span></span></span></li>
-      <li class="option" data-q="32" data-correct="false"><span class="option-letter">B</span><span class="math-expr">g(x) = 2 + <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x + 3</span></span></span></li>
-      <li class="option" data-q="32" data-correct="true"><span class="option-letter">C</span><span class="math-expr">g(x) = 2 + <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x − 3</span></span></span></li>
-      <li class="option" data-q="32" data-correct="false"><span class="option-letter">D</span><span class="math-expr">g(x) = 2 − <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x − 3</span></span></span></li>
-      <li class="option" data-q="32" data-correct="false"><span class="option-letter">E</span><span class="math-expr">g(x) = 2 + <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x</span></span></span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q32">✓ Correct Answer: C — g(x) = 2 + 1/(x−3)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q32')">Show Answer</button></div>
-</div>
-
-<!-- Q33 -->
-<div class="question-card" id="q33">
-  <div class="card-header">
-    <div class="q-number">33</div>
-    <div class="q-section-tag">Domain of Logarithm</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      Which of the following is in the domain of the function <span class="math-expr">f</span> given by
-      <span class="math-expr">f(x) = log[(x + 3)(2x − 7)(3x − 25)]</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="33" data-correct="false"><span class="option-letter">A</span>−4</li>
-      <li class="option" data-q="33" data-correct="true"><span class="option-letter">B</span>3</li>
-      <li class="option" data-q="33" data-correct="false"><span class="option-letter">C</span>4</li>
-      <li class="option" data-q="33" data-correct="false"><span class="option-letter">D</span>5</li>
-      <li class="option" data-q="33" data-correct="false"><span class="option-letter">E</span>6</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q33">✓ Correct Answer: B — 3 (all three factors are negative, product is negative → not in domain... wait, at x=3: (6)(−1)(−16)=96>0 ✓)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q33')">Show Answer</button></div>
-</div>
-
-<!-- Q34 -->
-<div class="question-card" id="q34">
-  <div class="card-header">
-    <div class="q-number">34</div>
-    <div class="q-section-tag">Trig Equations</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      What are the solutions to the equation <span class="math-expr">sin³θ cosθ + sinθ cos³θ = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">4</span></span></span> on the interval <span class="math-expr">[0, <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">2</span></span>]</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="34" data-correct="false"><span class="option-letter">A</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">12</span></span></span> only</li>
-      <li class="option" data-q="34" data-correct="false"><span class="option-letter">B</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">6</span></span></span> only</li>
-      <li class="option" data-q="34" data-correct="false"><span class="option-letter">C</span><span class="math-expr">θ = <span class="frac"><span class="num">5π</span><span class="bar"></span><span class="den">12</span></span></span> only</li>
-      <li class="option" data-q="34" data-correct="false"><span class="option-letter">D</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">12</span></span></span> and <span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">6</span></span></span></li>
-      <li class="option" data-q="34" data-correct="true"><span class="option-letter">E</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">12</span></span></span> and <span class="math-expr">θ = <span class="frac"><span class="num">5π</span><span class="bar"></span><span class="den">12</span></span></span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q34">✓ Correct Answer: E — π/12 and 5π/12</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q34')">Show Answer</button></div>
-</div>
-
-<!-- Q35 -->
-<div class="question-card" id="q35">
-  <div class="card-header">
-    <div class="q-number">35</div>
-    <div class="q-section-tag">Modeling / Optimization</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      <span class="math-expr">N(t) = 4 + (t² − 2t)e<sup>−0.5t</sup></span>, where <span class="math-expr">0 ≤ t ≤ 10</span>
-    </p>
-    <p class="question-text">
-      The function <span class="math-expr">N</span> models the squirrel population (in hundreds) in a wooded area over 10 years, where <span class="math-expr">t</span> = years after January 1, 1990. Between which years was the squirrel population at its maximum?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="35" data-correct="false"><span class="option-letter">A</span>1990 and 1991</li>
-      <li class="option" data-q="35" data-correct="true"><span class="option-letter">B</span>1991 and 1992</li>
-      <li class="option" data-q="35" data-correct="false"><span class="option-letter">C</span>1994 and 1995</li>
-      <li class="option" data-q="35" data-correct="false"><span class="option-letter">D</span>1995 and 1996</li>
-      <li class="option" data-q="35" data-correct="false"><span class="option-letter">E</span>1999 and 2000</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q35">✓ Correct Answer: B — 1991 and 1992</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q35')">Show Answer</button></div>
-</div>
-
-<!-- Q36 -->
-<div class="question-card" id="q36">
-  <div class="card-header">
-    <div class="q-number">36</div>
-    <div class="q-section-tag">Inverse Functions</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      Let <span class="math-expr">f</span> be a one-to-one function with domain <span class="math-expr">(−∞, ∞)</span>. The point <span class="math-expr">(a, b)</span> is on the graph of <span class="math-expr">y = f(x)</span>, where <span class="math-expr">a</span> and <span class="math-expr">b</span> are nonzero real numbers. Which of the following points must be on the graph of the inverse function <span class="math-expr">y = f⁻¹(x)</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="36" data-correct="false"><span class="option-letter">A</span><span class="math-expr">(−a, −b)</span></li>
-      <li class="option" data-q="36" data-correct="false"><span class="option-letter">B</span><span class="math-expr">(−b, −a)</span></li>
-      <li class="option" data-q="36" data-correct="false"><span class="option-letter">C</span><span class="math-expr">(−<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">b</span></span>, −<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">a</span></span>)</span></li>
-      <li class="option" data-q="36" data-correct="false"><span class="option-letter">D</span><span class="math-expr">(<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">a</span></span>, <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">b</span></span>)</span></li>
-      <li class="option" data-q="36" data-correct="true"><span class="option-letter">E</span><span class="math-expr">(b, a)</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q36">✓ Correct Answer: E — (b, a)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q36')">Show Answer</button></div>
-</div>
-
-<!-- Q37 -->
-<div class="question-card" id="q37">
-  <div class="card-header">
-    <div class="q-number">37</div>
-    <div class="q-section-tag">Trig Values</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">sin θ = −<span class="frac"><span class="num">5</span><span class="bar"></span><span class="den">13</span></span></span> and <span class="math-expr">π &lt; θ &lt; <span class="frac"><span class="num">3</span><span class="bar"></span><span class="den">2</span></span>π</span>, which of the following has the least value?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="37" data-correct="false"><span class="option-letter">A</span><span class="math-expr">tan θ</span></li>
-      <li class="option" data-q="37" data-correct="false"><span class="option-letter">B</span><span class="math-expr">cot θ</span></li>
-      <li class="option" data-q="37" data-correct="false"><span class="option-letter">C</span><span class="math-expr">cos θ</span></li>
-      <li class="option" data-q="37" data-correct="false"><span class="option-letter">D</span><span class="math-expr">sec θ</span></li>
-      <li class="option" data-q="37" data-correct="true"><span class="option-letter">E</span><span class="math-expr">csc θ</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q37">✓ Correct Answer: E — csc θ = −13/5 = −2.6, least value</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q37')">Show Answer</button></div>
-</div>
-
-<!-- Q38 -->
-<div class="question-card" id="q38">
-  <div class="card-header">
-    <div class="q-number">38</div>
-    <div class="q-section-tag">Parabolas</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      In the xy-plane, the axis of symmetry of a parabola is the line <span class="math-expr">x = 2</span>. The parabola intersects the x-axis when <span class="math-expr">x = −1</span>. Which of the following could be an equation of the parabola?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="38" data-correct="false"><span class="option-letter">A</span><span class="math-expr">y = x² − x − 2</span></li>
-      <li class="option" data-q="38" data-correct="false"><span class="option-letter">B</span><span class="math-expr">y = x² − 2x − 3</span></li>
-      <li class="option" data-q="38" data-correct="true"><span class="option-letter">C</span><span class="math-expr">y = x² − 4x − 5</span></li>
-      <li class="option" data-q="38" data-correct="false"><span class="option-letter">D</span><span class="math-expr">y = x² + 6x + 5</span></li>
-      <li class="option" data-q="38" data-correct="false"><span class="option-letter">E</span><span class="math-expr">y = 2x² + x − 1</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q38">✓ Correct Answer: C — y = x² − 4x − 5</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q38')">Show Answer</button></div>
-</div>
-
-<!-- Q39 -->
-<div class="question-card" id="q39">
-  <div class="card-header">
-    <div class="q-number">39</div>
-    <div class="q-section-tag">Range / Transformations</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The range of the function <span class="math-expr">f</span> is <span class="math-expr">{y : 0 ≤ y ≤ 2}</span>. If <span class="math-expr">g(x) = f(x − 5) + 10</span>, what is the range of the function <span class="math-expr">g</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="39" data-correct="false"><span class="option-letter">A</span><span class="math-expr">{y : −5 ≤ y ≤ −3}</span></li>
-      <li class="option" data-q="39" data-correct="false"><span class="option-letter">B</span><span class="math-expr">{y : 0 ≤ y ≤ 20}</span></li>
-      <li class="option" data-q="39" data-correct="false"><span class="option-letter">C</span><span class="math-expr">{y : 5 ≤ y ≤ 7}</span></li>
-      <li class="option" data-q="39" data-correct="true"><span class="option-letter">D</span><span class="math-expr">{y : 10 ≤ y ≤ 12}</span></li>
-      <li class="option" data-q="39" data-correct="false"><span class="option-letter">E</span><span class="math-expr">{y : 10 ≤ y ≤ 20}</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q39">✓ Correct Answer: D — {y : 10 ≤ y ≤ 12}</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q39')">Show Answer</button></div>
-</div>
-
-<!-- Q40 -->
-<div class="question-card" id="q40">
-  <div class="card-header">
-    <div class="q-number">40</div>
-    <div class="q-section-tag">Circles / Lines</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      Which of the following is an equation of the line in the xy-plane that passes through the x- and y-intercepts of the graph of <span class="math-expr">(x − 3)² + (y − 3)² = 9</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="40" data-correct="false"><span class="option-letter">A</span><span class="math-expr">y = x + 3</span></li>
-      <li class="option" data-q="40" data-correct="false"><span class="option-letter">B</span><span class="math-expr">y = −x + 3</span></li>
-      <li class="option" data-q="40" data-correct="false"><span class="option-letter">C</span><span class="math-expr">y = −x − 3</span></li>
-      <li class="option" data-q="40" data-correct="true"><span class="option-letter">D</span><span class="math-expr">y = −x + 6</span></li>
-      <li class="option" data-q="40" data-correct="false"><span class="option-letter">E</span><span class="math-expr">y = −x + 9</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q40">✓ Correct Answer: D — y = −x + 6</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q40')">Show Answer</button></div>
-</div>
-
-<!-- Q41 -->
-<div class="question-card" id="q41">
-  <div class="card-header">
-    <div class="q-number">41</div>
-    <div class="q-section-tag">Algebra / Solving for x</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">−7x + 5 = 2x − b</span>, which of the following expresses <span class="math-expr">x</span> in terms of <span class="math-expr">b</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="41" data-correct="false"><span class="option-letter">A</span><span class="math-expr">x = −<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">5</span></span>(b + 5)</span></li>
-      <li class="option" data-q="41" data-correct="false"><span class="option-letter">B</span><span class="math-expr">x = −<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">9</span></span>(5 − b)</span></li>
-      <li class="option" data-q="41" data-correct="false"><span class="option-letter">C</span><span class="math-expr">x = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">9</span></span>(5 − b)</span></li>
-      <li class="option" data-q="41" data-correct="true"><span class="option-letter">D</span><span class="math-expr">x = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">9</span></span>(b + 5)</span></li>
-      <li class="option" data-q="41" data-correct="false"><span class="option-letter">E</span><span class="math-expr">x = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">5</span></span>(b + 5)</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q41">✓ Correct Answer: D — x = (b + 5)/9</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q41')">Show Answer</button></div>
-</div>
-
-<!-- Q42 -->
-<div class="question-card" id="q42">
-  <div class="card-header">
-    <div class="q-number">42</div>
-    <div class="q-section-tag">Proportionality</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The cost of a container of liquid shaped as a rectangular box with interior dimensions 2.5 × 4 × 8 inches is $1.25. If cost is directly proportional to volume, what is the cost of a container with interior dimensions 4 × 10 × 12 inches?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="42" data-correct="false"><span class="option-letter">A</span>$5.00</li>
-      <li class="option" data-q="42" data-correct="false"><span class="option-letter">B</span>$6.00</li>
-      <li class="option" data-q="42" data-correct="true"><span class="option-letter">C</span>$7.50</li>
-      <li class="option" data-q="42" data-correct="false"><span class="option-letter">D</span>$11.25</li>
-      <li class="option" data-q="42" data-correct="false"><span class="option-letter">E</span>$24.00</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q42">✓ Correct Answer: C — $7.50</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q42')">Show Answer</button></div>
-</div>
-
-<!-- Q43 -->
-<div class="question-card" id="q43">
-  <div class="card-header">
-    <div class="q-number">43</div>
-    <div class="q-section-tag">Absolute Value Inequalities</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      <span style="display:block;text-align:center;font-style:italic;font-size:1.1rem;margin-bottom:0.5rem;">|x − m| &lt; 2</span>
-      If <span class="math-expr">m > 0</span> in the inequality above, which of the following CANNOT be the value of <span class="math-expr">x</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="43" data-correct="true"><span class="option-letter">A</span>−2</li>
-      <li class="option" data-q="43" data-correct="false"><span class="option-letter">B</span>0</li>
-      <li class="option" data-q="43" data-correct="false"><span class="option-letter">C</span><span class="math-expr"><span class="sqrt-wrap">2</span></span></li>
-      <li class="option" data-q="43" data-correct="false"><span class="option-letter">D</span>2</li>
-      <li class="option" data-q="43" data-correct="false"><span class="option-letter">E</span>4</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q43">✓ Correct Answer: A — −2 (since m > 0, x = −2 is always outside the interval)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q43')">Show Answer</button></div>
-</div>
-
-<!-- Q44 -->
-<div class="question-card" id="q44">
-  <div class="card-header">
-    <div class="q-number">44</div>
-    <div class="q-section-tag">Maximum / Distance</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      <span style="display:block;text-align:center;margin-bottom:0.5rem;font-style:italic;">
-        f(x) = <span class="frac"><span class="num">10 sin(x²)</span><span class="bar"></span><span class="den">x² + 1</span></span>
-      </span>
-      There are two values of <span class="math-expr">x</span> at which the function <span class="math-expr">f</span> attains its absolute maximum value. What is the distance between the two corresponding maximum points on the graph of <span class="math-expr">f</span> in the xy-plane?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="44" data-correct="false"><span class="option-letter">A</span>1.064</li>
-      <li class="option" data-q="44" data-correct="false"><span class="option-letter">B</span>2.128</li>
-      <li class="option" data-q="44" data-correct="false"><span class="option-letter">C</span>4.246</li>
-      <li class="option" data-q="44" data-correct="true"><span class="option-letter">D</span>4.258</li>
-      <li class="option" data-q="44" data-correct="false"><span class="option-letter">E</span>8.492</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q44">✓ Correct Answer: D — 4.258</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q44')">Show Answer</button></div>
-</div>
-
-<!-- Q45 -->
-<div class="question-card" id="q45">
-  <div class="card-header">
-    <div class="q-number">45</div>
-    <div class="q-section-tag">Discrete Functions</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      The figure shows the graph of the function <span class="math-expr">f</span> whose domain is <span class="math-expr">{−2, −1, 0, 1, 2}</span>. What is the set of all values of <span class="math-expr">x</span> such that <span class="math-expr">|f(x)| &lt; 2</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="45" data-correct="false"><span class="option-letter">A</span><span class="math-expr">{0, 1}</span></li>
-      <li class="option" data-q="45" data-correct="false"><span class="option-letter">B</span><span class="math-expr">{0, 1, 2}</span></li>
-      <li class="option" data-q="45" data-correct="false"><span class="option-letter">C</span><span class="math-expr">{−1, 0, 1}</span></li>
-      <li class="option" data-q="45" data-correct="false"><span class="option-letter">D</span><span class="math-expr">{−2, −1, 0, 1}</span></li>
-      <li class="option" data-q="45" data-correct="true"><span class="option-letter">E</span><span class="math-expr">{−2, −1, 0, 1, 2}</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q45">✓ Correct Answer: E — {−2, −1, 0, 1, 2}</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q45')">Show Answer</button></div>
-</div>
-
-<!-- Q46 -->
-<div class="question-card" id="q46">
-  <div class="card-header">
-    <div class="q-number">46</div>
-    <div class="q-section-tag">Composite Functions / Trig</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      If <span class="math-expr">f(x) = sin(3x)</span>, then <span class="math-expr">f(f(x))</span> =
-    </p>
-    <ul class="options">
-      <li class="option" data-q="46" data-correct="false"><span class="option-letter">A</span><span class="math-expr">9 sin²(x)</span></li>
-      <li class="option" data-q="46" data-correct="false"><span class="option-letter">B</span><span class="math-expr">sin²(3x)</span></li>
-      <li class="option" data-q="46" data-correct="false"><span class="option-letter">C</span><span class="math-expr">sin²(9x²)</span></li>
-      <li class="option" data-q="46" data-correct="false"><span class="option-letter">D</span><span class="math-expr">sin(sin(3x))</span></li>
-      <li class="option" data-q="46" data-correct="true"><span class="option-letter">E</span><span class="math-expr">sin(3 sin(3x))</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q46">✓ Correct Answer: E — sin(3 sin(3x))</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q46')">Show Answer</button></div>
-</div>
-
-<!-- Q47 -->
-<div class="question-card" id="q47">
-  <div class="card-header">
-    <div class="q-number">47</div>
-    <div class="q-section-tag">Exponential Inequalities</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      What are all values of <span class="math-expr">x</span> for which <span class="math-expr">2 &lt; 10<sup>x</sup> &lt; 5</span>?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="47" data-correct="false"><span class="option-letter">A</span><span class="math-expr">0 &lt; x &lt; log<span class="frac" style="font-size:0.8em"><span class="num">5</span><span class="bar"></span><span class="den">2</span></span></span></li>
-      <li class="option" data-q="47" data-correct="false"><span class="option-letter">B</span><span class="math-expr">log<span class="frac" style="font-size:0.8em"><span class="num">2</span><span class="bar"></span><span class="den">5</span></span> &lt; x &lt; 0</span></li>
-      <li class="option" data-q="47" data-correct="true"><span class="option-letter">C</span><span class="math-expr">log 2 &lt; x &lt; log 5</span></li>
-      <li class="option" data-q="47" data-correct="false"><span class="option-letter">D</span><span class="math-expr"><span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">5</span></span> &lt; x &lt; <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">2</span></span></span></li>
-      <li class="option" data-q="47" data-correct="false"><span class="option-letter">E</span><span class="math-expr">20 &lt; x &lt; 50</span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q47">✓ Correct Answer: C — log 2 &lt; x &lt; log 5</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q47')">Show Answer</button></div>
-</div>
-
-<!-- Q48 -->
-<div class="question-card" id="q48">
-  <div class="card-header">
-    <div class="q-number">48</div>
-    <div class="q-section-tag">Difference Quotient</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      Let <span class="math-expr">f</span> be the function defined by <span class="math-expr">f(x) = 9x − 4</span>. If <span class="math-expr">h ≠ 0</span>, then
-      <span class="math-expr"><span class="frac"><span class="num">f(2 + h) − f(2 − h)</span><span class="bar"></span><span class="den">2h</span></span></span> =
-    </p>
-    <ul class="options">
-      <li class="option" data-q="48" data-correct="false"><span class="option-letter">A</span>1</li>
-      <li class="option" data-q="48" data-correct="true"><span class="option-letter">B</span>9</li>
-      <li class="option" data-q="48" data-correct="false"><span class="option-letter">C</span><span class="math-expr">−<span class="frac"><span class="num">4</span><span class="bar"></span><span class="den">h</span></span></span></li>
-      <li class="option" data-q="48" data-correct="false"><span class="option-letter">D</span><span class="math-expr">1 − <span class="frac"><span class="num">4</span><span class="bar"></span><span class="den">h</span></span></span></li>
-      <li class="option" data-q="48" data-correct="false"><span class="option-letter">E</span><span class="math-expr">9 − <span class="frac"><span class="num">4</span><span class="bar"></span><span class="den">h</span></span></span></li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q48">✓ Correct Answer: B — 9</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q48')">Show Answer</button></div>
-</div>
-
-</main>
-
-<footer>CLEP Precalculus — 48 Practice Questions &nbsp;·&nbsp; For study purposes only</footer>
-
-<script>
-  const answered = new Set();
-  const total = 48;
-
-  function updateProgress() {
-    const count = answered.size;
-    document.getElementById('progress-label').textContent = `${count} / ${total} answered`;
-    document.getElementById('progress-fill').style.width = `${(count / total) * 100}%`;
-  }
-
-  function markAnswered(qId) {
-    answered.add(qId);
-    updateProgress();
-  }
-
-  // Option click handlers
-  document.querySelectorAll('.option').forEach(opt => {
-    opt.addEventListener('click', function () {
-      const qId = this.dataset.q;
-      // Remove selection from siblings
-      document.querySelectorAll(`.option[data-q="${qId}"]`).forEach(o => o.classList.remove('selected'));
-      this.classList.add('selected');
-      markAnswered('q' + qId);
-    });
-  });
-
-  function revealAnswer(qId) {
-    const reveal = document.getElementById('reveal-' + qId);
-    if (reveal) {
-      reveal.classList.toggle('show');
-      // Highlight correct option
-      const card = document.getElementById(qId);
-      if (card) {
-        card.querySelectorAll('.option[data-correct="true"]').forEach(o => o.classList.add('correct'));
-      }
-    }
-  }
-</script>
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener("click", e => {
+                const href = a.getAttribute("href");
+                const target = href ? document.querySelector(href) : null;
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>
