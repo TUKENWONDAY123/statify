@@ -840,30 +840,33 @@ function enterApp(user) {
 
 // Auto-login: validate saved session token against server
 (function() {
-  const session = loadSession();
-  if (session && session.token) {
-    fetch('/api/auth/validate', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + session.token }
-    }).then(async r => {
-      if (r.ok) {
-        const user = await r.json();
-        // keep token from saved session
-        user.token = session.token;
-        enterApp(user);
-      } else {
-        // Session kicked or expired — force login
-        localStorage.removeItem('pulse_session');
-        setTimeout(() => document.getElementById('loginUser').focus(), 400);
-        toast('Your session has expired. Please sign in again.', 'inf');
-      }
-    }).catch(() => {
-      // Network issue — let them in with cached session
-      enterApp(session);
-    });
-  } else {
-    setTimeout(() => document.getElementById('loginUser').focus(), 400);
+  // Always clear old sessions that don't have a token (pre-session format)
+  const raw = localStorage.getItem('pulse_session');
+  let session = null;
+  try { session = raw ? JSON.parse(raw) : null; } catch(e) { session = null; }
+  if (!session || !session.token) {
+    localStorage.removeItem('pulse_session');
+    setTimeout(() => { try { document.getElementById('loginUser').focus(); } catch(e){} }, 400);
+    return;
   }
+  // Validate token with server
+  fetch('/api/auth/validate', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + session.token }
+  }).then(async r => {
+    if (r.ok) {
+      const user = await r.json();
+      user.token = session.token;
+      enterApp(user);
+    } else {
+      localStorage.removeItem('pulse_session');
+      setTimeout(() => { try { document.getElementById('loginUser').focus(); } catch(e){} }, 400);
+      toast('Session expired. Please sign in again.', 'inf');
+    }
+  }).catch(() => {
+    // Network error — use cached session so app still works offline
+    enterApp(session);
+  });
 })();
 
 // ════════════════════════════════════════════════════════
