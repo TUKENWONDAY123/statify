@@ -1080,9 +1080,16 @@ async function deletePost(id) {
   const card=document.querySelector(`[data-id="${id}"]`);
   if(card){ card.style.transition='all 0.28s'; card.style.opacity='0'; card.style.transform='scale(0.95)'; }
   try {
-    const res = await fetch(`/api/posts/${id}`,{method:'DELETE'});
+    const res = await fetch(`/api/posts/${id}`,{
+      method:'DELETE',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({requester:currentUser, admin:isAdmin})
+    });
     if(!res.ok) throw new Error(await res.text());
-  } catch(e) { toast('Failed to delete: '+e.message,'err'); return; }
+  } catch(e) {
+    if(card){ card.style.opacity='1'; card.style.transform=''; }
+    toast('Failed to delete: '+e.message,'err'); return;
+  }
   setTimeout(async()=>{ await loadPosts(); },290);
   toast('Post deleted','inf');
 }
@@ -1213,7 +1220,7 @@ function postHtml(post) {
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             Share
           </div>
-          ${isAdmin?`<div class="dd-item red" onclick="deletePost(${post.id})">
+          ${(isAdmin || post.author === currentUser)?`<div class="dd-item red" onclick="deletePost(${post.id})">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>Delete</div>`:''}
         </div>
       </div>
@@ -1253,8 +1260,25 @@ function postHtml(post) {
 // ════════════════════════════════════════════════════════
 //  LOAD POSTS FROM API (fully D1-connected)
 // ════════════════════════════════════════════════════════
+async function checkSession() {
+  if (!sessionToken) return true; // not logged in yet, skip
+  try {
+    const r = await fetch('/api/auth/validate', {
+      method: 'POST', headers: { 'Authorization': 'Bearer ' + sessionToken }
+    });
+    if (!r.ok) {
+      localStorage.removeItem('pulse_session');
+      toast('You have been logged out.', 'inf');
+      setTimeout(() => location.reload(), 1500);
+      return false;
+    }
+  } catch(e) { /* network issue, ignore */ }
+  return true;
+}
+
 async function loadPosts() {
   const el = document.getElementById('postsList');
+  if (!(await checkSession())) return;
   try {
     const res = await fetch('/api/posts');
     if (!res.ok) throw new Error('Server error');
