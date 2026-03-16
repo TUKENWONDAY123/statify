@@ -16,6 +16,7 @@ export async function onRequest(context) {
     if (method === 'GET'  && path[0] === 'users')    return await listUsers(request, env);
     if (method === 'DELETE' && path[0] === 'users' && path[2] === 'session') return await kickUser(request, env, path[1]);
     if (method === 'DELETE' && path[0] === 'users' && path.length === 2)     return await deleteUser(request, env, path[1]);
+    if (method === 'POST' && path[0] === 'users' && path[2] === 'admin')     return await toggleAdmin(request, env, path[1]);
     return text('Not found', 404);
   } catch (err) {
     return text('Server error: ' + err.message, 500);
@@ -111,6 +112,20 @@ async function listUsers(request, env) {
     ORDER BY u.created_at DESC
   `).all();
   return json(results);
+}
+
+async function toggleAdmin(request, env, username) {
+  const token = getToken(request);
+  const session = await verifyToken(token, env);
+  if (!session || !session.is_admin) return text('Forbidden', 403);
+  if (username === session.username) return text('Cannot change your own admin status', 400);
+
+  const user = await env.DB.prepare('SELECT is_admin FROM users WHERE username = ?').bind(decodeURIComponent(username)).first();
+  if (!user) return text('User not found', 404);
+
+  const newStatus = user.is_admin ? 0 : 1;
+  await env.DB.prepare('UPDATE users SET is_admin = ? WHERE username = ?').bind(newStatus, decodeURIComponent(username)).run();
+  return json({ is_admin: !!newStatus });
 }
 
 async function kickUser(request, env, username) {
