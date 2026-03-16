@@ -6,9 +6,6 @@ export async function onRequest(context) {
   const path = (params.path || []).filter(Boolean);
 
   try {
-    // GET /api/rooms — list all rooms (public info only)
-    if (method === 'GET' && path.length === 0) return await listRooms(env);
-
     // POST /api/rooms — create a room
     if (method === 'POST' && path.length === 0) return await createRoom(request, env);
 
@@ -35,16 +32,6 @@ export async function onRequest(context) {
 
 function generateCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
-async function listRooms(env) {
-  const { results } = await env.DB.prepare(`
-    SELECT r.id, r.code, r.name, r.created_by, r.created_at,
-      (SELECT COUNT(*) FROM room_messages m WHERE m.room_code = r.code) AS message_count
-    FROM rooms r
-    ORDER BY r.id DESC
-  `).all();
-  return json(results);
 }
 
 async function createRoom(request, env) {
