@@ -22,14 +22,6 @@ export async function onRequest(context) {
   }
 }
 
-async function hashPassword(password) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
 async function register(request, env) {
   const body = await request.json();
   const username = String(body.username || '').trim().toLowerCase();
@@ -46,12 +38,11 @@ async function register(request, env) {
 
   if (existing) return text('Username already taken', 409);
 
-  const hashed = await hashPassword(password);
   const isAdmin = username === ADMIN_USERNAME ? 1 : 0;
 
   const result = await env.DB.prepare(
     'INSERT INTO users (username, password_hash, is_admin) VALUES (?, ?, ?)'
-  ).bind(username, hashed, isAdmin).run();
+  ).bind(username, password, isAdmin).run();
 
   return json({
     id: result.meta.last_row_id,
@@ -73,8 +64,7 @@ async function login(request, env) {
 
   if (!user) return text('Invalid username or password', 401);
 
-  const hashed = await hashPassword(password);
-  if (hashed !== user.password_hash) return text('Invalid username or password', 401);
+  if (password !== user.password_hash) return text('Invalid username or password', 401);
 
   return json({
     id: user.id,
