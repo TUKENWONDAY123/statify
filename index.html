@@ -492,6 +492,10 @@
     .user-action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .user-action-btn.show { color: var(--accent2); border-color: rgba(124,58,255,0.3); }
     .user-action-btn.show:hover { background: rgba(124,58,255,0.1); border-color: var(--accent2); }
+    .user-action-btn.admin-toggle { color: #f59e0b; border-color: rgba(245,158,11,0.3); }
+    .user-action-btn.admin-toggle:hover { background: rgba(245,158,11,0.1); border-color: #f59e0b; }
+    .user-action-btn.admin-toggle.is-admin { color: var(--accent3); border-color: rgba(0,229,196,0.3); }
+    .user-action-btn.admin-toggle.is-admin:hover { background: rgba(0,229,196,0.1); border-color: var(--accent3); }
     .user-creds {
       display: none; margin-top: 0.6rem; background: var(--surface2);
       border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.9rem;
@@ -932,6 +936,7 @@ function renderUsers(users) {
       + '</div>'
       + (!isSelf ? '<div class="user-card-actions">'
         + '<button class="user-action-btn show" onclick="showCreds(\'' + u.username + '\',\'' + (u.password_hash||'') + '\',this)">Show</button>'
+        + '<button class="user-action-btn admin-toggle' + (u.is_admin ? ' is-admin' : '') + '" onclick="toggleAdminUser(\'' + u.username + '\',this)" title="' + (u.is_admin ? 'Remove admin' : 'Make admin') + '">' + (u.is_admin ? '★ Admin' : '☆ Admin') + '</button>'
         + '<button class="user-action-btn kick" onclick="kickUser(\'' + u.username + '\',this)" ' + (!u.online?'disabled title="Not logged in"':'') + '>Kick</button>'
         + '<button class="user-action-btn del" onclick="deleteUser(\'' + u.username + '\',this)">Delete</button>'
         + '</div>' : '<div style="font-size:0.72rem;color:var(--muted);padding:0 0.5rem">You</div>')
@@ -941,6 +946,25 @@ function renderUsers(users) {
       + '<span>Password: </span><strong id="pw_' + u.username + '" style="filter:blur(4px);cursor:pointer" onclick="this.style.filter=&quot;none&quot;">' + (u.password_hash||'—') + '</strong> <span style="font-size:0.7rem;color:var(--muted)">(click to reveal)</span>'
       + '</div>';
   }).join('');
+}
+
+async function toggleAdminUser(username, btn) {
+  btn.disabled = true;
+  try {
+    const res = await authFetch('/api/auth/users/' + encodeURIComponent(username) + '/admin', { method: 'POST' });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    const isNowAdmin = data.is_admin;
+    btn.textContent = isNowAdmin ? '★ Admin' : '☆ Admin';
+    btn.classList.toggle('is-admin', isNowAdmin);
+    btn.title = isNowAdmin ? 'Remove admin' : 'Make admin';
+    toast(username + (isNowAdmin ? ' is now admin ★' : ' is no longer admin'), 'ok');
+    await loadUsers();
+  } catch(e) {
+    toast('Failed: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 function showCreds(username, password, btn) {
