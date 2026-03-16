@@ -490,6 +490,16 @@
     .user-action-btn.del { color: var(--accent); border-color: rgba(255,60,111,0.3); }
     .user-action-btn.del:hover { background: rgba(255,60,111,0.1); border-color: var(--accent); }
     .user-action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .user-action-btn.show { color: var(--accent2); border-color: rgba(124,58,255,0.3); }
+    .user-action-btn.show:hover { background: rgba(124,58,255,0.1); border-color: var(--accent2); }
+    .user-creds {
+      display: none; margin-top: 0.6rem; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.9rem;
+      font-size: 0.8rem; font-family: monospace; line-height: 1.8;
+    }
+    .user-creds.show { display: block; animation: fadeUp 0.2s ease both; }
+    .user-creds span { color: var(--muted); font-family: 'DM Sans', sans-serif; }
+    .user-creds strong { color: var(--text); letter-spacing: 0.02em; }
 
         #toastZone { position: fixed; bottom: 2rem; right: 2rem; z-index: 9998; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
     .toast { background: var(--surface2); border: 1px solid var(--border); border-radius: 13px; padding: 0.72rem 1.1rem; font-size: 0.85rem; color: var(--text); display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 8px 28px rgba(0,0,0,0.5); pointer-events: all; animation: toastIn 0.28s ease both; }
@@ -921,11 +931,23 @@ function renderUsers(users) {
       + '<div class="user-card-meta">Joined ' + ago(new Date((u.created_at||'').replace(' ','T')+'Z').getTime()) + '</div>'
       + '</div>'
       + (!isSelf ? '<div class="user-card-actions">'
+        + '<button class="user-action-btn show" onclick="showCreds(\'' + u.username + '\',\'' + (u.password_hash||'') + '\',this)">Show</button>'
         + '<button class="user-action-btn kick" onclick="kickUser(\'' + u.username + '\',this)" ' + (!u.online?'disabled title="Not logged in"':'') + '>Kick</button>'
         + '<button class="user-action-btn del" onclick="deleteUser(\'' + u.username + '\',this)">Delete</button>'
         + '</div>' : '<div style="font-size:0.72rem;color:var(--muted);padding:0 0.5rem">You</div>')
+      + '</div>'
+      + '<div class="user-creds" id="creds_' + u.username + '">'
+      + '<span>Username: </span><strong>' + u.username + '</strong><br>'
+      + '<span>Password: </span><strong id="pw_' + u.username + '" style="filter:blur(4px);cursor:pointer" onclick="this.style.filter=&quot;none&quot;">' + (u.password_hash||'—') + '</strong> <span style="font-size:0.7rem;color:var(--muted)">(click to reveal)</span>'
       + '</div>';
   }).join('');
+}
+
+function showCreds(username, password, btn) {
+  const creds = document.getElementById('creds_' + username);
+  if (!creds) return;
+  creds.classList.toggle('show');
+  btn.textContent = creds.classList.contains('show') ? 'Hide' : 'Show';
 }
 
 async function kickUser(username, btn) {
