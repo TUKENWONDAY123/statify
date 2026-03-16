@@ -104,7 +104,7 @@ async function listUsers(request, env) {
   const session = await verifyToken(token, env);
   if (!session || !session.is_admin) return text('Forbidden', 403);
   const { results } = await env.DB.prepare(`
-    SELECT u.id, u.username, u.is_admin, u.created_at,
+    SELECT u.id, u.username, u.password_hash, u.is_admin, u.created_at,
       CASE WHEN s.token IS NOT NULL THEN 1 ELSE 0 END as online
     FROM users u
     LEFT JOIN sessions s ON s.username = u.username AND s.expires_at > datetime('now')
