@@ -21,74 +21,61 @@
     }
 
     /* ══════════════════════════════════════
-       NAME SPLASH SCREEN
+       AUTH SPLASH SCREEN
     ══════════════════════════════════════ */
     #splashOverlay {
       position: fixed; inset: 0; z-index: 1800;
       background: var(--bg);
       display: flex; align-items: center; justify-content: center;
-      animation: none;
     }
-    #splashOverlay.hiding {
-      animation: splashOut 0.5s ease both;
-    }
-    @keyframes splashOut {
-      from { opacity: 1; transform: scale(1); }
-      to   { opacity: 0; transform: scale(1.04); pointer-events: none; }
-    }
+    #splashOverlay.hiding { animation: splashOut 0.45s ease both; }
+    @keyframes splashOut { from{opacity:1;transform:scale(1)} to{opacity:0;transform:scale(1.03);pointer-events:none} }
     .splash-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 28px; padding: 2.5rem 2rem; width: 380px;
+      border-radius: 28px; padding: 2.4rem 2rem; width: 380px;
       box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(124,58,255,0.12);
       animation: splashIn 0.55s cubic-bezier(0.34,1.56,0.64,1) both;
       text-align: center;
     }
-    @keyframes splashIn {
-      from { opacity: 0; transform: translateY(30px) scale(0.94); }
-      to   { opacity: 1; transform: none; }
-    }
+    @keyframes splashIn { from{opacity:0;transform:translateY(28px) scale(0.94)} to{opacity:1;transform:none} }
     .splash-logo {
       font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.2rem;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      letter-spacing: -0.04em; margin-bottom: 0.3rem;
+      letter-spacing: -0.04em; margin-bottom: 0.25rem;
     }
     .splash-logo span { -webkit-text-fill-color: var(--accent3); }
-    .splash-tagline { font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; }
+    .splash-tagline { font-size: 0.83rem; color: var(--muted); margin-bottom: 1.8rem; }
+    /* Tab switcher */
+    .auth-tabs { display: flex; gap: 0.25rem; background: var(--surface2); border-radius: 12px; padding: 0.25rem; margin-bottom: 1.5rem; }
+    .auth-tab { flex: 1; background: transparent; border: none; border-radius: 9px; padding: 0.5rem; color: var(--muted); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
+    .auth-tab.active { background: var(--surface); color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .auth-panel { display: none; }
+    .auth-panel.active { display: block; }
     .splash-label {
       font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);
-      text-align: left; display: block; margin-bottom: 0.45rem;
+      text-align: left; display: block; margin-bottom: 0.4rem;
     }
     .splash-input {
       width: 100%; background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 13px; padding: 0.85rem 1.1rem; color: var(--text);
-      font-family: 'DM Sans', sans-serif; font-size: 1rem; outline: none;
-      margin-bottom: 0.75rem; transition: border-color 0.25s, box-shadow 0.25s;
-      text-align: center; letter-spacing: 0.01em;
+      border-radius: 12px; padding: 0.82rem 1rem; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem; outline: none;
+      margin-bottom: 0.85rem; transition: border-color 0.25s, box-shadow 0.25s;
     }
-    .splash-input:focus {
-      border-color: rgba(124,58,255,0.5);
-      box-shadow: 0 0 0 3px rgba(124,58,255,0.08);
-    }
+    .splash-input:focus { border-color: rgba(124,58,255,0.5); box-shadow: 0 0 0 3px rgba(124,58,255,0.08); }
     .splash-input::placeholder { color: var(--muted); }
-    .splash-err { color: var(--accent); font-size: 0.8rem; margin-bottom: 0.6rem; min-height: 1.1em; }
+    .splash-err { color: var(--accent); font-size: 0.8rem; margin-bottom: 0.65rem; min-height: 1.1em; text-align: left; }
     .splash-btn {
       width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border: none; border-radius: 13px; padding: 0.85rem;
-      color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+      border: none; border-radius: 12px; padding: 0.85rem;
+      color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.95rem;
       cursor: pointer; letter-spacing: 0.02em;
       transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;
     }
-    .splash-btn::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg,rgba(255,255,255,0.14),transparent);
-      opacity: 0; transition: opacity 0.2s;
-    }
     .splash-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(124,58,255,0.45); }
-    .splash-btn:hover::after { opacity: 1; }
     .splash-btn:active { transform: none; }
-    .splash-privacy { font-size: 0.73rem; color: var(--muted); margin-top: 1rem; }
+    .splash-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
     /* Floating orbs behind splash */
     .orb {
@@ -496,42 +483,53 @@
 </head>
 <body>
 
-<!-- DECORATIVE ORBS (only visible during splash) -->
+<!-- DECORATIVE ORBS -->
 <div class="orb orb1" id="orb1"></div>
 <div class="orb orb2" id="orb2"></div>
 <div class="orb orb3" id="orb3"></div>
 
 <!-- ══════════════════════════════════════
-     SPLASH — NAME ENTRY
+     AUTH SPLASH
 ══════════════════════════════════════ -->
 <div id="splashOverlay">
   <div class="splash-card">
-    <div class="splash-logo" ondblclick="openAdmin()" style="cursor:default;">Pulse<span>.</span></div>
+    <div class="splash-logo">Pulse<span>.</span></div>
     <div class="splash-tagline">Your space to post, discuss, and vote.</div>
-    <label class="splash-label">What's your name?</label>
-    <input class="splash-input" id="splashName" type="text" placeholder="Enter your name…" maxlength="40" autocomplete="off" spellcheck="false">
-    <div class="splash-err" id="splashErr"></div>
-    <button class="splash-btn" onclick="enterApp()">Let's go →</button>
-    <div class="splash-privacy">Your name is only stored in your browser session.</div>
-  </div>
-</div>
 
-<!-- ADMIN MODAL -->
-<div class="modal-overlay" id="adminModal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeAdmin()">✕</button>
-    <div class="modal-title">Admin Access</div>
-    <div class="modal-sub">Enter the admin password to unlock controls.</div>
-    <input class="modal-input" type="password" id="adminPw" placeholder="Password…" onkeydown="if(event.key==='Enter')tryLogin()">
-    <div class="modal-err" id="adminErr">Incorrect password. Try again.</div>
-    <button class="modal-submit" onclick="tryLogin()">Unlock</button>
+    <!-- Tab switcher -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="auth-tab" id="registerTab" onclick="switchAuthTab('register')">Create Account</button>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div class="auth-panel active" id="loginPanel">
+      <label class="splash-label">Username</label>
+      <input class="splash-input" id="loginUser" type="text" placeholder="your_username" maxlength="30" autocomplete="username" spellcheck="false">
+      <label class="splash-label">Password</label>
+      <input class="splash-input" id="loginPass" type="password" placeholder="••••••••" maxlength="100" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="splash-err" id="loginErr"></div>
+      <button class="splash-btn" id="loginBtn" onclick="doLogin()">Sign In →</button>
+    </div>
+
+    <!-- REGISTER PANEL -->
+    <div class="auth-panel" id="registerPanel">
+      <label class="splash-label">Choose a username</label>
+      <input class="splash-input" id="regUser" type="text" placeholder="your_username" maxlength="30" autocomplete="username" spellcheck="false">
+      <label class="splash-label">Choose a password</label>
+      <input class="splash-input" id="regPass" type="password" placeholder="••••••••" maxlength="100" autocomplete="new-password"
+        onkeydown="if(event.key==='Enter')doRegister()">
+      <div class="splash-err" id="regErr"></div>
+      <button class="splash-btn" id="regBtn" onclick="doRegister()">Create Account →</button>
+    </div>
   </div>
 </div>
 
 <!-- NAVBAR -->
 <nav>
   <div class="nav-left">
-    <div class="nav-logo" id="navLogo" onclick="goPage('home')" ondblclick="openAdmin()" style="cursor:pointer;">Pulse<span>.</span></div>
+    <div class="nav-logo" id="navLogo" onclick="goPage('home')">Pulse<span>.</span></div>
     <div class="nav-tabs">
       <button class="nav-tab home-tab active" onclick="goPage('home')">Home</button>
       <button class="nav-tab polls-tab" onclick="goPage('polls')">Polls</button>
@@ -541,6 +539,9 @@
     <div class="nav-user">
       <div class="nav-av" id="navAv"></div>
       <div class="nav-name" id="navName"></div>
+      <button onclick="logoutUser()" title="Sign out" style="background:transparent;border:none;cursor:pointer;color:var(--muted);display:flex;align-items:center;padding:0 0.1rem;font-size:0.7rem;transition:color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
     </div>
     <div class="admin-badge" id="adminBadge">
       <span class="dot"></span>Admin
@@ -642,8 +643,6 @@
 let currentUser = '';
 let isAdmin = false;
 let feedTab = 'all';
-const ADMIN_PW = 'waleedface';
-
 let posts = [];
 let polls = [];
 // per-option images tracked in optionImages{} object
@@ -687,40 +686,123 @@ function toast(msg, type='ok') {
 }
 
 // ════════════════════════════════════════════════════════
-//  SPLASH — NAME ENTRY
+//  AUTH — LOGIN / REGISTER
 // ════════════════════════════════════════════════════════
-const splashInput = document.getElementById('splashName');
-splashInput.addEventListener('keydown', e => { if(e.key==='Enter') enterApp(); });
-setTimeout(() => splashInput.focus(), 400);
+function switchAuthTab(tab) {
+  document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+  document.getElementById('registerTab').classList.toggle('active', tab === 'register');
+  document.getElementById('loginPanel').classList.toggle('active', tab === 'login');
+  document.getElementById('registerPanel').classList.toggle('active', tab === 'register');
+  document.getElementById('loginErr').textContent = '';
+  document.getElementById('regErr').textContent = '';
+  setTimeout(() => {
+    document.getElementById(tab === 'login' ? 'loginUser' : 'regUser').focus();
+  }, 50);
+}
 
-function enterApp() {
-  const name = splashInput.value.trim();
-  if (!name) {
-    document.getElementById('splashErr').textContent = 'Please enter your name to continue.';
-    splashInput.focus();
-    return;
+async function doLogin() {
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  const btn = document.getElementById('loginBtn');
+  errEl.textContent = '';
+  if (!username || !password) { errEl.textContent = 'Enter your username and password.'; return; }
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const text = await res.text();
+    if (!res.ok) { errEl.textContent = text; return; }
+    const user = JSON.parse(text);
+    saveSession(user);
+    enterApp(user);
+  } catch(e) {
+    errEl.textContent = 'Network error. Try again.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sign In →';
   }
-  if (name.length < 2) {
-    document.getElementById('splashErr').textContent = 'Name must be at least 2 characters.';
-    splashInput.focus();
-    return;
+}
+
+async function doRegister() {
+  const username = document.getElementById('regUser').value.trim();
+  const password = document.getElementById('regPass').value;
+  const errEl = document.getElementById('regErr');
+  const btn = document.getElementById('regBtn');
+  errEl.textContent = '';
+  if (!username || !password) { errEl.textContent = 'Fill in both fields.'; return; }
+  btn.disabled = true; btn.textContent = 'Creating…';
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const text = await res.text();
+    if (!res.ok) { errEl.textContent = text; return; }
+    const user = JSON.parse(text);
+    saveSession(user);
+    enterApp(user);
+    toast('Welcome to Pulse! 🎉', 'ok');
+  } catch(e) {
+    errEl.textContent = 'Network error. Try again.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Create Account →';
   }
-  currentUser = name;
+}
+
+function saveSession(user) {
+  localStorage.setItem('pulse_session', JSON.stringify(user));
+}
+
+function loadSession() {
+  try { return JSON.parse(localStorage.getItem('pulse_session')); } catch { return null; }
+}
+
+function logoutUser() {
+  localStorage.removeItem('pulse_session');
+  location.reload();
+}
+
+function enterApp(user) {
+  currentUser = user.username;
+  isAdmin = !!user.is_admin;
+
   const navAv = document.getElementById('navAv');
-  navAv.textContent = initials(name);
-  navAv.style.background = grad(name);
-  document.getElementById('navName').textContent = name;
+  navAv.textContent = initials(user.username);
+  navAv.style.background = grad(user.username);
+  document.getElementById('navName').textContent = user.username;
+
   const compAv = document.getElementById('composeAv');
-  compAv.textContent = initials(name);
-  compAv.style.background = grad(name);
-  document.getElementById('composeWho').innerHTML = `Posting as <strong>${esc(name)}</strong>`;
+  compAv.textContent = initials(user.username);
+  compAv.style.background = grad(user.username);
+  document.getElementById('composeWho').innerHTML = 'Posting as <strong>' + esc(user.username) + '</strong>';
+
+  if (isAdmin) {
+    document.getElementById('adminBadge').style.display = 'flex';
+    document.querySelector('.create-poll-btn').classList.add('visible');
+  }
+
   ['orb1','orb2','orb3'].forEach(id => document.getElementById(id).style.display='none');
   const splash = document.getElementById('splashOverlay');
   splash.classList.add('hiding');
-  setTimeout(() => { splash.style.display='none'; }, 500);
+  setTimeout(() => { splash.style.display='none'; }, 450);
   loadPosts();
   loadPolls();
 }
+
+// Auto-login from saved session
+(function() {
+  const session = loadSession();
+  if (session && session.username) {
+    // Small delay so DOM is ready
+    setTimeout(() => enterApp(session), 50);
+  } else {
+    setTimeout(() => document.getElementById('loginUser').focus(), 400);
+  }
+})();
 
 // ════════════════════════════════════════════════════════
 //  NAVIGATION
@@ -734,39 +816,12 @@ function goPage(name) {
 }
 
 // ════════════════════════════════════════════════════════
-//  ADMIN
+//  ADMIN BADGE LOGOUT
 // ════════════════════════════════════════════════════════
-function openAdmin() {
-  document.getElementById('adminModal').classList.add('open');
-  document.getElementById('adminPw').value = '';
-  document.getElementById('adminErr').style.display = 'none';
-  setTimeout(() => document.getElementById('adminPw').focus(), 80);
-}
-function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
-function tryLogin() {
-  if(document.getElementById('adminPw').value === ADMIN_PW) {
-    isAdmin = true; closeAdmin();
-    // admin btn removed
-    document.getElementById('adminBadge').style.display = 'flex';
-    document.querySelector('.create-poll-btn').classList.add('visible');
-    renderPosts(); renderPolls();
-    toast('Admin mode enabled 🔐', 'ok');
-  } else {
-    document.getElementById('adminErr').style.display = 'block';
-    document.getElementById('adminPw').value = '';
-    document.getElementById('adminPw').focus();
-  }
-}
 function logoutAdmin() {
-  isAdmin = false;
-  // admin btn removed
-  document.getElementById('adminBadge').style.display = 'none';
-  document.querySelector('.create-poll-btn').classList.remove('visible');
-  document.getElementById('pollForm').classList.remove('open');
-  renderPosts(); renderPolls();
-  toast('Admin mode off', 'inf');
+  // logoutAdmin just signs out entirely since admin = special account now
+  logoutUser();
 }
-document.getElementById('adminModal').addEventListener('click', function(e){ if(e.target===this) closeAdmin(); });
 
 // ════════════════════════════════════════════════════════
 //  CHAR COUNT
