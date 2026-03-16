@@ -1943,8 +1943,8 @@ async function loadRooms() {
 
     
 async function enterRoom(code, name) {
-  const res = await fetch('/api/rooms/' + code + '/join', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser }) });
-  if (!res.ok) { toast('Room not found', 'err'); return; }
+  const res = await fetch('/api/rooms/' + code);
+  if (!res.ok) { toast('Invalid code — room not found.', 'err'); return; }
   currentRoom = { code, name };
   saveMyRoomCode(code);
   document.getElementById('roomListView').style.display = 'none';
@@ -2135,7 +2135,7 @@ async function submitJoinRoom() {
   btn.disabled = true; btn.textContent = 'Joining…';
   try {
     const res = await fetch('/api/rooms/' + code);
-    if (!res.ok) { errEl.textContent = 'Room not found. Check the code.'; return; }
+    if (!res.ok) { errEl.textContent = 'Wrong code — no room found.'; return; }
     const room = await res.json();
     saveMyRoomCode(room.code);
     closeJoinModal();
