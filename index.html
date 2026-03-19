@@ -354,6 +354,16 @@
   .btn:hover { background: var(--paper-dark); border-color: var(--gold); color: var(--gold); }
   .btn-reveal { border-color: var(--accent); color: var(--accent); }
   .btn-reveal:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-submit { border-color: var(--gold); color: var(--gold); }
+  .btn-submit:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+  .btn-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+  .fr-feedback {
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .fr-feedback.correct { color: var(--correct-border); }
+  .fr-feedback.wrong   { color: #c0392b; }
 
   /* ── Math rendering helpers ── */
   .frac {
@@ -650,7 +660,11 @@
     <p class="question-text">What is the value of <span class="math-expr">f(3) + f(−3)</span>?</p>
     <div class="free-response">
       <label>Your answer</label>
-      <input type="number" step="any" placeholder="Enter a number" id="input-q7" oninput="markAnswered('q7')">
+      <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+        <input type="number" step="any" placeholder="Enter a number" id="input-q7">
+        <button class="btn btn-submit" id="submit-q7" onclick="submitFreeResponse('q7', 4.8)">Submit</button>
+        <span class="fr-feedback" id="feedback-q7"></span>
+      </div>
     </div>
   </div>
   <div class="answer-reveal" id="reveal-q7">✓ Correct Answer: 4.8 &nbsp;(f(3) = 5, f(−3) = −1/5 → 5 − 0.2 = 4.8)</div>
@@ -952,7 +966,11 @@
     </p>
     <div class="free-response">
       <label>Your answer</label>
-      <input type="number" step="any" placeholder="Enter a number" id="input-q20" oninput="markAnswered('q20')">
+      <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+        <input type="number" step="any" placeholder="Enter a number" id="input-q20">
+        <button class="btn btn-submit" id="submit-q20" onclick="submitFreeResponse('q20', -5)">Submit</button>
+        <span class="fr-feedback" id="feedback-q20"></span>
+      </div>
     </div>
   </div>
   <div class="answer-reveal" id="reveal-q20">✓ Correct Answer: −5 &nbsp;(factor: (3x − 2)(x + 5) = 0; x = 2/3 or x = −5; least is −5)</div>
@@ -1681,7 +1699,45 @@
     updateProgress();
   }
 
-  // Option click handlers
+  // Free-response submit handler
+  function submitFreeResponse(qId, correctAnswer) {
+    if (answered.has(qId)) return;
+    const input = document.getElementById('input-' + qId);
+    const feedback = document.getElementById('feedback-' + qId);
+    const submitBtn = document.getElementById('submit-' + qId);
+    const val = parseFloat(input.value);
+    if (isNaN(val)) {
+      feedback.textContent = 'Please enter a number.';
+      feedback.className = 'fr-feedback wrong';
+      return;
+    }
+    const isCorrect = Math.abs(val - correctAnswer) < 0.01;
+    if (isCorrect) {
+      feedback.textContent = '✓ Correct!';
+      feedback.className = 'fr-feedback correct';
+    } else {
+      feedback.textContent = '✗ Incorrect';
+      feedback.className = 'fr-feedback wrong';
+    }
+    // Show answer reveal
+    const reveal = document.getElementById('reveal-' + qId);
+    if (reveal) reveal.classList.add('show');
+    // Lock input and button
+    input.disabled = true;
+    submitBtn.disabled = true;
+    markAnswered(qId);
+  }
+
+  // Allow Enter key to submit free-response questions
+  ['q7', 'q20'].forEach(qId => {
+    const input = document.getElementById('input-' + qId);
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') document.getElementById('submit-' + qId).click();
+      });
+    }
+  });
+
   document.querySelectorAll('.option').forEach(opt => {
     opt.addEventListener('click', function () {
       const qId = this.dataset.q;
