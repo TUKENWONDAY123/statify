@@ -1548,6 +1548,58 @@
 
 </main>
 
+<!-- Credits Modal -->
+<div id="credits-overlay" style="
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(26,17,8,0.72);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(3px);
+">
+  <div style="
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    box-shadow: 0 8px 48px rgba(26,17,8,0.35);
+    padding: 2.8rem 3rem 2.2rem;
+    max-width: 380px; width: 90%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  ">
+    <!-- top accent line -->
+    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--gold),var(--accent));"></div>
+
+    <p style="font-family:'Source Serif 4',serif;font-size:0.72rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;">Credits</p>
+
+    <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:1.7rem;color:var(--ink);line-height:1.2;margin-bottom:0.5rem;">Made by</h2>
+
+    <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.18rem;color:var(--accent);margin-bottom:1.6rem;line-height:1.8;">
+      Waleed &nbsp;·&nbsp; Tareq &nbsp;·&nbsp; Yousef
+    </p>
+
+    <p style="font-family:'Source Serif 4',serif;font-size:0.9rem;color:#6b5a47;margin-bottom:2rem;">
+      We hope this helps you ace your CLEP exam. Good luck! 🎓
+    </p>
+
+    <button onclick="document.getElementById('credits-overlay').style.display='none'" style="
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      padding: 0.65rem 2.2rem;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: background 0.2s;
+    "
+    onmouseover="this.style.background='#9a3416'"
+    onmouseout="this.style.background='var(--accent)'"
+    >Thank You!</button>
+  </div>
+</div>
+
 <footer>CLEP Precalculus — 47 Practice Questions &nbsp;·&nbsp; For study purposes only</footer>
 
 <script>
