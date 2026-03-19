@@ -30,7 +30,6 @@
     min-height: 100vh;
   }
 
-  /* Subtle paper texture */
   body::before {
     content: '';
     position: fixed;
@@ -42,7 +41,6 @@
     z-index: 0;
   }
 
-  /* ── Header ── */
   header {
     position: relative;
     background: var(--ink);
@@ -99,7 +97,6 @@
     margin: 0 0.25rem;
   }
 
-  /* ── Nav / progress ── */
   .progress-bar-wrap {
     background: var(--paper-dark);
     border-bottom: 1px solid var(--rule);
@@ -116,15 +113,15 @@
     z-index: 50;
   }
   .question-image {
-  display: block;
-  width: 100%;
-  max-width: 640px;
-  margin: 0 0 1rem;
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  background: var(--paper);
-  box-shadow: 0 2px 10px var(--shadow);
-}
+    display: block;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 0 1rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+    box-shadow: 0 2px 10px var(--shadow);
+  }
   .progress-bar {
     flex: 1;
     height: 3px;
@@ -140,7 +137,6 @@
     border-radius: 2px;
   }
 
-  /* ── Main layout ── */
   main {
     position: relative;
     z-index: 1;
@@ -149,7 +145,6 @@
     padding: 2.5rem 1.5rem 6rem;
   }
 
-  /* ── Section dividers ── */
   .section-heading {
     display: flex;
     align-items: center;
@@ -172,7 +167,6 @@
     letter-spacing: 0.08em;
   }
 
-  /* ── Question card ── */
   .question-card {
     background: #fff;
     border: 1px solid var(--rule);
@@ -223,7 +217,6 @@
     margin-bottom: 1rem;
   }
 
-  /* ── Answer options ── */
   .options {
     list-style: none;
     display: flex;
@@ -289,7 +282,6 @@
     color: #fff;
   }
 
-  /* ── Free-response ── */
   .free-response {
     margin-bottom: 1rem;
   }
@@ -317,7 +309,6 @@
     border-color: var(--accent);
   }
 
-  /* ── Answer reveal ── */
   .answer-reveal {
     display: none;
     background: var(--paper-dark);
@@ -331,7 +322,6 @@
     display: block;
   }
 
-  /* ── Card footer ── */
   .card-footer {
     padding: 0.5rem 1.6rem 0.9rem;
     display: flex;
@@ -365,7 +355,6 @@
   .fr-feedback.correct { color: var(--correct-border); }
   .fr-feedback.wrong   { color: #c0392b; }
 
-  /* ── Math rendering helpers ── */
   .frac {
     display: inline-flex;
     flex-direction: column;
@@ -390,7 +379,6 @@
   .math-expr {
     font-style: italic;
   }
-  /* ── Square root rendering ── */
   .sqrt-wrap {
     display: inline-flex;
     align-items: center;
@@ -416,12 +404,10 @@
     font-style: italic;
   }
 
-  /* ── Scrollbar ── */
   ::-webkit-scrollbar { width: 7px; }
   ::-webkit-scrollbar-track { background: var(--paper-dark); }
   ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
 
-  /* ── Footer ── */
   footer {
     position: relative;
     z-index: 1;
@@ -433,7 +419,6 @@
     border-top: 1px solid var(--rule);
   }
 
-  /* Responsive */
   @media (max-width: 600px) {
     main { padding: 1.5rem 0.9rem 4rem; }
     .card-body { padding: 1rem 1rem 0.3rem; }
@@ -450,12 +435,12 @@
   <p class="meta">
     <span class="badge">Section 1</span>
     <span class="badge">Section 2</span>
-    &nbsp;48 Practice Questions
+    &nbsp;47 Practice Questions
   </p>
 </header>
 
 <div class="progress-bar-wrap">
-  <span id="progress-label">0 / 48 answered</span>
+  <span id="progress-label">0 / 47 answered</span>
   <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
 </div>
 
@@ -498,7 +483,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q1">✓ Correct Answer: D — <span class="math-expr">x²/4 − 1/2</span></div>
-
 </div>
 
 <!-- Q2 -->
@@ -511,7 +495,7 @@
     <p class="question-text">
       A ship, located at point <em>S</em>, is 20 miles due south of a buoy at point <em>B</em>. The ship sails at 16 miles per hour along a straight course that is 70° east of north. After 5 hours, what is the distance, in miles, between the ship and the buoy?
     </p>
-   <img src="2.png" class="question-image">
+    <img src="2.png" class="question-image">
     <ul class="options">
       <li class="option" data-q="2" data-correct="false"><span class="option-letter">A</span>61.39</li>
       <li class="option" data-q="2" data-correct="true"><span class="option-letter">B</span>75.53</li>
@@ -520,8 +504,7 @@
       <li class="option" data-q="2" data-correct="false"><span class="option-letter">E</span>99.03</li>
     </ul>
   </div>
- <div class="answer-reveal" id="reveal-q2">✓ Correct Answer: B — 75.53 miles</div>
-
+  <div class="answer-reveal" id="reveal-q2">✓ Correct Answer: B — 75.53 miles</div>
 </div>
 
 <!-- Q3 -->
@@ -549,7 +532,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q3">✓ Correct Answer: B — II only</div>
-
 </div>
 
 <!-- Q4 -->
@@ -571,7 +553,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q4">✓ Correct Answer: D — 8</div>
-
 </div>
 
 <!-- Q5 -->
@@ -584,15 +565,15 @@
     <p class="question-text">
       If <span class="math-expr">a ≥ 0</span>, then
       <span class="math-expr">
-  <span class="sqrt-wrap">
-    <span class="sqrt-inner">
-      a³ · 
-      <span class="sqrt-wrap">
-        <span class="sqrt-inner">a⁶</span>
+        <span class="sqrt-wrap">
+          <span class="sqrt-inner">
+            a³ · 
+            <span class="sqrt-wrap">
+              <span class="sqrt-inner">a⁶</span>
+            </span>
+          </span>
+        </span>
       </span>
-    </span>
-  </span>
-</span>
     </p>
     <ul class="options">
       <li class="option" data-q="5" data-correct="false"><span class="option-letter">A</span><span class="math-expr">a</span></li>
@@ -603,7 +584,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q5">✓ Correct Answer: C — a³</div>
-
 </div>
 
 <!-- Q6 -->
@@ -636,7 +616,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q6">✓ Correct Answer: D — 4√y / (x²√w)</div>
-
 </div>
 
 <!-- Q7 -->
@@ -668,7 +647,6 @@
     </div>
   </div>
   <div class="answer-reveal" id="reveal-q7">✓ Correct Answer: 4.8 &nbsp;(f(3) = 5, f(−3) = −1/5 → 5 − 0.2 = 4.8)</div>
-
 </div>
 
 <!-- Q8 -->
@@ -690,7 +668,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q8">✓ Correct Answer: A — x = 5</div>
-
 </div>
 
 <!-- Q9 -->
@@ -713,7 +690,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q9">✓ Correct Answer: C — 22 ft</div>
-
 </div>
 
 <!-- Q10 -->
@@ -735,7 +711,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q10">✓ Correct Answer: B — f + g (Pythagorean identity)</div>
-
 </div>
 
 <!-- Q11 -->
@@ -757,7 +732,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q11">✓ Correct Answer: C — g(x) = 4x + 6</div>
-
 </div>
 
 <!-- Q12 -->
@@ -779,7 +753,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q12">✓ Correct Answer: A</div>
-
 </div>
 
 <!-- Q13 -->
@@ -803,7 +776,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q13">✓ Correct Answer: B — 65</div>
-
 </div>
 
 <!-- Q14 -->
@@ -831,7 +803,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q14">✓ Correct Answer: B</div>
-
 </div>
 
 <!-- Q15 -->
@@ -857,7 +828,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q15">✓ Correct Answer: C — Graph shifted 1 unit downward</div>
-
 </div>
 
 <!-- Q16 -->
@@ -880,7 +850,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q16">✓ Correct Answer: D — A hyperbola (opposite sign coefficients)</div>
-
 </div>
 
 <!-- Q17 -->
@@ -902,7 +871,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q17">✓ Correct Answer: D — Quadrant IV (cos > 0, tan < 0)</div>
-
 </div>
 
 <!-- Q18 -->
@@ -925,7 +893,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q18">✓ Correct Answer: C — 1 and 5</div>
-
 </div>
 
 <!-- Q19 -->
@@ -950,7 +917,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q19">✓ Correct Answer: A — None (all three are false identities)</div>
-
 </div>
 
 <!-- Q20 -->
@@ -974,7 +940,6 @@
     </div>
   </div>
   <div class="answer-reveal" id="reveal-q20">✓ Correct Answer: −5 &nbsp;(factor: (3x − 2)(x + 5) = 0; x = 2/3 or x = −5; least is −5)</div>
-
 </div>
 
 <!-- Q21 -->
@@ -997,7 +962,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q21">✓ Correct Answer: B — 1</div>
-
 </div>
 
 <!-- Q22 -->
@@ -1022,7 +986,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q22">✓ Correct Answer: C — 7/5</div>
-
 </div>
 
 <!-- Q23 -->
@@ -1045,7 +1008,6 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q23">✓ Answer recorded as −5x + 1 (image was low resolution)</div>
-
 </div>
 
 <!-- Q24 -->
@@ -1060,79 +1022,29 @@
     </p>
     <img src="24.png" alt="Question 24 graph or diagram" class="question-image">
     <ul class="options">
-      <!-- A -->
       <li class="option" data-q="24" data-correct="false">
         <span class="option-letter">A</span>
-        <span class="math-expr">
-          y − 3 = −
-          <span class="frac">
-            <span class="num">2</span>
-            <span class="bar"></span>
-            <span class="den">5</span>
-          </span>
-          (x + 2)
-        </span>
+        <span class="math-expr">y − 3 = −<span class="frac"><span class="num">2</span><span class="bar"></span><span class="den">5</span></span>(x + 2)</span>
       </li>
-
-      <!-- B -->
       <li class="option" data-q="24" data-correct="false">
         <span class="option-letter">B</span>
-        <span class="math-expr">
-          y − 3 =
-          <span class="frac">
-            <span class="num">5</span>
-            <span class="bar"></span>
-            <span class="den">2</span>
-          </span>
-          (x + 2)
-        </span>
+        <span class="math-expr">y − 3 = <span class="frac"><span class="num">5</span><span class="bar"></span><span class="den">2</span></span>(x + 2)</span>
       </li>
-
-      <!-- C -->
       <li class="option" data-q="24" data-correct="false">
         <span class="option-letter">C</span>
-        <span class="math-expr">
-          y + 3 = −
-          <span class="frac">
-            <span class="num">5</span>
-            <span class="bar"></span>
-            <span class="den">2</span>
-          </span>
-          (x − 2)
-        </span>
+        <span class="math-expr">y + 3 = −<span class="frac"><span class="num">5</span><span class="bar"></span><span class="den">2</span></span>(x − 2)</span>
       </li>
-
-      <!-- D -->
       <li class="option" data-q="24" data-correct="true">
         <span class="option-letter">D</span>
-        <span class="math-expr">
-          y + 3 = −
-          <span class="frac">
-            <span class="num">2</span>
-            <span class="bar"></span>
-            <span class="den">5</span>
-          </span>
-          (x − 2)
-        </span>
+        <span class="math-expr">y + 3 = −<span class="frac"><span class="num">2</span><span class="bar"></span><span class="den">5</span></span>(x − 2)</span>
       </li>
-
-      <!-- E (unchanged) -->
       <li class="option" data-q="24" data-correct="false">
         <span class="option-letter">E</span>
-        <span class="math-expr">
-          y + 3 =
-          <span class="frac">
-            <span class="num">5</span>
-            <span class="bar"></span>
-            <span class="den">2</span>
-          </span>
-          (x − 2)
-        </span>
+        <span class="math-expr">y + 3 = <span class="frac"><span class="num">5</span><span class="bar"></span><span class="den">2</span></span>(x − 2)</span>
       </li>
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q24">✓ Correct Answer: D</div>
-
 </div>
 
 <!-- Q25 -->
@@ -1154,11 +1066,10 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q25">✓ Correct Answer: D — √3</div>
-
 </div>
 
 <!-- ═══════════════════ SECTION 2 ═══════════════════ -->
-<div class="section-heading"><span>Section 2 — Questions 26–48</span></div>
+<div class="section-heading"><span>Section 2 — Questions 26–47</span></div>
 
 <!-- Q26 -->
 <div class="question-card" id="q26">
@@ -1177,10 +1088,9 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q26">✓ Correct Answer: A — cos(x/2) has period 4π</div>
-
 </div>
 
-<!-- Q27 -->
+<!-- Q27 (formerly Q28) -->
 <div class="question-card" id="q27">
   <div class="card-header">
     <div class="q-number">27</div>
@@ -1188,47 +1098,23 @@
   </div>
   <div class="card-body">
     <p class="question-text">
-      When a certain company sells <span class="math-expr">n</span> items, its total sales revenue is modeled by <span class="math-expr">R(n) = −(n − 30)² + 1,200</span>. What is the average rate of change of the total sales revenue when the number of items sold increases from 20 to 28?
+      When a certain company sells <span class="math-expr">n</span> items, its total sales revenue is modeled by <span class="math-expr">R(n) = −(n − 30)² + 1,200</span>. What is the average rate of change of the total sales revenue when the number of items sold increases from 20 to 26?
     </p>
     <ul class="options">
-      <li class="option" data-q="27" data-correct="false"><span class="option-letter">A</span>$14 per item</li>
+      <li class="option" data-q="27" data-correct="true"><span class="option-letter">A</span>$14 per item</li>
       <li class="option" data-q="27" data-correct="false"><span class="option-letter">B</span>$42 per item</li>
       <li class="option" data-q="27" data-correct="false"><span class="option-letter">C</span>$85 per item</li>
       <li class="option" data-q="27" data-correct="false"><span class="option-letter">D</span>$1,142 per item</li>
       <li class="option" data-q="27" data-correct="false"><span class="option-letter">E</span>$2,284 per item</li>
     </ul>
-    <p style="font-size:0.8rem; color:var(--gold); font-style:italic; margin-top:0.4rem;">(See Q28 for same question with interval 20 to 26)</p>
   </div>
-  <div class="answer-reveal" id="reveal-q27">✓ Average rate of change from 20→28: [R(28)−R(20)] / 8 = $18 per item (check your computation)</div>
-
+  <div class="answer-reveal" id="reveal-q27">✓ Correct Answer: A — $14 per item</div>
 </div>
 
-<!-- Q28 -->
+<!-- Q28 (formerly Q29) -->
 <div class="question-card" id="q28">
   <div class="card-header">
     <div class="q-number">28</div>
-    <div class="q-section-tag">Average Rate of Change</div>
-  </div>
-  <div class="card-body">
-    <p class="question-text">
-      When a certain company sells <span class="math-expr">n</span> items, its total sales revenue is modeled by <span class="math-expr">R(n) = −(n − 30)² + 1,200</span>. What is the average rate of change of the total sales revenue when the number of items sold increases from 20 to 26?
-    </p>
-    <ul class="options">
-      <li class="option" data-q="28" data-correct="true"><span class="option-letter">A</span>$14 per item</li>
-      <li class="option" data-q="28" data-correct="false"><span class="option-letter">B</span>$42 per item</li>
-      <li class="option" data-q="28" data-correct="false"><span class="option-letter">C</span>$85 per item</li>
-      <li class="option" data-q="28" data-correct="false"><span class="option-letter">D</span>$1,142 per item</li>
-      <li class="option" data-q="28" data-correct="false"><span class="option-letter">E</span>$2,284 per item</li>
-    </ul>
-  </div>
-  <div class="answer-reveal" id="reveal-q28">✓ Correct Answer: A — $14 per item</div>
-
-</div>
-
-<!-- Q29 -->
-<div class="question-card" id="q29">
-  <div class="card-header">
-    <div class="q-number">29</div>
     <div class="q-section-tag">Linear Functions / Inequalities</div>
   </div>
   <div class="card-body">
@@ -1239,21 +1125,20 @@
       For the functions above, <span class="math-expr">m</span> and <span class="math-expr">k</span> are constants where <span class="math-expr">m &lt; 0</span> and <span class="math-expr">k > 0</span>. If the graphs intersect at the point <span class="math-expr">(6, 3)</span>, what are all values of <span class="math-expr">x</span> such that <span class="math-expr">f(x) &lt; g(x)</span>?
     </p>
     <ul class="options">
-      <li class="option" data-q="29" data-correct="false"><span class="option-letter">A</span><span class="math-expr">x &lt; 3</span></li>
-      <li class="option" data-q="29" data-correct="false"><span class="option-letter">B</span><span class="math-expr">x &lt; 6</span></li>
-      <li class="option" data-q="29" data-correct="false"><span class="option-letter">C</span><span class="math-expr">x > 3</span></li>
-      <li class="option" data-q="29" data-correct="true"><span class="option-letter">D</span><span class="math-expr">x > 6</span></li>
-      <li class="option" data-q="29" data-correct="false"><span class="option-letter">E</span><span class="math-expr">x > 10</span></li>
+      <li class="option" data-q="28" data-correct="false"><span class="option-letter">A</span><span class="math-expr">x &lt; 3</span></li>
+      <li class="option" data-q="28" data-correct="false"><span class="option-letter">B</span><span class="math-expr">x &lt; 6</span></li>
+      <li class="option" data-q="28" data-correct="false"><span class="option-letter">C</span><span class="math-expr">x > 3</span></li>
+      <li class="option" data-q="28" data-correct="true"><span class="option-letter">D</span><span class="math-expr">x > 6</span></li>
+      <li class="option" data-q="28" data-correct="false"><span class="option-letter">E</span><span class="math-expr">x > 10</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q29">✓ Correct Answer: D — x > 6</div>
-
+  <div class="answer-reveal" id="reveal-q28">✓ Correct Answer: D — x > 6</div>
 </div>
 
-<!-- Q30 -->
-<div class="question-card" id="q30">
+<!-- Q29 (formerly Q30) -->
+<div class="question-card" id="q29">
   <div class="card-header">
-    <div class="q-number">30</div>
+    <div class="q-number">29</div>
     <div class="q-section-tag">Inverse Functions</div>
   </div>
   <div class="card-body">
@@ -1261,21 +1146,20 @@
       If <span class="math-expr">f(x) = <span class="sqrt-wrap">x − 3</span> + 4</span>, then <span class="math-expr">f⁻¹</span>, the inverse function of <span class="math-expr">f</span>, is defined by which of the following?
     </p>
     <ul class="options">
-      <li class="option" data-q="30" data-correct="false"><span class="option-letter">A</span><span class="math-expr">f⁻¹(x) = (x + 4)² − 3</span>, for <span class="math-expr">x ≥ 0</span></li>
-      <li class="option" data-q="30" data-correct="false"><span class="option-letter">B</span><span class="math-expr">f⁻¹(x) = (x + 3)² − 4</span>, for <span class="math-expr">x ≥ 0</span></li>
-      <li class="option" data-q="30" data-correct="false"><span class="option-letter">C</span><span class="math-expr">f⁻¹(x) = (x + 3)² − 4</span>, for <span class="math-expr">x ≥ 3</span></li>
-      <li class="option" data-q="30" data-correct="false"><span class="option-letter">D</span><span class="math-expr">f⁻¹(x) = (x − 4)² − 3</span>, for <span class="math-expr">x ≥ 3</span></li>
-      <li class="option" data-q="30" data-correct="true"><span class="option-letter">E</span><span class="math-expr">f⁻¹(x) = (x − 4)² + 3</span>, for <span class="math-expr">x ≥ 4</span></li>
+      <li class="option" data-q="29" data-correct="false"><span class="option-letter">A</span><span class="math-expr">f⁻¹(x) = (x + 4)² − 3</span>, for <span class="math-expr">x ≥ 0</span></li>
+      <li class="option" data-q="29" data-correct="false"><span class="option-letter">B</span><span class="math-expr">f⁻¹(x) = (x + 3)² − 4</span>, for <span class="math-expr">x ≥ 0</span></li>
+      <li class="option" data-q="29" data-correct="false"><span class="option-letter">C</span><span class="math-expr">f⁻¹(x) = (x + 3)² − 4</span>, for <span class="math-expr">x ≥ 3</span></li>
+      <li class="option" data-q="29" data-correct="false"><span class="option-letter">D</span><span class="math-expr">f⁻¹(x) = (x − 4)² − 3</span>, for <span class="math-expr">x ≥ 3</span></li>
+      <li class="option" data-q="29" data-correct="true"><span class="option-letter">E</span><span class="math-expr">f⁻¹(x) = (x − 4)² + 3</span>, for <span class="math-expr">x ≥ 4</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q30">✓ Correct Answer: E</div>
-
+  <div class="answer-reveal" id="reveal-q29">✓ Correct Answer: E</div>
 </div>
 
-<!-- Q31 -->
-<div class="question-card" id="q31">
+<!-- Q30 (formerly Q31) -->
+<div class="question-card" id="q30">
   <div class="card-header">
-    <div class="q-number">31</div>
+    <div class="q-number">30</div>
     <div class="q-section-tag">Difference Quotient</div>
   </div>
   <div class="card-body">
@@ -1284,44 +1168,42 @@
       <span class="math-expr"><span class="frac"><span class="num">f(x + 2) − f(x)</span><span class="bar"></span><span class="den">2</span></span></span> =
     </p>
     <ul class="options">
-      <li class="option" data-q="31" data-correct="false"><span class="option-letter">A</span>1</li>
-      <li class="option" data-q="31" data-correct="false"><span class="option-letter">B</span>4x</li>
-      <li class="option" data-q="31" data-correct="true"><span class="option-letter">C</span><span class="math-expr">2x + 1</span></li>
-      <li class="option" data-q="31" data-correct="false"><span class="option-letter">D</span><span class="math-expr">4x + 2</span></li>
-      <li class="option" data-q="31" data-correct="false"><span class="option-letter">E</span><span class="math-expr">x² − x</span></li>
+      <li class="option" data-q="30" data-correct="false"><span class="option-letter">A</span>1</li>
+      <li class="option" data-q="30" data-correct="false"><span class="option-letter">B</span>4x</li>
+      <li class="option" data-q="30" data-correct="true"><span class="option-letter">C</span><span class="math-expr">2x + 1</span></li>
+      <li class="option" data-q="30" data-correct="false"><span class="option-letter">D</span><span class="math-expr">4x + 2</span></li>
+      <li class="option" data-q="30" data-correct="false"><span class="option-letter">E</span><span class="math-expr">x² − x</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q31">✓ Correct Answer: C — 2x + 1</div>
-
+  <div class="answer-reveal" id="reveal-q30">✓ Correct Answer: C — 2x + 1</div>
 </div>
 
-<!-- Q32 -->
-<div class="question-card" id="q32">
+<!-- Q31 (formerly Q32) -->
+<div class="question-card" id="q31">
   <div class="card-header">
-    <div class="q-number">32</div>
+    <div class="q-number">31</div>
     <div class="q-section-tag">Rational Functions / Graphing</div>
   </div>
   <div class="card-body">
     <p class="question-text">
       The figure shows the graph of a function <span class="math-expr">g</span> in the xy-plane. Which of the following could define <span class="math-expr">g</span>?
     </p>
-    <img src="32.png" alt="Question 32 graph or diagram" class="question-image">
+    <img src="32.png" alt="Question 31 graph or diagram" class="question-image">
     <ul class="options">
-      <li class="option" data-q="32" data-correct="false"><span class="option-letter">A</span><span class="math-expr">g(x) = <span class="frac"><span class="num">2</span><span class="bar"></span><span class="den">x + 3</span></span></span></li>
-      <li class="option" data-q="32" data-correct="false"><span class="option-letter">B</span><span class="math-expr">g(x) = 2 + <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x + 3</span></span></span></li>
-      <li class="option" data-q="32" data-correct="true"><span class="option-letter">C</span><span class="math-expr">g(x) = 2 + <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x − 3</span></span></span></li>
-      <li class="option" data-q="32" data-correct="false"><span class="option-letter">D</span><span class="math-expr">g(x) = 2 − <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x − 3</span></span></span></li>
-      <li class="option" data-q="32" data-correct="false"><span class="option-letter">E</span><span class="math-expr">g(x) = 2 + <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x</span></span></span></li>
+      <li class="option" data-q="31" data-correct="false"><span class="option-letter">A</span><span class="math-expr">g(x) = <span class="frac"><span class="num">2</span><span class="bar"></span><span class="den">x + 3</span></span></span></li>
+      <li class="option" data-q="31" data-correct="false"><span class="option-letter">B</span><span class="math-expr">g(x) = 2 + <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x + 3</span></span></span></li>
+      <li class="option" data-q="31" data-correct="true"><span class="option-letter">C</span><span class="math-expr">g(x) = 2 + <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x − 3</span></span></span></li>
+      <li class="option" data-q="31" data-correct="false"><span class="option-letter">D</span><span class="math-expr">g(x) = 2 − <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x − 3</span></span></span></li>
+      <li class="option" data-q="31" data-correct="false"><span class="option-letter">E</span><span class="math-expr">g(x) = 2 + <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">x</span></span></span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q32">✓ Correct Answer: C — g(x) = 2 + 1/(x−3)</div>
-
+  <div class="answer-reveal" id="reveal-q31">✓ Correct Answer: C — g(x) = 2 + 1/(x−3)</div>
 </div>
 
-<!-- Q33 -->
-<div class="question-card" id="q33">
+<!-- Q32 (formerly Q33) -->
+<div class="question-card" id="q32">
   <div class="card-header">
-    <div class="q-number">33</div>
+    <div class="q-number">32</div>
     <div class="q-section-tag">Domain of Logarithm</div>
   </div>
   <div class="card-body">
@@ -1330,21 +1212,20 @@
       <span class="math-expr">f(x) = log[(x + 3)(2x − 7)(3x − 25)]</span>?
     </p>
     <ul class="options">
-      <li class="option" data-q="33" data-correct="false"><span class="option-letter">A</span>−4</li>
-      <li class="option" data-q="33" data-correct="true"><span class="option-letter">B</span>3</li>
-      <li class="option" data-q="33" data-correct="false"><span class="option-letter">C</span>4</li>
-      <li class="option" data-q="33" data-correct="false"><span class="option-letter">D</span>5</li>
-      <li class="option" data-q="33" data-correct="false"><span class="option-letter">E</span>6</li>
+      <li class="option" data-q="32" data-correct="false"><span class="option-letter">A</span>−4</li>
+      <li class="option" data-q="32" data-correct="true"><span class="option-letter">B</span>3</li>
+      <li class="option" data-q="32" data-correct="false"><span class="option-letter">C</span>4</li>
+      <li class="option" data-q="32" data-correct="false"><span class="option-letter">D</span>5</li>
+      <li class="option" data-q="32" data-correct="false"><span class="option-letter">E</span>6</li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q33">✓ Correct Answer: B — 3 (all three factors are negative, product is negative → not in domain... wait, at x=3: (6)(−1)(−16)=96>0 ✓)</div>
-
+  <div class="answer-reveal" id="reveal-q32">✓ Correct Answer: B — 3 (at x=3: (6)(−1)(−16)=96>0 ✓)</div>
 </div>
 
-<!-- Q34 -->
-<div class="question-card" id="q34">
+<!-- Q33 (formerly Q34) -->
+<div class="question-card" id="q33">
   <div class="card-header">
-    <div class="q-number">34</div>
+    <div class="q-number">33</div>
     <div class="q-section-tag">Trig Equations</div>
   </div>
   <div class="card-body">
@@ -1352,21 +1233,20 @@
       What are the solutions to the equation <span class="math-expr">sin³θ cosθ + sinθ cos³θ = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">4</span></span></span> on the interval <span class="math-expr">[0, <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">2</span></span>]</span>?
     </p>
     <ul class="options">
-      <li class="option" data-q="34" data-correct="false"><span class="option-letter">A</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">12</span></span></span> only</li>
-      <li class="option" data-q="34" data-correct="false"><span class="option-letter">B</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">6</span></span></span> only</li>
-      <li class="option" data-q="34" data-correct="false"><span class="option-letter">C</span><span class="math-expr">θ = <span class="frac"><span class="num">5π</span><span class="bar"></span><span class="den">12</span></span></span> only</li>
-      <li class="option" data-q="34" data-correct="false"><span class="option-letter">D</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">12</span></span></span> and <span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">6</span></span></span></li>
-      <li class="option" data-q="34" data-correct="true"><span class="option-letter">E</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">12</span></span></span> and <span class="math-expr">θ = <span class="frac"><span class="num">5π</span><span class="bar"></span><span class="den">12</span></span></span></li>
+      <li class="option" data-q="33" data-correct="false"><span class="option-letter">A</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">12</span></span></span> only</li>
+      <li class="option" data-q="33" data-correct="false"><span class="option-letter">B</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">6</span></span></span> only</li>
+      <li class="option" data-q="33" data-correct="false"><span class="option-letter">C</span><span class="math-expr">θ = <span class="frac"><span class="num">5π</span><span class="bar"></span><span class="den">12</span></span></span> only</li>
+      <li class="option" data-q="33" data-correct="false"><span class="option-letter">D</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">12</span></span></span> and <span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">6</span></span></span></li>
+      <li class="option" data-q="33" data-correct="true"><span class="option-letter">E</span><span class="math-expr">θ = <span class="frac"><span class="num">π</span><span class="bar"></span><span class="den">12</span></span></span> and <span class="math-expr">θ = <span class="frac"><span class="num">5π</span><span class="bar"></span><span class="den">12</span></span></span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q34">✓ Correct Answer: E — π/12 and 5π/12</div>
-
+  <div class="answer-reveal" id="reveal-q33">✓ Correct Answer: E — π/12 and 5π/12</div>
 </div>
 
-<!-- Q35 -->
-<div class="question-card" id="q35">
+<!-- Q34 (formerly Q35) -->
+<div class="question-card" id="q34">
   <div class="card-header">
-    <div class="q-number">35</div>
+    <div class="q-number">34</div>
     <div class="q-section-tag">Modeling / Optimization</div>
   </div>
   <div class="card-body">
@@ -1377,21 +1257,20 @@
       The function <span class="math-expr">N</span> models the squirrel population (in hundreds) in a wooded area over 10 years, where <span class="math-expr">t</span> = years after January 1, 1990. Between which years was the squirrel population at its maximum?
     </p>
     <ul class="options">
-      <li class="option" data-q="35" data-correct="false"><span class="option-letter">A</span>1990 and 1991</li>
-      <li class="option" data-q="35" data-correct="true"><span class="option-letter">B</span>1991 and 1992</li>
-      <li class="option" data-q="35" data-correct="false"><span class="option-letter">C</span>1994 and 1995</li>
-      <li class="option" data-q="35" data-correct="false"><span class="option-letter">D</span>1995 and 1996</li>
-      <li class="option" data-q="35" data-correct="false"><span class="option-letter">E</span>1999 and 2000</li>
+      <li class="option" data-q="34" data-correct="false"><span class="option-letter">A</span>1990 and 1991</li>
+      <li class="option" data-q="34" data-correct="true"><span class="option-letter">B</span>1991 and 1992</li>
+      <li class="option" data-q="34" data-correct="false"><span class="option-letter">C</span>1994 and 1995</li>
+      <li class="option" data-q="34" data-correct="false"><span class="option-letter">D</span>1995 and 1996</li>
+      <li class="option" data-q="34" data-correct="false"><span class="option-letter">E</span>1999 and 2000</li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q35">✓ Correct Answer: B — 1991 and 1992</div>
-
+  <div class="answer-reveal" id="reveal-q34">✓ Correct Answer: B — 1991 and 1992</div>
 </div>
 
-<!-- Q36 -->
-<div class="question-card" id="q36">
+<!-- Q35 (formerly Q36) -->
+<div class="question-card" id="q35">
   <div class="card-header">
-    <div class="q-number">36</div>
+    <div class="q-number">35</div>
     <div class="q-section-tag">Inverse Functions</div>
   </div>
   <div class="card-body">
@@ -1399,21 +1278,20 @@
       Let <span class="math-expr">f</span> be a one-to-one function with domain <span class="math-expr">(−∞, ∞)</span>. The point <span class="math-expr">(a, b)</span> is on the graph of <span class="math-expr">y = f(x)</span>, where <span class="math-expr">a</span> and <span class="math-expr">b</span> are nonzero real numbers. Which of the following points must be on the graph of the inverse function <span class="math-expr">y = f⁻¹(x)</span>?
     </p>
     <ul class="options">
-      <li class="option" data-q="36" data-correct="false"><span class="option-letter">A</span><span class="math-expr">(−a, −b)</span></li>
-      <li class="option" data-q="36" data-correct="false"><span class="option-letter">B</span><span class="math-expr">(−b, −a)</span></li>
-      <li class="option" data-q="36" data-correct="false"><span class="option-letter">C</span><span class="math-expr">(−<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">b</span></span>, −<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">a</span></span>)</span></li>
-      <li class="option" data-q="36" data-correct="false"><span class="option-letter">D</span><span class="math-expr">(<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">a</span></span>, <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">b</span></span>)</span></li>
-      <li class="option" data-q="36" data-correct="true"><span class="option-letter">E</span><span class="math-expr">(b, a)</span></li>
+      <li class="option" data-q="35" data-correct="false"><span class="option-letter">A</span><span class="math-expr">(−a, −b)</span></li>
+      <li class="option" data-q="35" data-correct="false"><span class="option-letter">B</span><span class="math-expr">(−b, −a)</span></li>
+      <li class="option" data-q="35" data-correct="false"><span class="option-letter">C</span><span class="math-expr">(−<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">b</span></span>, −<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">a</span></span>)</span></li>
+      <li class="option" data-q="35" data-correct="false"><span class="option-letter">D</span><span class="math-expr">(<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">a</span></span>, <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">b</span></span>)</span></li>
+      <li class="option" data-q="35" data-correct="true"><span class="option-letter">E</span><span class="math-expr">(b, a)</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q36">✓ Correct Answer: E — (b, a)</div>
-
+  <div class="answer-reveal" id="reveal-q35">✓ Correct Answer: E — (b, a)</div>
 </div>
 
-<!-- Q37 -->
-<div class="question-card" id="q37">
+<!-- Q36 (formerly Q37) -->
+<div class="question-card" id="q36">
   <div class="card-header">
-    <div class="q-number">37</div>
+    <div class="q-number">36</div>
     <div class="q-section-tag">Trig Values</div>
   </div>
   <div class="card-body">
@@ -1421,21 +1299,20 @@
       If <span class="math-expr">sin θ = −<span class="frac"><span class="num">5</span><span class="bar"></span><span class="den">13</span></span></span> and <span class="math-expr">π &lt; θ &lt; <span class="frac"><span class="num">3</span><span class="bar"></span><span class="den">2</span></span>π</span>, which of the following has the least value?
     </p>
     <ul class="options">
-      <li class="option" data-q="37" data-correct="false"><span class="option-letter">A</span><span class="math-expr">tan θ</span></li>
-      <li class="option" data-q="37" data-correct="false"><span class="option-letter">B</span><span class="math-expr">cot θ</span></li>
-      <li class="option" data-q="37" data-correct="false"><span class="option-letter">C</span><span class="math-expr">cos θ</span></li>
-      <li class="option" data-q="37" data-correct="false"><span class="option-letter">D</span><span class="math-expr">sec θ</span></li>
-      <li class="option" data-q="37" data-correct="true"><span class="option-letter">E</span><span class="math-expr">csc θ</span></li>
+      <li class="option" data-q="36" data-correct="false"><span class="option-letter">A</span><span class="math-expr">tan θ</span></li>
+      <li class="option" data-q="36" data-correct="false"><span class="option-letter">B</span><span class="math-expr">cot θ</span></li>
+      <li class="option" data-q="36" data-correct="false"><span class="option-letter">C</span><span class="math-expr">cos θ</span></li>
+      <li class="option" data-q="36" data-correct="false"><span class="option-letter">D</span><span class="math-expr">sec θ</span></li>
+      <li class="option" data-q="36" data-correct="true"><span class="option-letter">E</span><span class="math-expr">csc θ</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q37">✓ Correct Answer: E — csc θ = −13/5 = −2.6, least value</div>
-
+  <div class="answer-reveal" id="reveal-q36">✓ Correct Answer: E — csc θ = −13/5 = −2.6, least value</div>
 </div>
 
-<!-- Q38 -->
-<div class="question-card" id="q38">
+<!-- Q37 (formerly Q38) -->
+<div class="question-card" id="q37">
   <div class="card-header">
-    <div class="q-number">38</div>
+    <div class="q-number">37</div>
     <div class="q-section-tag">Parabolas</div>
   </div>
   <div class="card-body">
@@ -1443,21 +1320,20 @@
       In the xy-plane, the axis of symmetry of a parabola is the line <span class="math-expr">x = 2</span>. The parabola intersects the x-axis when <span class="math-expr">x = −1</span>. Which of the following could be an equation of the parabola?
     </p>
     <ul class="options">
-      <li class="option" data-q="38" data-correct="false"><span class="option-letter">A</span><span class="math-expr">y = x² − x − 2</span></li>
-      <li class="option" data-q="38" data-correct="false"><span class="option-letter">B</span><span class="math-expr">y = x² − 2x − 3</span></li>
-      <li class="option" data-q="38" data-correct="true"><span class="option-letter">C</span><span class="math-expr">y = x² − 4x − 5</span></li>
-      <li class="option" data-q="38" data-correct="false"><span class="option-letter">D</span><span class="math-expr">y = x² + 6x + 5</span></li>
-      <li class="option" data-q="38" data-correct="false"><span class="option-letter">E</span><span class="math-expr">y = 2x² + x − 1</span></li>
+      <li class="option" data-q="37" data-correct="false"><span class="option-letter">A</span><span class="math-expr">y = x² − x − 2</span></li>
+      <li class="option" data-q="37" data-correct="false"><span class="option-letter">B</span><span class="math-expr">y = x² − 2x − 3</span></li>
+      <li class="option" data-q="37" data-correct="true"><span class="option-letter">C</span><span class="math-expr">y = x² − 4x − 5</span></li>
+      <li class="option" data-q="37" data-correct="false"><span class="option-letter">D</span><span class="math-expr">y = x² + 6x + 5</span></li>
+      <li class="option" data-q="37" data-correct="false"><span class="option-letter">E</span><span class="math-expr">y = 2x² + x − 1</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q38">✓ Correct Answer: C — y = x² − 4x − 5</div>
-
+  <div class="answer-reveal" id="reveal-q37">✓ Correct Answer: C — y = x² − 4x − 5</div>
 </div>
 
-<!-- Q39 -->
-<div class="question-card" id="q39">
+<!-- Q38 (formerly Q39) -->
+<div class="question-card" id="q38">
   <div class="card-header">
-    <div class="q-number">39</div>
+    <div class="q-number">38</div>
     <div class="q-section-tag">Range / Transformations</div>
   </div>
   <div class="card-body">
@@ -1465,21 +1341,20 @@
       The range of the function <span class="math-expr">f</span> is <span class="math-expr">{y : 0 ≤ y ≤ 2}</span>. If <span class="math-expr">g(x) = f(x − 5) + 10</span>, what is the range of the function <span class="math-expr">g</span>?
     </p>
     <ul class="options">
-      <li class="option" data-q="39" data-correct="false"><span class="option-letter">A</span><span class="math-expr">{y : −5 ≤ y ≤ −3}</span></li>
-      <li class="option" data-q="39" data-correct="false"><span class="option-letter">B</span><span class="math-expr">{y : 0 ≤ y ≤ 20}</span></li>
-      <li class="option" data-q="39" data-correct="false"><span class="option-letter">C</span><span class="math-expr">{y : 5 ≤ y ≤ 7}</span></li>
-      <li class="option" data-q="39" data-correct="true"><span class="option-letter">D</span><span class="math-expr">{y : 10 ≤ y ≤ 12}</span></li>
-      <li class="option" data-q="39" data-correct="false"><span class="option-letter">E</span><span class="math-expr">{y : 10 ≤ y ≤ 20}</span></li>
+      <li class="option" data-q="38" data-correct="false"><span class="option-letter">A</span><span class="math-expr">{y : −5 ≤ y ≤ −3}</span></li>
+      <li class="option" data-q="38" data-correct="false"><span class="option-letter">B</span><span class="math-expr">{y : 0 ≤ y ≤ 20}</span></li>
+      <li class="option" data-q="38" data-correct="false"><span class="option-letter">C</span><span class="math-expr">{y : 5 ≤ y ≤ 7}</span></li>
+      <li class="option" data-q="38" data-correct="true"><span class="option-letter">D</span><span class="math-expr">{y : 10 ≤ y ≤ 12}</span></li>
+      <li class="option" data-q="38" data-correct="false"><span class="option-letter">E</span><span class="math-expr">{y : 10 ≤ y ≤ 20}</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q39">✓ Correct Answer: D — {y : 10 ≤ y ≤ 12}</div>
-
+  <div class="answer-reveal" id="reveal-q38">✓ Correct Answer: D — {y : 10 ≤ y ≤ 12}</div>
 </div>
 
-<!-- Q40 -->
-<div class="question-card" id="q40">
+<!-- Q39 (formerly Q40) -->
+<div class="question-card" id="q39">
   <div class="card-header">
-    <div class="q-number">40</div>
+    <div class="q-number">39</div>
     <div class="q-section-tag">Circles / Lines</div>
   </div>
   <div class="card-body">
@@ -1487,21 +1362,20 @@
       Which of the following is an equation of the line in the xy-plane that passes through the x- and y-intercepts of the graph of <span class="math-expr">(x − 3)² + (y − 3)² = 9</span>?
     </p>
     <ul class="options">
-      <li class="option" data-q="40" data-correct="false"><span class="option-letter">A</span><span class="math-expr">y = x + 3</span></li>
-      <li class="option" data-q="40" data-correct="false"><span class="option-letter">B</span><span class="math-expr">y = −x + 3</span></li>
-      <li class="option" data-q="40" data-correct="false"><span class="option-letter">C</span><span class="math-expr">y = −x − 3</span></li>
-      <li class="option" data-q="40" data-correct="true"><span class="option-letter">D</span><span class="math-expr">y = −x + 6</span></li>
-      <li class="option" data-q="40" data-correct="false"><span class="option-letter">E</span><span class="math-expr">y = −x + 9</span></li>
+      <li class="option" data-q="39" data-correct="false"><span class="option-letter">A</span><span class="math-expr">y = x + 3</span></li>
+      <li class="option" data-q="39" data-correct="false"><span class="option-letter">B</span><span class="math-expr">y = −x + 3</span></li>
+      <li class="option" data-q="39" data-correct="false"><span class="option-letter">C</span><span class="math-expr">y = −x − 3</span></li>
+      <li class="option" data-q="39" data-correct="true"><span class="option-letter">D</span><span class="math-expr">y = −x + 6</span></li>
+      <li class="option" data-q="39" data-correct="false"><span class="option-letter">E</span><span class="math-expr">y = −x + 9</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q40">✓ Correct Answer: D — y = −x + 6</div>
-
+  <div class="answer-reveal" id="reveal-q39">✓ Correct Answer: D — y = −x + 6</div>
 </div>
 
-<!-- Q41 -->
-<div class="question-card" id="q41">
+<!-- Q40 (formerly Q41) -->
+<div class="question-card" id="q40">
   <div class="card-header">
-    <div class="q-number">41</div>
+    <div class="q-number">40</div>
     <div class="q-section-tag">Algebra / Solving for x</div>
   </div>
   <div class="card-body">
@@ -1509,21 +1383,20 @@
       If <span class="math-expr">−7x + 5 = 2x − b</span>, which of the following expresses <span class="math-expr">x</span> in terms of <span class="math-expr">b</span>?
     </p>
     <ul class="options">
-      <li class="option" data-q="41" data-correct="false"><span class="option-letter">A</span><span class="math-expr">x = −<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">5</span></span>(b + 5)</span></li>
-      <li class="option" data-q="41" data-correct="false"><span class="option-letter">B</span><span class="math-expr">x = −<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">9</span></span>(5 − b)</span></li>
-      <li class="option" data-q="41" data-correct="false"><span class="option-letter">C</span><span class="math-expr">x = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">9</span></span>(5 − b)</span></li>
-      <li class="option" data-q="41" data-correct="true"><span class="option-letter">D</span><span class="math-expr">x = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">9</span></span>(b + 5)</span></li>
-      <li class="option" data-q="41" data-correct="false"><span class="option-letter">E</span><span class="math-expr">x = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">5</span></span>(b + 5)</span></li>
+      <li class="option" data-q="40" data-correct="false"><span class="option-letter">A</span><span class="math-expr">x = −<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">5</span></span>(b + 5)</span></li>
+      <li class="option" data-q="40" data-correct="false"><span class="option-letter">B</span><span class="math-expr">x = −<span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">9</span></span>(5 − b)</span></li>
+      <li class="option" data-q="40" data-correct="false"><span class="option-letter">C</span><span class="math-expr">x = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">9</span></span>(5 − b)</span></li>
+      <li class="option" data-q="40" data-correct="true"><span class="option-letter">D</span><span class="math-expr">x = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">9</span></span>(b + 5)</span></li>
+      <li class="option" data-q="40" data-correct="false"><span class="option-letter">E</span><span class="math-expr">x = <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">5</span></span>(b + 5)</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q41">✓ Correct Answer: D — x = (b + 5)/9</div>
-
+  <div class="answer-reveal" id="reveal-q40">✓ Correct Answer: D — x = (b + 5)/9</div>
 </div>
 
-<!-- Q42 -->
-<div class="question-card" id="q42">
+<!-- Q41 (formerly Q42) -->
+<div class="question-card" id="q41">
   <div class="card-header">
-    <div class="q-number">42</div>
+    <div class="q-number">41</div>
     <div class="q-section-tag">Proportionality</div>
   </div>
   <div class="card-body">
@@ -1531,21 +1404,20 @@
       The cost of a container of liquid shaped as a rectangular box with interior dimensions 2.5 × 4 × 8 inches is $1.25. If cost is directly proportional to volume, what is the cost of a container with interior dimensions 4 × 10 × 12 inches?
     </p>
     <ul class="options">
-      <li class="option" data-q="42" data-correct="false"><span class="option-letter">A</span>$5.00</li>
-      <li class="option" data-q="42" data-correct="false"><span class="option-letter">B</span>$6.00</li>
-      <li class="option" data-q="42" data-correct="true"><span class="option-letter">C</span>$7.50</li>
-      <li class="option" data-q="42" data-correct="false"><span class="option-letter">D</span>$11.25</li>
-      <li class="option" data-q="42" data-correct="false"><span class="option-letter">E</span>$24.00</li>
+      <li class="option" data-q="41" data-correct="false"><span class="option-letter">A</span>$5.00</li>
+      <li class="option" data-q="41" data-correct="false"><span class="option-letter">B</span>$6.00</li>
+      <li class="option" data-q="41" data-correct="true"><span class="option-letter">C</span>$7.50</li>
+      <li class="option" data-q="41" data-correct="false"><span class="option-letter">D</span>$11.25</li>
+      <li class="option" data-q="41" data-correct="false"><span class="option-letter">E</span>$24.00</li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q42">✓ Correct Answer: C — $7.50</div>
-
+  <div class="answer-reveal" id="reveal-q41">✓ Correct Answer: C — $7.50</div>
 </div>
 
-<!-- Q43 -->
-<div class="question-card" id="q43">
+<!-- Q42 (formerly Q43) -->
+<div class="question-card" id="q42">
   <div class="card-header">
-    <div class="q-number">43</div>
+    <div class="q-number">42</div>
     <div class="q-section-tag">Absolute Value Inequalities</div>
   </div>
   <div class="card-body">
@@ -1554,21 +1426,20 @@
       If <span class="math-expr">m > 0</span> in the inequality above, which of the following CANNOT be the value of <span class="math-expr">x</span>?
     </p>
     <ul class="options">
-      <li class="option" data-q="43" data-correct="true"><span class="option-letter">A</span>−2</li>
-      <li class="option" data-q="43" data-correct="false"><span class="option-letter">B</span>0</li>
-      <li class="option" data-q="43" data-correct="false"><span class="option-letter">C</span><span class="math-expr"><span class="sqrt-wrap">2</span></span></li>
-      <li class="option" data-q="43" data-correct="false"><span class="option-letter">D</span>2</li>
-      <li class="option" data-q="43" data-correct="false"><span class="option-letter">E</span>4</li>
+      <li class="option" data-q="42" data-correct="true"><span class="option-letter">A</span>−2</li>
+      <li class="option" data-q="42" data-correct="false"><span class="option-letter">B</span>0</li>
+      <li class="option" data-q="42" data-correct="false"><span class="option-letter">C</span><span class="math-expr"><span class="sqrt-wrap">2</span></span></li>
+      <li class="option" data-q="42" data-correct="false"><span class="option-letter">D</span>2</li>
+      <li class="option" data-q="42" data-correct="false"><span class="option-letter">E</span>4</li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q43">✓ Correct Answer: A — −2 (since m > 0, x = −2 is always outside the interval)</div>
-
+  <div class="answer-reveal" id="reveal-q42">✓ Correct Answer: A — −2 (since m > 0, x = −2 is always outside the interval)</div>
 </div>
 
-<!-- Q44 -->
-<div class="question-card" id="q44">
+<!-- Q43 (formerly Q44) -->
+<div class="question-card" id="q43">
   <div class="card-header">
-    <div class="q-number">44</div>
+    <div class="q-number">43</div>
     <div class="q-section-tag">Maximum / Distance</div>
   </div>
   <div class="card-body">
@@ -1579,44 +1450,42 @@
       There are two values of <span class="math-expr">x</span> at which the function <span class="math-expr">f</span> attains its absolute maximum value. What is the distance between the two corresponding maximum points on the graph of <span class="math-expr">f</span> in the xy-plane?
     </p>
     <ul class="options">
-      <li class="option" data-q="44" data-correct="false"><span class="option-letter">A</span>1.064</li>
-      <li class="option" data-q="44" data-correct="false"><span class="option-letter">B</span>2.128</li>
-      <li class="option" data-q="44" data-correct="false"><span class="option-letter">C</span>4.246</li>
-      <li class="option" data-q="44" data-correct="true"><span class="option-letter">D</span>4.258</li>
-      <li class="option" data-q="44" data-correct="false"><span class="option-letter">E</span>8.492</li>
+      <li class="option" data-q="43" data-correct="false"><span class="option-letter">A</span>1.064</li>
+      <li class="option" data-q="43" data-correct="false"><span class="option-letter">B</span>2.128</li>
+      <li class="option" data-q="43" data-correct="false"><span class="option-letter">C</span>4.246</li>
+      <li class="option" data-q="43" data-correct="true"><span class="option-letter">D</span>4.258</li>
+      <li class="option" data-q="43" data-correct="false"><span class="option-letter">E</span>8.492</li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q44">✓ Correct Answer: D — 4.258</div>
-
+  <div class="answer-reveal" id="reveal-q43">✓ Correct Answer: D — 4.258</div>
 </div>
 
-<!-- Q45 -->
-<div class="question-card" id="q45">
+<!-- Q44 (formerly Q45) -->
+<div class="question-card" id="q44">
   <div class="card-header">
-    <div class="q-number">45</div>
+    <div class="q-number">44</div>
     <div class="q-section-tag">Discrete Functions</div>
   </div>
   <div class="card-body">
     <p class="question-text">
       The figure shows the graph of the function <span class="math-expr">f</span> whose domain is <span class="math-expr">{−2, −1, 0, 1, 2}</span>. What is the set of all values of <span class="math-expr">x</span> such that <span class="math-expr">|f(x)| &lt; 2</span>?
     </p>
-    <img src="45.png" alt="Question 45 graph or diagram" class="question-image">
+    <img src="45.png" alt="Question 44 graph or diagram" class="question-image">
     <ul class="options">
-      <li class="option" data-q="45" data-correct="false"><span class="option-letter">A</span><span class="math-expr">{0, 1}</span></li>
-      <li class="option" data-q="45" data-correct="false"><span class="option-letter">B</span><span class="math-expr">{0, 1, 2}</span></li>
-      <li class="option" data-q="45" data-correct="false"><span class="option-letter">C</span><span class="math-expr">{−1, 0, 1}</span></li>
-      <li class="option" data-q="45" data-correct="false"><span class="option-letter">D</span><span class="math-expr">{−2, −1, 0, 1}</span></li>
-      <li class="option" data-q="45" data-correct="true"><span class="option-letter">E</span><span class="math-expr">{−2, −1, 0, 1, 2}</span></li>
+      <li class="option" data-q="44" data-correct="false"><span class="option-letter">A</span><span class="math-expr">{0, 1}</span></li>
+      <li class="option" data-q="44" data-correct="false"><span class="option-letter">B</span><span class="math-expr">{0, 1, 2}</span></li>
+      <li class="option" data-q="44" data-correct="false"><span class="option-letter">C</span><span class="math-expr">{−1, 0, 1}</span></li>
+      <li class="option" data-q="44" data-correct="false"><span class="option-letter">D</span><span class="math-expr">{−2, −1, 0, 1}</span></li>
+      <li class="option" data-q="44" data-correct="true"><span class="option-letter">E</span><span class="math-expr">{−2, −1, 0, 1, 2}</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q45">✓ Correct Answer: E — {−2, −1, 0, 1, 2}</div>
-
+  <div class="answer-reveal" id="reveal-q44">✓ Correct Answer: E — {−2, −1, 0, 1, 2}</div>
 </div>
 
-<!-- Q46 -->
-<div class="question-card" id="q46">
+<!-- Q45 (formerly Q46) -->
+<div class="question-card" id="q45">
   <div class="card-header">
-    <div class="q-number">46</div>
+    <div class="q-number">45</div>
     <div class="q-section-tag">Composite Functions / Trig</div>
   </div>
   <div class="card-body">
@@ -1624,21 +1493,20 @@
       If <span class="math-expr">f(x) = sin(3x)</span>, then <span class="math-expr">f(f(x))</span> =
     </p>
     <ul class="options">
-      <li class="option" data-q="46" data-correct="false"><span class="option-letter">A</span><span class="math-expr">9 sin²(x)</span></li>
-      <li class="option" data-q="46" data-correct="false"><span class="option-letter">B</span><span class="math-expr">sin²(3x)</span></li>
-      <li class="option" data-q="46" data-correct="false"><span class="option-letter">C</span><span class="math-expr">sin²(9x²)</span></li>
-      <li class="option" data-q="46" data-correct="false"><span class="option-letter">D</span><span class="math-expr">sin(sin(3x))</span></li>
-      <li class="option" data-q="46" data-correct="true"><span class="option-letter">E</span><span class="math-expr">sin(3 sin(3x))</span></li>
+      <li class="option" data-q="45" data-correct="false"><span class="option-letter">A</span><span class="math-expr">9 sin²(x)</span></li>
+      <li class="option" data-q="45" data-correct="false"><span class="option-letter">B</span><span class="math-expr">sin²(3x)</span></li>
+      <li class="option" data-q="45" data-correct="false"><span class="option-letter">C</span><span class="math-expr">sin²(9x²)</span></li>
+      <li class="option" data-q="45" data-correct="false"><span class="option-letter">D</span><span class="math-expr">sin(sin(3x))</span></li>
+      <li class="option" data-q="45" data-correct="true"><span class="option-letter">E</span><span class="math-expr">sin(3 sin(3x))</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q46">✓ Correct Answer: E — sin(3 sin(3x))</div>
-
+  <div class="answer-reveal" id="reveal-q45">✓ Correct Answer: E — sin(3 sin(3x))</div>
 </div>
 
-<!-- Q47 -->
-<div class="question-card" id="q47">
+<!-- Q46 (formerly Q47) -->
+<div class="question-card" id="q46">
   <div class="card-header">
-    <div class="q-number">47</div>
+    <div class="q-number">46</div>
     <div class="q-section-tag">Exponential Inequalities</div>
   </div>
   <div class="card-body">
@@ -1646,21 +1514,20 @@
       What are all values of <span class="math-expr">x</span> for which <span class="math-expr">2 &lt; 10<sup>x</sup> &lt; 5</span>?
     </p>
     <ul class="options">
-      <li class="option" data-q="47" data-correct="false"><span class="option-letter">A</span><span class="math-expr">0 &lt; x &lt; log<span class="frac" style="font-size:0.8em"><span class="num">5</span><span class="bar"></span><span class="den">2</span></span></span></li>
-      <li class="option" data-q="47" data-correct="false"><span class="option-letter">B</span><span class="math-expr">log<span class="frac" style="font-size:0.8em"><span class="num">2</span><span class="bar"></span><span class="den">5</span></span> &lt; x &lt; 0</span></li>
-      <li class="option" data-q="47" data-correct="true"><span class="option-letter">C</span><span class="math-expr">log 2 &lt; x &lt; log 5</span></li>
-      <li class="option" data-q="47" data-correct="false"><span class="option-letter">D</span><span class="math-expr"><span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">5</span></span> &lt; x &lt; <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">2</span></span></span></li>
-      <li class="option" data-q="47" data-correct="false"><span class="option-letter">E</span><span class="math-expr">20 &lt; x &lt; 50</span></li>
+      <li class="option" data-q="46" data-correct="false"><span class="option-letter">A</span><span class="math-expr">0 &lt; x &lt; log<span class="frac" style="font-size:0.8em"><span class="num">5</span><span class="bar"></span><span class="den">2</span></span></span></li>
+      <li class="option" data-q="46" data-correct="false"><span class="option-letter">B</span><span class="math-expr">log<span class="frac" style="font-size:0.8em"><span class="num">2</span><span class="bar"></span><span class="den">5</span></span> &lt; x &lt; 0</span></li>
+      <li class="option" data-q="46" data-correct="true"><span class="option-letter">C</span><span class="math-expr">log 2 &lt; x &lt; log 5</span></li>
+      <li class="option" data-q="46" data-correct="false"><span class="option-letter">D</span><span class="math-expr"><span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">5</span></span> &lt; x &lt; <span class="frac"><span class="num">1</span><span class="bar"></span><span class="den">2</span></span></span></li>
+      <li class="option" data-q="46" data-correct="false"><span class="option-letter">E</span><span class="math-expr">20 &lt; x &lt; 50</span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q47">✓ Correct Answer: C — log 2 &lt; x &lt; log 5</div>
-
+  <div class="answer-reveal" id="reveal-q46">✓ Correct Answer: C — log 2 &lt; x &lt; log 5</div>
 </div>
 
-<!-- Q48 -->
-<div class="question-card" id="q48">
+<!-- Q47 (formerly Q48) -->
+<div class="question-card" id="q47">
   <div class="card-header">
-    <div class="q-number">48</div>
+    <div class="q-number">47</div>
     <div class="q-section-tag">Difference Quotient</div>
   </div>
   <div class="card-body">
@@ -1669,24 +1536,23 @@
       <span class="math-expr"><span class="frac"><span class="num">f(2 + h) − f(2 − h)</span><span class="bar"></span><span class="den">2h</span></span></span> =
     </p>
     <ul class="options">
-      <li class="option" data-q="48" data-correct="false"><span class="option-letter">A</span>1</li>
-      <li class="option" data-q="48" data-correct="true"><span class="option-letter">B</span>9</li>
-      <li class="option" data-q="48" data-correct="false"><span class="option-letter">C</span><span class="math-expr">−<span class="frac"><span class="num">4</span><span class="bar"></span><span class="den">h</span></span></span></li>
-      <li class="option" data-q="48" data-correct="false"><span class="option-letter">D</span><span class="math-expr">1 − <span class="frac"><span class="num">4</span><span class="bar"></span><span class="den">h</span></span></span></li>
-      <li class="option" data-q="48" data-correct="false"><span class="option-letter">E</span><span class="math-expr">9 − <span class="frac"><span class="num">4</span><span class="bar"></span><span class="den">h</span></span></span></li>
+      <li class="option" data-q="47" data-correct="false"><span class="option-letter">A</span>1</li>
+      <li class="option" data-q="47" data-correct="true"><span class="option-letter">B</span>9</li>
+      <li class="option" data-q="47" data-correct="false"><span class="option-letter">C</span><span class="math-expr">−<span class="frac"><span class="num">4</span><span class="bar"></span><span class="den">h</span></span></span></li>
+      <li class="option" data-q="47" data-correct="false"><span class="option-letter">D</span><span class="math-expr">1 − <span class="frac"><span class="num">4</span><span class="bar"></span><span class="den">h</span></span></span></li>
+      <li class="option" data-q="47" data-correct="false"><span class="option-letter">E</span><span class="math-expr">9 − <span class="frac"><span class="num">4</span><span class="bar"></span><span class="den">h</span></span></span></li>
     </ul>
   </div>
-  <div class="answer-reveal" id="reveal-q48">✓ Correct Answer: B — 9</div>
-
+  <div class="answer-reveal" id="reveal-q47">✓ Correct Answer: B — 9</div>
 </div>
 
 </main>
 
-<footer>CLEP Precalculus — 48 Practice Questions &nbsp;·&nbsp; For study purposes only</footer>
+<footer>CLEP Precalculus — 47 Practice Questions &nbsp;·&nbsp; For study purposes only</footer>
 
 <script>
   const answered = new Set();
-  const total = 48;
+  const total = 47;
 
   function updateProgress() {
     const count = answered.size;
@@ -1699,7 +1565,6 @@
     updateProgress();
   }
 
-  // Free-response submit handler
   function submitFreeResponse(qId, correctAnswer) {
     if (answered.has(qId)) return;
     const input = document.getElementById('input-' + qId);
@@ -1719,16 +1584,13 @@
       feedback.textContent = '✗ Incorrect';
       feedback.className = 'fr-feedback wrong';
     }
-    // Show answer reveal
     const reveal = document.getElementById('reveal-' + qId);
     if (reveal) reveal.classList.add('show');
-    // Lock input and button
     input.disabled = true;
     submitBtn.disabled = true;
     markAnswered(qId);
   }
 
-  // Allow Enter key to submit free-response questions
   ['q7', 'q20'].forEach(qId => {
     const input = document.getElementById('input-' + qId);
     if (input) {
@@ -1743,18 +1605,14 @@
       const qId = this.dataset.q;
       const fullQId = 'q' + qId;
 
-      // If already answered, do nothing
       if (answered.has(fullQId)) return;
 
-      // Highlight selected
       document.querySelectorAll(`.option[data-q="${qId}"]`).forEach(o => o.classList.remove('selected'));
       this.classList.add('selected');
 
-      // Mark correct answer and show reveal
       const card = document.getElementById(fullQId);
       if (card) {
         card.querySelectorAll('.option[data-correct="true"]').forEach(o => o.classList.add('correct'));
-        // Add wrong class if selected wrong
         if (this.dataset.correct === 'false') {
           this.classList.add('wrong');
         }
