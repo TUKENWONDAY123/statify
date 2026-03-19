@@ -255,6 +255,15 @@
     background: var(--correct-bg);
     border-color: var(--correct-border);
   }
+  .option.wrong {
+    background: #fde8e8;
+    border-color: #c0392b;
+  }
+  .option.wrong .option-letter {
+    background: #c0392b;
+    border-color: #c0392b;
+    color: #fff;
+  }
   .option-letter {
     display: inline-flex;
     align-items: center;
@@ -479,9 +488,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q1">✓ Correct Answer: D — <span class="math-expr">x²/4 − 1/2</span></div>
-  <div class="card-footer">
-    <button class="btn btn-reveal" onclick="revealAnswer('q1')">Show Answer</button>
-  </div>
+
 </div>
 
 <!-- Q2 -->
@@ -504,7 +511,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q2">✓ Correct Answer: D — 88.85 miles</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q2')">Show Answer</button></div>
+
 </div>
 
 <!-- Q3 -->
@@ -532,7 +539,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q3">✓ Correct Answer: B — II only</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q3')">Show Answer</button></div>
+
 </div>
 
 <!-- Q4 -->
@@ -554,7 +561,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q4">✓ Correct Answer: D — 8</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q4')">Show Answer</button></div>
+
 </div>
 
 <!-- Q5 -->
@@ -586,7 +593,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q5">✓ Correct Answer: C — a³</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q5')">Show Answer</button></div>
+
 </div>
 
 <!-- Q6 -->
@@ -619,7 +626,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q6">✓ Correct Answer: D — 4√y / (x²√w)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q6')">Show Answer</button></div>
+
 </div>
 
 <!-- Q7 -->
@@ -647,7 +654,7 @@
     </div>
   </div>
   <div class="answer-reveal" id="reveal-q7">✓ Correct Answer: 4.8 &nbsp;(f(3) = 5, f(−3) = −1/5 → 5 − 0.2 = 4.8)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q7')">Show Answer</button></div>
+
 </div>
 
 <!-- Q8 -->
@@ -669,7 +676,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q8">✓ Correct Answer: A — x = 5</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q8')">Show Answer</button></div>
+
 </div>
 
 <!-- Q9 -->
@@ -692,7 +699,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q9">✓ Correct Answer: C — 22 ft</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q9')">Show Answer</button></div>
+
 </div>
 
 <!-- Q10 -->
@@ -714,7 +721,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q10">✓ Correct Answer: B — f + g (Pythagorean identity)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q10')">Show Answer</button></div>
+
 </div>
 
 <!-- Q11 -->
@@ -736,7 +743,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q11">✓ Correct Answer: C — g(x) = 4x + 6</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q11')">Show Answer</button></div>
+
 </div>
 
 <!-- Q12 -->
@@ -758,7 +765,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q12">✓ Correct Answer: A</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q12')">Show Answer</button></div>
+
 </div>
 
 <!-- Q13 -->
@@ -782,7 +789,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q13">✓ Correct Answer: B — 65</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q13')">Show Answer</button></div>
+
 </div>
 
 <!-- Q14 -->
@@ -810,7 +817,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q14">✓ Correct Answer: B</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q14')">Show Answer</button></div>
+
 </div>
 
 <!-- Q15 -->
@@ -836,7 +843,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q15">✓ Correct Answer: C — Graph shifted 1 unit downward</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q15')">Show Answer</button></div>
+
 </div>
 
 <!-- Q16 -->
@@ -859,7 +866,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q16">✓ Correct Answer: D — A hyperbola (opposite sign coefficients)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q16')">Show Answer</button></div>
+
 </div>
 
 <!-- Q17 -->
@@ -881,7 +888,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q17">✓ Correct Answer: D — Quadrant IV (cos > 0, tan < 0)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q17')">Show Answer</button></div>
+
 </div>
 
 <!-- Q18 -->
@@ -904,7 +911,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q18">✓ Correct Answer: C — 1 and 5</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q18')">Show Answer</button></div>
+
 </div>
 
 <!-- Q19 -->
@@ -929,7 +936,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q19">✓ Correct Answer: A — None (all three are false identities)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q19')">Show Answer</button></div>
+
 </div>
 
 <!-- Q20 -->
@@ -949,7 +956,7 @@
     </div>
   </div>
   <div class="answer-reveal" id="reveal-q20">✓ Correct Answer: −5 &nbsp;(factor: (3x − 2)(x + 5) = 0; x = 2/3 or x = −5; least is −5)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q20')">Show Answer</button></div>
+
 </div>
 
 <!-- Q21 -->
@@ -972,7 +979,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q21">✓ Correct Answer: B — 1</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q21')">Show Answer</button></div>
+
 </div>
 
 <!-- Q22 -->
@@ -997,7 +1004,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q22">✓ Correct Answer: C — 7/5</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q22')">Show Answer</button></div>
+
 </div>
 
 <!-- Q23 -->
@@ -1020,7 +1027,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q23">✓ Answer recorded as −5x + 1 (image was low resolution)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q23')">Show Answer</button></div>
+
 </div>
 
 <!-- Q24 -->
@@ -1107,7 +1114,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q24">✓ Correct Answer: D</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q24')">Show Answer</button></div>
+
 </div>
 
 <!-- Q25 -->
@@ -1129,7 +1136,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q25">✓ Correct Answer: D — √3</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q25')">Show Answer</button></div>
+
 </div>
 
 <!-- ═══════════════════ SECTION 2 ═══════════════════ -->
@@ -1152,7 +1159,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q26">✓ Correct Answer: A — cos(x/2) has period 4π</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q26')">Show Answer</button></div>
+
 </div>
 
 <!-- Q27 -->
@@ -1175,7 +1182,7 @@
     <p style="font-size:0.8rem; color:var(--gold); font-style:italic; margin-top:0.4rem;">(See Q28 for same question with interval 20 to 26)</p>
   </div>
   <div class="answer-reveal" id="reveal-q27">✓ Average rate of change from 20→28: [R(28)−R(20)] / 8 = $18 per item (check your computation)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q27')">Show Answer</button></div>
+
 </div>
 
 <!-- Q28 -->
@@ -1197,7 +1204,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q28">✓ Correct Answer: A — $14 per item</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q28')">Show Answer</button></div>
+
 </div>
 
 <!-- Q29 -->
@@ -1222,7 +1229,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q29">✓ Correct Answer: D — x > 6</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q29')">Show Answer</button></div>
+
 </div>
 
 <!-- Q30 -->
@@ -1244,7 +1251,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q30">✓ Correct Answer: E</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q30')">Show Answer</button></div>
+
 </div>
 
 <!-- Q31 -->
@@ -1267,7 +1274,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q31">✓ Correct Answer: C — 2x + 1</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q31')">Show Answer</button></div>
+
 </div>
 
 <!-- Q32 -->
@@ -1290,7 +1297,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q32">✓ Correct Answer: C — g(x) = 2 + 1/(x−3)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q32')">Show Answer</button></div>
+
 </div>
 
 <!-- Q33 -->
@@ -1313,7 +1320,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q33">✓ Correct Answer: B — 3 (all three factors are negative, product is negative → not in domain... wait, at x=3: (6)(−1)(−16)=96>0 ✓)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q33')">Show Answer</button></div>
+
 </div>
 
 <!-- Q34 -->
@@ -1335,7 +1342,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q34">✓ Correct Answer: E — π/12 and 5π/12</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q34')">Show Answer</button></div>
+
 </div>
 
 <!-- Q35 -->
@@ -1360,7 +1367,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q35">✓ Correct Answer: B — 1991 and 1992</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q35')">Show Answer</button></div>
+
 </div>
 
 <!-- Q36 -->
@@ -1382,7 +1389,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q36">✓ Correct Answer: E — (b, a)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q36')">Show Answer</button></div>
+
 </div>
 
 <!-- Q37 -->
@@ -1404,7 +1411,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q37">✓ Correct Answer: E — csc θ = −13/5 = −2.6, least value</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q37')">Show Answer</button></div>
+
 </div>
 
 <!-- Q38 -->
@@ -1426,7 +1433,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q38">✓ Correct Answer: C — y = x² − 4x − 5</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q38')">Show Answer</button></div>
+
 </div>
 
 <!-- Q39 -->
@@ -1448,7 +1455,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q39">✓ Correct Answer: D — {y : 10 ≤ y ≤ 12}</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q39')">Show Answer</button></div>
+
 </div>
 
 <!-- Q40 -->
@@ -1470,7 +1477,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q40">✓ Correct Answer: D — y = −x + 6</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q40')">Show Answer</button></div>
+
 </div>
 
 <!-- Q41 -->
@@ -1492,7 +1499,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q41">✓ Correct Answer: D — x = (b + 5)/9</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q41')">Show Answer</button></div>
+
 </div>
 
 <!-- Q42 -->
@@ -1514,7 +1521,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q42">✓ Correct Answer: C — $7.50</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q42')">Show Answer</button></div>
+
 </div>
 
 <!-- Q43 -->
@@ -1537,7 +1544,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q43">✓ Correct Answer: A — −2 (since m > 0, x = −2 is always outside the interval)</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q43')">Show Answer</button></div>
+
 </div>
 
 <!-- Q44 -->
@@ -1562,7 +1569,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q44">✓ Correct Answer: D — 4.258</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q44')">Show Answer</button></div>
+
 </div>
 
 <!-- Q45 -->
@@ -1585,7 +1592,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q45">✓ Correct Answer: E — {−2, −1, 0, 1, 2}</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q45')">Show Answer</button></div>
+
 </div>
 
 <!-- Q46 -->
@@ -1607,7 +1614,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q46">✓ Correct Answer: E — sin(3 sin(3x))</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q46')">Show Answer</button></div>
+
 </div>
 
 <!-- Q47 -->
@@ -1629,7 +1636,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q47">✓ Correct Answer: C — log 2 &lt; x &lt; log 5</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q47')">Show Answer</button></div>
+
 </div>
 
 <!-- Q48 -->
@@ -1652,7 +1659,7 @@
     </ul>
   </div>
   <div class="answer-reveal" id="reveal-q48">✓ Correct Answer: B — 9</div>
-  <div class="card-footer"><button class="btn btn-reveal" onclick="revealAnswer('q48')">Show Answer</button></div>
+
 </div>
 
 </main>
@@ -1678,24 +1685,30 @@
   document.querySelectorAll('.option').forEach(opt => {
     opt.addEventListener('click', function () {
       const qId = this.dataset.q;
-      // Remove selection from siblings
+      const fullQId = 'q' + qId;
+
+      // If already answered, do nothing
+      if (answered.has(fullQId)) return;
+
+      // Highlight selected
       document.querySelectorAll(`.option[data-q="${qId}"]`).forEach(o => o.classList.remove('selected'));
       this.classList.add('selected');
-      markAnswered('q' + qId);
-    });
-  });
 
-  function revealAnswer(qId) {
-    const reveal = document.getElementById('reveal-' + qId);
-    if (reveal) {
-      reveal.classList.toggle('show');
-      // Highlight correct option
-      const card = document.getElementById(qId);
+      // Mark correct answer and show reveal
+      const card = document.getElementById(fullQId);
       if (card) {
         card.querySelectorAll('.option[data-correct="true"]').forEach(o => o.classList.add('correct'));
+        // Add wrong class if selected wrong
+        if (this.dataset.correct === 'false') {
+          this.classList.add('wrong');
+        }
       }
-    }
-  }
+      const reveal = document.getElementById('reveal-' + fullQId);
+      if (reveal) reveal.classList.add('show');
+
+      markAnswered(fullQId);
+    });
+  });
 </script>
 </body>
 </html>
