@@ -29,7 +29,27 @@
     line-height: 1.7;
     min-height: 100vh;
   }
+.dua-text {
+  font-family: 'Playfair Display', 'Source Serif 4', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accent);
+  direction: rtl;
+  text-align: center;
+  margin-bottom: 2rem;
+  line-height: 1.9;
+  position: relative;
+  display: inline-block;
+  padding: 0.2rem 1rem;
+}
 
+.dua-text::before,
+.dua-text::after {
+  content: '✦';
+  color: var(--gold);
+  font-size: 0.85rem;
+  margin: 0 0.6rem;
+}
   body::before {
     content: '';
     position: fixed;
@@ -1577,9 +1597,7 @@
       Waleed &nbsp;·&nbsp; Tareq &nbsp;·&nbsp; Yousef
     </p>
 
-    <p style="font-family:'Source Serif 4',serif;font-size:0.9rem;color:#6b5a47;margin-bottom:2rem;">
-      We hope this helps you ace your CLEP exam. Good luck! 🎓
-    </p>
+    <p class="dua-text">ادعولنا</p>
 
     <button onclick="document.getElementById('credits-overlay').style.display='none'" style="
       background: var(--accent);
