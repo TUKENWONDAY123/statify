@@ -44,6 +44,9 @@
         --ch9-c: #fb923c;
         --ch10-c: #4ade80;
         --kinetics: #c084fc;
+        --polyatoms: #f472b6;
+        --solubility: #3b82f6;
+        --groups: #10b981;
     }
 
     /* ═══════════════════════════════════════════════════════════
@@ -819,6 +822,9 @@
         <button class="pill" data-ch="ch9">🧪 Ch 9 · Descriptive Chem</button>
         <button class="pill" data-ch="ch10">🔬 Ch 10 · Experimental</button>
         <button class="pill" data-ch="kinetics">✨ Reaction Orders</button>
+        <button class="pill" data-ch="polyatoms">🧬 Polyatomic Ions</button>
+        <button class="pill" data-ch="solubility">💧 Solubility Rules</button>
+        <button class="pill" data-ch="groups">🧪 Functional Groups</button>
       </div>
     </div>
 
@@ -966,6 +972,55 @@
         plot: "\\frac{1}{[A]} \\text{ vs } t",
         slope: "+k"
       }
+    ];
+
+    const POLYATOMIC_IONS = [
+      { ion: "NH_4^+", name: "ammonium" },
+      { ion: "NO_2^-", name: "nitrite" },
+      { ion: "NO_3^-", name: "nitrate" },
+      { ion: "SO_3^{2-}", name: "sulfite" },
+      { ion: "SO_4^{2-}", name: "sulfate" },
+      { ion: "HSO_4^-", name: "hydrogen sulfate (bisulfate)" },
+      { ion: "OH^-", name: "hydroxide" },
+      { ion: "CN^-", name: "cyanide" },
+      { ion: "PO_4^{3-}", name: "phosphate" },
+      { ion: "HPO_4^{2-}", name: "hydrogen phosphate" },
+      { ion: "H_2PO_4^-", name: "dihydrogen phosphate" },
+      { ion: "CO_3^{2-}", name: "carbonate" },
+      { ion: "HCO_3^-", name: "hydrogen carbonate (bicarbonate)" },
+      { ion: "ClO^-", name: "hypochlorite" },
+      { ion: "ClO_2^-", name: "chlorite" },
+      { ion: "ClO_3^-", name: "chlorate" },
+      { ion: "ClO_4^-", name: "perchlorate" },
+      { ion: "C_2H_3O_2^-", name: "acetate" },
+      { ion: "MnO_4^-", name: "permanganate" },
+      { ion: "Cr_2O_7^{2-}", name: "dichromate" },
+      { ion: "CrO_4^{2-}", name: "chromate" },
+      { ion: "O_2^{2-}", name: "peroxide" }
+    ];
+
+    const SOLUBILITY_RULES = {
+      soluble: [
+        { rule: "NO_3^- \\text{ salts}", detail: "\\text{All are soluble}" },
+        { rule: "Na^+, K^+, NH_4^+ \\text{ salts}", detail: "\\text{All are soluble}" },
+        { rule: "Cl^-, Br^-, I^- \\text{ salts}", detail: "\\text{Except: } Ag^+, Hg_2^{2+}, Pb^{2+}" },
+        { rule: "SO_4^{2-} \\text{ salts}", detail: "\\text{Except: } Ba^{2+}, Pb^{2+}, Ca^{2+}" }
+      ],
+      insoluble: [
+        { rule: "S^{2-}, CO_3^{2-}, PO_4^{3-} \\text{ salts}", detail: "\\text{Most are insoluble}" },
+        { rule: "OH^- \\text{ salts}", detail: "\\text{Except: } Na^+, K^+, Ba^{2+}, Ca^{2+}" }
+      ]
+    };
+
+    const FUNCTIONAL_GROUPS = [
+      { name: "Halohydrocarbons", group: "-X \\text{ (F, Cl, Br, I)}", formula: "R-X", example: "CH_3I" },
+      { name: "Alcohols", group: "-OH", formula: "R-OH", example: "CH_3OH" },
+      { name: "Ethers", group: "-O-", formula: "R-O-R'", example: "CH_3-O-CH_3" },
+      { name: "Aldehydes", group: "-C(=O)H", formula: "R-C(=O)H", example: "H-C(=O)H" },
+      { name: "Ketones", group: "-C(=O)-", formula: "R-C(=O)R'", example: "CH_3-C(=O)CH_3" },
+      { name: "Carboxylic Acids", group: "-C(=O)OH", formula: "R-C(=O)OH", example: "CH_3-C(=O)OH" },
+      { name: "Esters", group: "-C(=O)O-", formula: "R-C(=O)OR'", example: "CH_3-C(=O)OCH_2CH_3" },
+      { name: "Amines", group: "-NH_2", formula: "R-NH_2", example: "CH_3NH_2" }
     ];
 
     const CHAPTERS = [
@@ -2310,6 +2365,24 @@
           main.appendChild(kineticsBlock);
           total += KINETIC_ORDERS.length;
         }
+
+        if (activeChapter === 'all' || activeChapter === 'polyatoms') {
+          const polyBlock = buildPolyatomicTable();
+          main.appendChild(polyBlock);
+          total += POLYATOMIC_IONS.length;
+        }
+
+        if (activeChapter === 'all' || activeChapter === 'solubility') {
+          const solBlock = buildSolubilityTable();
+          main.appendChild(solBlock);
+          total += 6; // Approximation of rule items
+        }
+
+        if (activeChapter === 'all' || activeChapter === 'groups') {
+          const groupBlock = buildFunctionalTable();
+          main.appendChild(groupBlock);
+          total += FUNCTIONAL_GROUPS.length;
+        }
       }
 
       animCards();
@@ -2363,7 +2436,7 @@
       KINETIC_ORDERS.forEach(k => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-      <td><span class="kinetics-order-badge">${k.name}</span></td>
+      <td><span class="kinetics-order-badge" style="background:var(--kinetics)">${k.name}</span></td>
       <td><div class="kinetics-math"></div></td>
       <td><div class="kinetics-math"></div></td>
       <td><div class="kinetics-math"></div></td>
@@ -2389,6 +2462,192 @@
       wrap.appendChild(table);
       el.appendChild(wrap);
 
+      return el;
+    }
+
+    function buildPolyatomicTable() {
+      const el = document.createElement('div');
+      el.className = 'kinetics-section chapter-block';
+
+      const hdr = document.createElement('div');
+      hdr.className = 'chapter-header';
+      const num = document.createElement('span');
+      num.className = 'ch-num';
+      num.style = "background:rgba(244,114,182,0.15); color:var(--polyatoms); border:1px solid rgba(244,114,182,0.3);";
+      num.textContent = 'Reference';
+      const tit = document.createElement('h2');
+      tit.className = 'ch-title';
+      tit.textContent = 'Polyatomic Ions';
+      hdr.appendChild(num); hdr.appendChild(tit); el.appendChild(hdr);
+
+      const wrap = document.createElement('div');
+      wrap.className = 'kinetics-table-wrap';
+
+      const table = document.createElement('table');
+      table.className = 'kinetics-table';
+      // Adjust width for dual columns if table is too long
+      table.style.minWidth = "auto";
+
+      const thead = document.createElement('thead');
+      thead.innerHTML = `<tr>
+        <th>Ion</th>
+        <th>Name</th>
+        <th>Ion</th>
+        <th>Name</th>
+      </tr>`;
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      for (let i = 0; i < POLYATOMIC_IONS.length; i += 2) {
+        const tr = document.createElement('tr');
+        const ion1 = POLYATOMIC_IONS[i];
+        const ion2 = POLYATOMIC_IONS[i+1];
+        
+        tr.innerHTML = `
+          <td style="width:150px"><div class="kinetics-math"></div></td>
+          <td>${ion1.name}</td>
+          <td style="width:150px"><div class="kinetics-math">${ion2 ? '' : ''}</div></td>
+          <td>${ion2 ? ion2.name : ''}</td>
+        `;
+
+        const mathDivs = tr.querySelectorAll('.kinetics-math');
+        try { katex.render(ion1.ion, mathDivs[0], { throwOnError: false }); } catch(e) {}
+        if (ion2) {
+            try { katex.render(ion2.ion, mathDivs[1], { throwOnError: false }); } catch(e) {}
+        }
+
+        tbody.appendChild(tr);
+      }
+
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+      el.appendChild(wrap);
+      return el;
+    }
+
+    function buildSolubilityTable() {
+      const el = document.createElement('div');
+      el.className = 'kinetics-section chapter-block';
+
+      const hdr = document.createElement('div');
+      hdr.className = 'chapter-header';
+      const num = document.createElement('span');
+      num.className = 'ch-num';
+      num.style = "background:rgba(59,130,246,0.15); color:var(--solubility); border:1px solid rgba(59,130,246,0.3);";
+      num.textContent = 'Reference';
+      const tit = document.createElement('h2');
+      tit.className = 'ch-title';
+      tit.textContent = 'Solubility Rules';
+      hdr.appendChild(num); hdr.appendChild(tit); el.appendChild(hdr);
+
+      const wrap = document.createElement('div');
+      wrap.className = 'kinetics-table-wrap';
+
+      const table = document.createElement('table');
+      table.className = 'kinetics-table';
+      table.style.minWidth = "auto";
+
+      const tbody = document.createElement('tbody');
+
+      // Soluble Header
+      const headS = document.createElement('tr');
+      headS.innerHTML = `<td colspan="2"><span class="kinetics-order-badge" style="background:var(--green); border-radius:4px">Soluble Compounds</span></td>`;
+      tbody.appendChild(headS);
+
+      SOLUBILITY_RULES.soluble.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="width:300px"><div class="kinetics-math"></div></td>
+          <td>${s.detail ? '<div class="kinetics-math detail-math"></div>' : ''}</td>
+        `;
+        try { katex.render(s.rule, tr.querySelector('.kinetics-math'), { throwOnError: false }); } catch(e) {}
+        if (s.detail) {
+            try { 
+                const detailStr = `\\color{#ff3131}\\rightarrow\\text{ } ` + s.detail;
+                katex.render(detailStr, tr.querySelector('.detail-math'), { throwOnError: false }); 
+            } catch(e) {}
+        }
+        tbody.appendChild(tr);
+      });
+
+      // Insoluble Header
+      const headI = document.createElement('tr');
+      headI.innerHTML = `<td colspan="2" style="padding-top:2rem"><span class="kinetics-order-badge" style="background:var(--red); border-radius:4px">Insoluble Compounds</span></td>`;
+      tbody.appendChild(headI);
+
+      SOLUBILITY_RULES.insoluble.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="width:300px"><div class="kinetics-math"></div></td>
+          <td>${s.detail ? '<div class="kinetics-math detail-math"></div>' : ''}</td>
+        `;
+        try { katex.render(s.rule, tr.querySelector('.kinetics-math'), { throwOnError: false }); } catch(e) {}
+        if (s.detail) {
+            try { 
+                const detailStr = `\\color{#ff3131}\\rightarrow\\text{ } ` + s.detail;
+                katex.render(detailStr, tr.querySelector('.detail-math'), { throwOnError: false }); 
+            } catch(e) {}
+        }
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+      el.appendChild(wrap);
+      return el;
+    }
+
+    function buildFunctionalTable() {
+      const el = document.createElement('div');
+      el.className = 'kinetics-section chapter-block';
+
+      const hdr = document.createElement('div');
+      hdr.className = 'chapter-header';
+      const num = document.createElement('span');
+      num.className = 'ch-num';
+      num.style = "background:rgba(16,185,129,0.15); color:var(--groups); border:1px solid rgba(16,185,129,0.3);";
+      num.textContent = 'Reference';
+      const tit = document.createElement('h2');
+      tit.className = 'ch-title';
+      tit.textContent = 'Functional Groups';
+      hdr.appendChild(num); hdr.appendChild(tit); el.appendChild(hdr);
+
+      const wrap = document.createElement('div');
+      wrap.className = 'kinetics-table-wrap';
+
+      const table = document.createElement('table');
+      table.className = 'kinetics-table';
+
+      const thead = document.createElement('thead');
+      thead.innerHTML = `<tr>
+        <th>Name</th>
+        <th>Group</th>
+        <th>General Formula</th>
+        <th>Example</th>
+      </tr>`;
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      FUNCTIONAL_GROUPS.forEach(g => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${g.name}</strong></td>
+          <td><div class="kinetics-math"></div></td>
+          <td><div class="kinetics-math"></div></td>
+          <td><div class="kinetics-math"></div></td>
+        `;
+
+        const divs = tr.querySelectorAll('.kinetics-math');
+        try { katex.render(g.group, divs[0], { throwOnError: false }); } catch(e) {}
+        try { katex.render(g.formula, divs[1], { throwOnError: false }); } catch(e) {}
+        try { katex.render(g.example, divs[2], { throwOnError: false }); } catch(e) {}
+
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+      el.appendChild(wrap);
       return el;
     }
 
