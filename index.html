@@ -41,6 +41,8 @@
         --ch6-c: #fbbf24;
         --ch7-c: #f87171;
         --ch8-c: #22d3ee;
+        --ch9-c: #fb923c;
+        --ch10-c: #4ade80;
         --kinetics: #c084fc;
     }
 
@@ -506,6 +508,8 @@
     .ch6 .eq-card { border-top-color: var(--ch6-c); }
     .ch7 .eq-card { border-top-color: var(--ch7-c); }
     .ch8 .eq-card { border-top-color: var(--ch8-c); }
+    .ch9 .eq-card { border-top-color: var(--ch9-c); }
+    .ch10 .eq-card { border-top-color: var(--ch10-c); }
 
     .eq-card:hover {
       transform: translate(-4px, -4px);
@@ -543,6 +547,7 @@
       border: 2px solid var(--black);
       background: var(--white);
     }
+
 
     .eq-display {
       width: 100%;
@@ -677,6 +682,7 @@
     .var-table-wrap {
       border: var(--border);
       background: var(--card-bg);
+      overflow-x: auto;
     }
 
     .var-table {
@@ -810,6 +816,8 @@
         <button class="pill" data-ch="ch6">♎ Ch 6 · Equilibrium</button>
         <button class="pill" data-ch="ch7">⏱️ Ch 7 · Kinetics</button>
         <button class="pill" data-ch="ch8">🌡️ Ch 8 · Thermodynamics</button>
+        <button class="pill" data-ch="ch9">🧪 Ch 9 · Descriptive Chem</button>
+        <button class="pill" data-ch="ch10">🔬 Ch 10 · Experimental</button>
         <button class="pill" data-ch="kinetics">✨ Reaction Orders</button>
       </div>
     </div>
@@ -850,7 +858,7 @@
      CONSTANTS MODAL
 ═══════════════════════════════════════════════════════════ -->
   <div id="constants-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="constants-modal-name">
-    <div class="constants-modal-container" id="modal" style="max-width: 700px;">
+    <div class="constants-modal-container" style="max-width: 700px;">
       <button id="constants-modal-close" aria-label="Close">&times;</button>
       <div class="modal-inner">
         <div id="modal-chapter-badge">Constants</div>
@@ -1038,6 +1046,94 @@
                   { sym: "m̄", symL: "\\bar{m}", name: "Average Atomic Mass", unit: "amu (u)", desc: "The standard atomic weight reported on the periodic table." },
                   { sym: "fᵢ", symL: "f_i", name: "Fractional Abundance", unit: "dimensionless", desc: "Fraction of atoms that are isotope i (sum of all fᵢ = 1)." },
                   { sym: "mᵢ", symL: "m_i", name: "Isotope Mass", unit: "amu (u)", desc: "Exact mass of isotope i." }
+                ]
+              }
+            ]
+          },
+          {
+            label: "Quantum Numbers",
+            eqs: [
+              {
+                name: "Principal Quantum Number (n)",
+                eq: "n = 1, 2, 3, \\ldots, 7",
+                desc: "Describes the shell or main energy level of an electron. Higher n means the electron is farther from the nucleus and has higher energy.",
+                vars: [
+                  { sym: "n", symL: "n", name: "Principal Quantum Number", unit: "integer", desc: "Shell number; n=1 is closest to nucleus." }
+                ]
+              },
+              {
+                name: "Angular Momentum Quantum Number (l)",
+                eq: "l = 0 \\text{ to } (n-1)",
+                desc: "Defines the shape of the orbital (subshell). l=0→s, l=1→p, l=2→d, l=3→f. The number of subshells in shell n equals n.",
+                vars: [
+                  { sym: "l", symL: "l", name: "Angular Momentum Quantum Number", unit: "integer", desc: "0 = s, 1 = p, 2 = d, 3 = f orbital shapes." }
+                ]
+              },
+              {
+                name: "Magnetic Quantum Number (mₗ)",
+                eq: "m_l = -l \\text{ to } +l",
+                desc: "Specifies the orientation of the orbital in space. For l=1 (p), mₗ = −1, 0, +1 giving 3 p orbitals. For l=2 (d), mₗ gives 5 d orbitals.",
+                vars: [
+                  { sym: "mₗ", symL: "m_l", name: "Magnetic Quantum Number", unit: "integer", desc: "Number of orientations = 2l + 1." }
+                ]
+              },
+              {
+                name: "Spin Quantum Number (mₛ)",
+                eq: "m_s = +\\tfrac{1}{2} \\text{ or } -\\tfrac{1}{2}",
+                desc: "Describes the intrinsic spin of the electron — either 'spin up' (+½) or 'spin down' (−½). Each orbital holds a maximum of 2 electrons with opposite spins (Pauli exclusion principle).",
+                vars: [
+                  { sym: "mₛ", symL: "m_s", name: "Spin Quantum Number", unit: "dimensionless", desc: "+½ (spin up) or −½ (spin down)." }
+                ]
+              }
+            ]
+          },
+          {
+            label: "Hybridization & Geometry",
+            eqs: [
+              {
+                name: "sp Hybridization",
+                eq: "\\text{sp} \\rightarrow 180^\\circ \\text{ (Linear)}",
+                desc: "2 bonding regions, 0 lone pairs. Linear geometry. Example: BeF₂, CO₂, alkynes (C≡C).",
+                vars: [
+                  { sym: "sp", symL: "\\text{sp}", name: "sp Hybrid", unit: "—", desc: "2 hybrid orbitals; 2 unhybridized p orbitals." }
+                ]
+              },
+              {
+                name: "sp² Hybridization",
+                eq: "\\text{sp}^2 \\rightarrow 120^\\circ \\text{ (Trigonal planar)}",
+                desc: "3 bonding regions, 0 lone pairs. Trigonal planar geometry. Example: BF₃, alkenes (C=C).",
+                vars: [
+                  { sym: "sp²", symL: "\\text{sp}^2", name: "sp² Hybrid", unit: "—", desc: "3 hybrid orbitals; 1 unhybridized p orbital." }
+                ]
+              },
+              {
+                name: "sp³ Hybridization",
+                eq: "\\text{sp}^3 \\rightarrow 109.5^\\circ \\text{ (Tetrahedral)}",
+                desc: "4 bonding regions. Tetrahedral if 0 lone pairs (CH₄, 109.5°); pyramidal if 1 lone pair (NH₃, ~107°); angular/bent if 2 lone pairs (H₂O, ~104.5°).",
+                vars: [
+                  { sym: "sp³", symL: "\\text{sp}^3", name: "sp³ Hybrid", unit: "—", desc: "4 hybrid orbitals; lone pairs compress bond angles." }
+                ]
+              },
+              {
+                name: "sp³d² Hybridization",
+                eq: "\\text{sp}^3\\text{d}^2 \\rightarrow 90^\\circ \\text{ (Octahedral)}",
+                desc: "6 bonding regions, 0 lone pairs. Octahedral geometry. Example: SF₆.",
+                vars: [
+                  { sym: "sp³d²", symL: "\\text{sp}^3\\text{d}^2", name: "sp³d² Hybrid", unit: "—", desc: "6 hybrid orbitals; 90° bond angles." }
+                ]
+              }
+            ]
+          },
+          {
+            label: "Radioactive Decay",
+            eqs: [
+              {
+                name: "Radioactive Half-Life",
+                eq: "T_{1/2} = \\frac{0.693}{k}",
+                desc: "The half-life is the time required for half the radioactive nuclei in a sample to decay. It is constant for a given isotope and inversely related to the decay rate constant k.",
+                vars: [
+                  { sym: "T½", symL: "T_{1/2}", name: "Half-Life", unit: "s, min, yr", desc: "Time for 50% of radioactive nuclei to decay." },
+                  { sym: "k", symL: "k", name: "Decay Rate Constant", unit: "s⁻¹", desc: "First-order rate constant for the decay process." }
                 ]
               }
             ]
@@ -1246,6 +1342,41 @@
             ]
           },
           {
+            label: "Phase Changes & Heat Calculations",
+            eqs: [
+              {
+                name: "Heat During Temperature Change",
+                eq: "q = mc\\Delta T",
+                desc: "Calculates heat absorbed or released when a substance changes temperature within a single phase (e.g. warming liquid water from 10°C to 80°C). Used for all segments on a heating/cooling curve that are NOT flat.",
+                vars: [
+                  { sym: "q", symL: "q", name: "Heat", unit: "J or kJ", desc: "Positive = absorbed; negative = released." },
+                  { sym: "m", symL: "m", name: "Mass", unit: "grams (g)", desc: "Mass of the substance." },
+                  { sym: "c", symL: "c", name: "Specific Heat", unit: "J/(g·°C)", desc: "Water: 4.184 J/g·°C; Ice: 2.09 J/g·°C; Steam: 1.87 J/g·°C." },
+                  { sym: "ΔT", symL: "\\Delta T", name: "Temperature Change", unit: "°C", desc: "T_final − T_initial." }
+                ]
+              },
+              {
+                name: "Heat During Phase Change",
+                eq: "q = n \\cdot \\Delta H_{\\text{phase}}",
+                desc: "Calculates heat absorbed or released during a phase change (melting, freezing, vaporisation, condensation). Temperature stays CONSTANT during a phase change — these are the flat portions of heating/cooling curves.",
+                vars: [
+                  { sym: "q", symL: "q", name: "Heat", unit: "J or kJ", desc: "Positive for endothermic (melting, vaporising); negative for exothermic (freezing, condensing)." },
+                  { sym: "n", symL: "n", name: "Moles", unit: "mol", desc: "Amount of substance undergoing the phase change." },
+                  { sym: "ΔH", symL: "\\Delta H_{\\text{phase}}", name: "Enthalpy of Phase Change", unit: "kJ/mol", desc: "ΔH_fus (fusion) or ΔH_vap (vaporisation) from tables." }
+                ]
+              },
+              {
+                name: "Phase Change Sign Convention",
+                eq: "\\text{Endothermic: } \\Delta H > 0 \\quad \\text{Exothermic: } \\Delta H < 0",
+                desc: "Melting, vaporisation, and sublimation absorb energy (ΔH > 0). Freezing, condensation, and deposition release energy (ΔH < 0). Reverse processes have equal and opposite ΔH values.",
+                vars: [
+                  { sym: "ΔH>0", symL: "\\Delta H > 0", name: "Endothermic", unit: "—", desc: "Solid→Liquid (fusion), Liquid→Gas (vap), Solid→Gas (sublimation)." },
+                  { sym: "ΔH<0", symL: "\\Delta H < 0", name: "Exothermic", unit: "—", desc: "Liquid→Solid (freezing), Gas→Liquid (condensation), Gas→Solid (deposition)." }
+                ]
+              }
+            ]
+          },
+          {
             label: "Colligative Properties",
             eqs: [
               {
@@ -1418,6 +1549,16 @@
             label: "Electrochemistry",
             eqs: [
               {
+                name: "Standard Cell Voltage",
+                eq: "E^\\circ_{\\text{cell}} = E^\\circ_{\\text{red}} + E^\\circ_{\\text{ox}}",
+                desc: "The standard cell potential equals the sum of the standard reduction potential of the cathode and the standard oxidation potential of the anode. Note: E°ox = −E°red (reverse the sign when flipping a half-reaction).",
+                vars: [
+                  { sym: "E°cell", symL: "E^\\circ_{\\text{cell}}", name: "Standard Cell Potential", unit: "Volts (V)", desc: "Positive E° means the reaction is spontaneous." },
+                  { sym: "E°red", symL: "E^\\circ_{\\text{red}}", name: "Standard Reduction Potential", unit: "Volts (V)", desc: "Looked up from standard electrode potential tables." },
+                  { sym: "E°ox", symL: "E^\\circ_{\\text{ox}}", name: "Standard Oxidation Potential", unit: "Volts (V)", desc: "E°ox = −E°red; sign is reversed from table value." }
+                ]
+              },
+              {
                 name: "Nernst Equation",
                 eq: "E_{\\text{cell}} = E^\\circ_{\\text{cell}} - \\frac{RT}{nF}\\ln Q",
                 desc: "Gives the actual cell voltage under non-standard conditions. As the reaction proceeds, Q changes and so does the cell voltage, eventually reaching zero at equilibrium.",
@@ -1452,6 +1593,21 @@
                 ]
               }
             ]
+          },
+          {
+            label: "Precipitation Reactions",
+            eqs: [
+              {
+                name: "Net Ionic — Precipitation",
+                eq: "Pb^{2+}_{(aq)} + 2I^-_{(aq)} \\rightarrow PbI_{2(s)}",
+                desc: "When two aqueous solutions are mixed and an insoluble product (precipitate) forms, spectator ions are removed to give the net ionic equation. Solubility rules determine which combinations precipitate.",
+                vars: [
+                  { sym: "Pb²⁺", symL: "Pb^{2+}", name: "Lead(II) Ion", unit: "—", desc: "Aqueous cation from Pb(NO₃)₂ solution." },
+                  { sym: "I⁻", symL: "I^-", name: "Iodide Ion", unit: "—", desc: "Aqueous anion from KI solution." },
+                  { sym: "PbI₂", symL: "PbI_2", name: "Lead(II) Iodide", unit: "—", desc: "Insoluble precipitate (bright yellow solid)." }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -1480,6 +1636,49 @@
                   { sym: "n", symL: "n", name: "Moles", unit: "mol", desc: "Amount of substance in moles." },
                   { sym: "MM", symL: "MM", name: "Molar Mass", unit: "g/mol", desc: "Sum of atomic masses of the formula units." },
                   { sym: "m", symL: "m", name: "Mass", unit: "grams (g)", desc: "Mass of the substance." }
+                ]
+              },
+              {
+                name: "Molar Volume at STP",
+                eq: "1 \\text{ mol gas (STP)} = 22.4 \\text{ L}",
+                desc: "At Standard Temperature and Pressure (0°C, 1 atm), one mole of any ideal gas occupies 22.4 litres. This is a key conversion factor in gas stoichiometry problems.",
+                vars: [
+                  { sym: "22.4 L", symL: "22.4\\,\\text{L}", name: "Molar Volume", unit: "L/mol", desc: "Valid only at STP (0°C = 273.15 K, 1 atm)." }
+                ]
+              }
+            ]
+          },
+          {
+            label: "Stoichiometry & Composition",
+            eqs: [
+              {
+                name: "Stoichiometry Conversion Map",
+                eq: "x_B = (\\text{given}_A) \\times \\frac{\\text{mol}_A}{\\text{unit}_A} \\times \\frac{\\text{mol}_B}{\\text{mol}_A} \\times \\frac{\\text{unit}_B}{\\text{mol}_B}",
+                desc: "The universal stoichiometry road map: start with a given amount of A, convert to moles of A, use the mole ratio from the balanced equation to get moles of B, then convert to desired units of B.",
+                vars: [
+                  { sym: "xB", symL: "x_B", name: "Amount of B", unit: "varies", desc: "The unknown quantity you're solving for." },
+                  { sym: "givenA", symL: "\\text{given}_A", name: "Given Amount of A", unit: "varies", desc: "Starting quantity — grams, litres, particles, etc." },
+                  { sym: "mol B/mol A", symL: "\\text{mol}_B/\\text{mol}_A", name: "Mole Ratio", unit: "dimensionless", desc: "From stoichiometric coefficients in the balanced equation." }
+                ]
+              },
+              {
+                name: "Percent Composition",
+                eq: "\\% \\text{ element} = \\frac{\\text{mass of element}}{\\text{molar mass of compound}} \\times 100\\%",
+                desc: "Gives the mass percentage of each element in a compound. Used to determine empirical formulas from experimental data and to verify compound identity.",
+                vars: [
+                  { sym: "% element", symL: "\\%\\,\\text{element}", name: "Mass Percent", unit: "%", desc: "Fraction of total mass contributed by that element." },
+                  { sym: "mass element", symL: "\\text{mass element}", name: "Element Mass in Formula", unit: "g/mol", desc: "Atomic mass × subscript for that element." },
+                  { sym: "MM", symL: "MM", name: "Molar Mass of Compound", unit: "g/mol", desc: "Sum of all element contributions." }
+                ]
+              },
+              {
+                name: "Empirical & Molecular Formula",
+                eq: "\\text{Mol. Formula} = \\text{Emp. Formula} \\times n, \\quad n = \\frac{MM}{\\text{Emp. mass}}",
+                desc: "Steps: (1) convert % → g (assume 100 g sample), (2) g → moles for each element, (3) divide all by the smallest mole value to get whole-number ratios (empirical formula), (4) find n to scale to molecular formula.",
+                vars: [
+                  { sym: "n", symL: "n", name: "Scale Factor", unit: "integer", desc: "How many empirical units are in one molecular formula." },
+                  { sym: "MM", symL: "MM", name: "Molar Mass", unit: "g/mol", desc: "Determined experimentally (e.g. by MS or colligative properties)." },
+                  { sym: "Emp. mass", symL: "\\text{Emp. mass}", name: "Empirical Formula Mass", unit: "g/mol", desc: "Molar mass of the empirical formula unit." }
                 ]
               }
             ]
@@ -1514,6 +1713,15 @@
                 ]
               },
               {
+                name: "Reverse Reaction Equilibrium Constant",
+                eq: "K_{\\text{rev}} = \\frac{1}{K_{\\text{fwd}}}",
+                desc: "Reversing a chemical equation takes the reciprocal of its equilibrium constant. If the forward reaction is strongly product-favoured (large K), the reverse is strongly reactant-favoured (small K).",
+                vars: [
+                  { sym: "K_rev", symL: "K_{\\text{rev}}", name: "Reverse K", unit: "dimensionless", desc: "Equilibrium constant for the reverse reaction." },
+                  { sym: "K_fwd", symL: "K_{\\text{fwd}}", name: "Forward K", unit: "dimensionless", desc: "Equilibrium constant for the forward reaction." }
+                ]
+              },
+              {
                 name: "Kp from Kc",
                 eq: "K_p = K_c(RT)^{\\Delta n}",
                 desc: "Relates the equilibrium constant expressed in pressures (Kp) to that in concentrations (Kc). They are equal only when the total moles of gas do not change (Δn = 0).",
@@ -1540,6 +1748,28 @@
                   { sym: "[OH⁻]", symL: "[OH^-]", name: "OH⁻ Concentration", unit: "mol/L", desc: "Hydroxide ion concentration." },
                   { sym: "K_a", symL: "K_a", name: "Acid Dissociation Constant", unit: "mol/L", desc: "Strength of a weak acid." },
                   { sym: "K_b", symL: "K_b", name: "Base Dissociation Constant", unit: "mol/L", desc: "Strength of a weak base; Kₐ × K_b = 1×10⁻¹⁴." }
+                ]
+              },
+              {
+                name: "Weak Acid Dissociation (Ka)",
+                eq: "K_a = \\frac{[H^+][A^-]}{[HA]}",
+                desc: "The acid dissociation constant Ka measures weak acid strength. For dilute solutions, assume x ≪ [HA]₀, giving [H⁺] = √(Ka × [HA]₀). Then pH = −log[H⁺].",
+                vars: [
+                  { sym: "Ka", symL: "K_a", name: "Acid Dissociation Constant", unit: "mol/L", desc: "Larger Ka = stronger weak acid." },
+                  { sym: "[H⁺]", symL: "[H^+]", name: "Hydrogen Ion Concentration", unit: "mol/L", desc: "Approximated as x = √(Ka × [HA]₀)." },
+                  { sym: "[A⁻]", symL: "[A^-]", name: "Conjugate Base Concentration", unit: "mol/L", desc: "Equal to [H⁺] for a monoprotic acid." },
+                  { sym: "[HA]", symL: "[HA]", name: "Weak Acid Concentration", unit: "mol/L", desc: "Approximately equal to initial [HA]₀ when x ≪ [HA]₀." }
+                ]
+              },
+              {
+                name: "Solubility Product (Ksp)",
+                eq: "K_{sp} = [A^+][B^-] \\quad (\\text{for } AB \\rightleftharpoons A^+ + B^-)",
+                desc: "Ksp describes the equilibrium between a sparingly soluble ionic solid and its dissolved ions. Molar solubility x = √Ksp for a 1:1 salt. If the ion product exceeds Ksp, precipitation occurs.",
+                vars: [
+                  { sym: "Ksp", symL: "K_{sp}", name: "Solubility Product", unit: "mol²/L²", desc: "Smaller Ksp = less soluble compound." },
+                  { sym: "[A⁺]", symL: "[A^+]", name: "Cation Concentration", unit: "mol/L", desc: "Concentration of dissolved cation." },
+                  { sym: "[B⁻]", symL: "[B^-]", name: "Anion Concentration", unit: "mol/L", desc: "Concentration of dissolved anion." },
+                  { sym: "x", symL: "x", name: "Molar Solubility", unit: "mol/L", desc: "x = √Ksp for 1:1 salts; cube-root expressions for 1:2 salts." }
                 ]
               },
               {
@@ -1772,6 +2002,200 @@
             ]
           }
         ]
+      },
+
+      {
+        id: "ch9", label: "Chapter 9", title: "Descriptive Chemistry",
+        sections: [
+          {
+            label: "Net Ionic Equations",
+            eqs: [
+              {
+                name: "Strong Acid + Strong Base",
+                eq: "H^+ + OH^- \\rightarrow H_2O",
+                desc: "The net ionic equation for any strong acid–strong base neutralisation. Spectator ions (Na⁺, Cl⁻, etc.) cancel out, leaving only this simple reaction.",
+                vars: [
+                  { sym: "H⁺", symL: "H^+", name: "Hydrogen Ion", unit: "—", desc: "From any strong acid (HCl, HNO₃, H₂SO₄, etc.)." },
+                  { sym: "OH⁻", symL: "OH^-", name: "Hydroxide Ion", unit: "—", desc: "From any strong base (NaOH, KOH, etc.)." },
+                  { sym: "H₂O", symL: "H_2O", name: "Water", unit: "—", desc: "Product of neutralisation." }
+                ]
+              },
+              {
+                name: "Strong Acid + Weak Base",
+                eq: "H^+ + NH_3 \\rightarrow NH_4^+",
+                desc: "When a strong acid reacts with a weak base, the proton is transferred to the base. The resulting solution is acidic (pH < 7) because NH₄⁺ is a weak acid.",
+                vars: [
+                  { sym: "H⁺", symL: "H^+", name: "Proton (strong acid)", unit: "—", desc: "From the fully dissociated strong acid." },
+                  { sym: "NH₃", symL: "NH_3", name: "Ammonia (weak base)", unit: "—", desc: "Proton acceptor (Lewis/Brønsted base)." },
+                  { sym: "NH₄⁺", symL: "NH_4^+", name: "Ammonium Ion", unit: "—", desc: "Conjugate acid of ammonia; makes solution acidic." }
+                ]
+              },
+              {
+                name: "Strong Base + Weak Acid",
+                eq: "HC_2H_3O_2 + OH^- \\rightarrow C_2H_3O_2^- + H_2O",
+                desc: "A strong base deprotonates a weak acid. The resulting solution is basic (pH > 7) because the conjugate base (acetate) is a weak base.",
+                vars: [
+                  { sym: "HC₂H₃O₂", symL: "HC_2H_3O_2", name: "Acetic Acid", unit: "—", desc: "Weak acid (proton donor)." },
+                  { sym: "OH⁻", symL: "OH^-", name: "Hydroxide", unit: "—", desc: "From the strong base; accepts the proton." },
+                  { sym: "C₂H₃O₂⁻", symL: "C_2H_3O_2^-", name: "Acetate Ion", unit: "—", desc: "Conjugate base; solution becomes slightly basic." }
+                ]
+              },
+              {
+                name: "Coordination Complex Formation",
+                eq: "Fe^{3+} + SCN^- \\rightarrow FeSCN^{2+}",
+                desc: "Lewis acid-base reaction forming a coordination complex. Fe³⁺ (Lewis acid) accepts the lone pair from SCN⁻ (Lewis base). The blood-red FeSCN²⁺ complex is a classic qualitative test for Fe³⁺.",
+                vars: [
+                  { sym: "Fe³⁺", symL: "Fe^{3+}", name: "Iron(III) Ion", unit: "—", desc: "Lewis acid; accepts lone pair." },
+                  { sym: "SCN⁻", symL: "SCN^-", name: "Thiocyanate Ion", unit: "—", desc: "Lewis base; donates lone pair via N or S." },
+                  { sym: "FeSCN²⁺", symL: "FeSCN^{2+}", name: "Iron Thiocyanate Complex", unit: "—", desc: "Blood-red complex; indicator for Fe³⁺." }
+                ]
+              },
+              {
+                name: "Precipitation (Silver Iodide)",
+                eq: "Ag^+ + I^- \\rightarrow AgI_{(s)}",
+                desc: "Silver iodide is insoluble (Ksp = 8.5 × 10⁻¹⁷). Mixing Ag⁺ and I⁻ solutions immediately forms a bright yellow precipitate. Used in qualitative analysis to identify iodide ions.",
+                vars: [
+                  { sym: "Ag⁺", symL: "Ag^+", name: "Silver Ion", unit: "—", desc: "From AgNO₃ solution." },
+                  { sym: "I⁻", symL: "I^-", name: "Iodide Ion", unit: "—", desc: "From KI or NaI solution." },
+                  { sym: "AgI", symL: "AgI_{(s)}", name: "Silver Iodide", unit: "—", desc: "Pale yellow precipitate; very low Ksp." }
+                ]
+              },
+              {
+                name: "Combination (Redox): Metal + Oxygen",
+                eq: "2Mg + O_2 \\rightarrow 2MgO",
+                desc: "A classic combination (synthesis) reaction and also a redox reaction. Mg is oxidised (+2) and oxygen is reduced (0 → −2). Magnesium burns with a brilliant white flame.",
+                vars: [
+                  { sym: "Mg", symL: "Mg", name: "Magnesium", unit: "—", desc: "Reducing agent; oxidised from 0 → +2." },
+                  { sym: "O₂", symL: "O_2", name: "Oxygen", unit: "—", desc: "Oxidising agent; reduced from 0 → −2." },
+                  { sym: "MgO", symL: "MgO", name: "Magnesium Oxide", unit: "—", desc: "Ionic product (Mg²⁺ O²⁻)." }
+                ]
+              },
+              {
+                name: "Combustion: Hydrocarbon",
+                eq: "2C_4H_{10} + 13O_2 \\rightarrow 8CO_2 + 10H_2O",
+                desc: "Complete combustion of a hydrocarbon always produces CO₂ and H₂O. Butane (C₄H₁₀) is the fuel in lighters. The products depend on the C:H:O ratio of the fuel.",
+                vars: [
+                  { sym: "C₄H₁₀", symL: "C_4H_{10}", name: "Butane", unit: "—", desc: "Hydrocarbon fuel; all C and H atoms are oxidised." },
+                  { sym: "O₂", symL: "O_2", name: "Oxygen", unit: "—", desc: "Required for complete combustion." },
+                  { sym: "CO₂", symL: "CO_2", name: "Carbon Dioxide", unit: "—", desc: "Carbon fully oxidised to +4." },
+                  { sym: "H₂O", symL: "H_2O", name: "Water", unit: "—", desc: "Hydrogen oxidised to +1 in water." }
+                ]
+              },
+              {
+                name: "Decomposition: Hydrogen Peroxide",
+                eq: "2H_2O_2 \\rightarrow O_2 + 2H_2O",
+                desc: "H₂O₂ spontaneously decomposes into water and oxygen gas (accelerated by catalysts like MnO₂ or KI). This is a disproportionation redox: O goes from −1 to both 0 and −2.",
+                vars: [
+                  { sym: "H₂O₂", symL: "H_2O_2", name: "Hydrogen Peroxide", unit: "—", desc: "Unstable; stores O in −1 oxidation state." },
+                  { sym: "O₂", symL: "O_2", name: "Oxygen Gas", unit: "—", desc: "Oxygen oxidised to 0." },
+                  { sym: "H₂O", symL: "H_2O", name: "Water", unit: "—", desc: "Oxygen reduced to −2." }
+                ]
+              },
+              {
+                name: "Metal in Acid",
+                eq: "Mg + 2H^+ \\rightarrow Mg^{2+} + H_2",
+                desc: "Active metals (above H in the activity series) displace hydrogen gas from acidic solutions. This is a single-displacement redox reaction: Mg is oxidised, H⁺ is reduced.",
+                vars: [
+                  { sym: "Mg", symL: "Mg", name: "Magnesium", unit: "—", desc: "Active metal; oxidised 0 → +2." },
+                  { sym: "H⁺", symL: "H^+", name: "Hydrogen Ion", unit: "—", desc: "From acid; reduced 0 → H₂." },
+                  { sym: "Mg²⁺", symL: "Mg^{2+}", name: "Magnesium Ion", unit: "—", desc: "Aqueous product." },
+                  { sym: "H₂", symL: "H_2", name: "Hydrogen Gas", unit: "—", desc: "Gas produced; observed as bubbles." }
+                ]
+              },
+              {
+                name: "Electrolysis of Molten NaCl",
+                eq: "2NaCl_{(l)} \\xrightarrow{\\text{electrolysis}} 2Na_{(l)} + Cl_2{(g)}",
+                desc: "Passing electrical current through molten NaCl decomposes it into sodium metal and chlorine gas. Na⁺ is reduced at the cathode; Cl⁻ is oxidised at the anode.",
+                vars: [
+                  { sym: "NaCl", symL: "NaCl_{(l)}", name: "Molten Sodium Chloride", unit: "—", desc: "Must be molten (not aqueous) to prevent water electrolysis." },
+                  { sym: "Na", symL: "Na_{(l)}", name: "Sodium Metal", unit: "—", desc: "Deposited at cathode; Na⁺ + e⁻ → Na." },
+                  { sym: "Cl₂", symL: "Cl_2{(g)}", name: "Chlorine Gas", unit: "—", desc: "Produced at anode; 2Cl⁻ → Cl₂ + 2e⁻." }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        id: "ch10", label: "Chapter 10", title: "Experimental Chemistry",
+        sections: [
+          {
+            label: "Measurement & Error",
+            eqs: [
+              {
+                name: "Percent Error",
+                eq: "\\%\\,\\text{error} = \\frac{|\\text{experimental} - \\text{theoretical}|}{\\text{theoretical}} \\times 100\\%",
+                desc: "Measures how close an experimental result is to the accepted (theoretical) value. The absolute value ensures percent error is always positive regardless of whether the result is too high or too low.",
+                vars: [
+                  { sym: "experimental", symL: "\\text{experimental}", name: "Experimental Value", unit: "same as theoretical", desc: "Value measured in the lab." },
+                  { sym: "theoretical", symL: "\\text{theoretical}", name: "Theoretical Value", unit: "same as experimental", desc: "Accepted or calculated true value." },
+                  { sym: "% error", symL: "\\%\\,\\text{error}", name: "Percent Error", unit: "%", desc: "Smaller = more accurate measurement." }
+                ]
+              },
+              {
+                name: "Mass Percent (Experimental)",
+                eq: "\\%\\,\\text{element} = \\frac{\\text{mass of element in sample}}{\\text{total mass of sample}} \\times 100\\%",
+                desc: "Determines the composition of a compound from experimental masses. For example: 3.20 g O / 8.50 g MgO × 100% = 37.6% oxygen.",
+                vars: [
+                  { sym: "mass element", symL: "\\text{mass element}", name: "Mass of Element", unit: "grams (g)", desc: "Experimentally measured mass of the element of interest." },
+                  { sym: "total mass", symL: "\\text{total mass}", name: "Total Sample Mass", unit: "grams (g)", desc: "Total mass of the compound sample." },
+                  { sym: "% element", symL: "\\%\\,\\text{element}", name: "Mass Percent", unit: "%", desc: "Percent by mass; used to determine empirical formula." }
+                ]
+              }
+            ]
+          },
+          {
+            label: "Lab Techniques & Calculations",
+            eqs: [
+              {
+                name: "Molar Mass by Freezing-Point Depression",
+                eq: "m = \\frac{\\Delta T_f}{k_f \\cdot i}, \\quad MM = \\frac{m_{\\text{solute}}}{m \\times \\text{kg solvent}}",
+                desc: "Used to determine the molar mass of an unknown substance. Measure the freezing-point depression, calculate molality, then divide mass of solute by moles = molar mass. Assumes i = 1 (non-electrolyte).",
+                vars: [
+                  { sym: "m", symL: "m", name: "Molality", unit: "mol/kg", desc: "ΔTf ÷ (kf × i); kf(water) = 1.86 °C·kg/mol." },
+                  { sym: "ΔTf", symL: "\\Delta T_f", name: "Freezing-Point Depression", unit: "°C", desc: "Measured depression of the freezing point." },
+                  { sym: "MM", symL: "MM", name: "Molar Mass of Unknown", unit: "g/mol", desc: "Mass of solute (g) ÷ moles of solute." },
+                  { sym: "i", symL: "i", name: "van 't Hoff Factor", unit: "dimensionless", desc: "1 for non-electrolytes; higher for salts." }
+                ]
+              },
+              {
+                name: "Molar Volume — Eudiometer (Gas over Water)",
+                eq: "n = \\frac{P_{\\text{dry}} \\cdot V}{RT}, \\quad P_{\\text{dry}} = P_{\\text{total}} - P_{H_2O}",
+                desc: "When gas is collected over water in a eudiometer tube, the water vapour pressure must be subtracted from the total pressure to find the dry gas pressure. Then use the ideal gas law to find moles.",
+                vars: [
+                  { sym: "n", symL: "n", name: "Moles of Gas", unit: "mol", desc: "Calculated from ideal gas law: n = PV/RT." },
+                  { sym: "P_dry", symL: "P_{\\text{dry}}", name: "Dry Gas Pressure", unit: "atm", desc: "P_total minus vapour pressure of water at that temperature." },
+                  { sym: "P_H₂O", symL: "P_{H_2O}", name: "Water Vapour Pressure", unit: "atm / mmHg", desc: "Looked up from a table at the measured temperature." }
+                ]
+              },
+              {
+                name: "Titration — Concentration",
+                eq: "M_a V_a = M_b V_b \\quad (1{:}1 \\text{ stoichiometry})",
+                desc: "At the equivalence point of a titration, moles of acid = moles of base (for a 1:1 reaction). Rearrange to find the unknown molarity. For non-1:1 reactions, multiply by the mole ratio from the balanced equation.",
+                vars: [
+                  { sym: "Ma", symL: "M_a", name: "Molarity of Acid", unit: "mol/L", desc: "Concentration of acid solution." },
+                  { sym: "Va", symL: "V_a", name: "Volume of Acid", unit: "L or mL", desc: "Volume of acid used at equivalence point." },
+                  { sym: "Mb", symL: "M_b", name: "Molarity of Base", unit: "mol/L", desc: "Concentration of base solution." },
+                  { sym: "Vb", symL: "V_b", name: "Volume of Base", unit: "L or mL", desc: "Volume of base used at equivalence point." }
+                ]
+              },
+              {
+                name: "Electroplating Mass (Faraday's Law)",
+                eq: "m_{\\text{dep}} = \\frac{I \\cdot t}{96485} \\times \\frac{MM}{n_e}",
+                desc: "Calculates the mass of metal deposited or dissolved during electrolysis. Charge (I × t) divided by Faraday's constant gives moles of electrons; divided by electrons per ion (ne) gives moles of metal; multiplied by molar mass gives grams.",
+                vars: [
+                  { sym: "m_dep", symL: "m_{\\text{dep}}", name: "Mass Deposited", unit: "grams (g)", desc: "Mass of metal electroplated onto the electrode." },
+                  { sym: "I", symL: "I", name: "Current", unit: "Amperes (A)", desc: "Electrical current through the cell." },
+                  { sym: "t", symL: "t", name: "Time", unit: "seconds (s)", desc: "Duration of electrolysis." },
+                  { sym: "96485", symL: "96485", name: "Faraday Constant", unit: "C/mol e⁻", desc: "Charge per mole of electrons." },
+                  { sym: "MM", symL: "MM", name: "Molar Mass of Metal", unit: "g/mol", desc: "e.g. Ag = 107.87 g/mol; Cu = 63.55 g/mol." },
+                  { sym: "nₑ", symL: "n_e", name: "Electrons per Ion", unit: "dimensionless", desc: "e.g. Ag⁺ + e⁻ → Ag (nₑ = 1); Cu²⁺ + 2e⁻ → Cu (nₑ = 2)." }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ];
 
@@ -1830,9 +2254,10 @@
     // FILTER PILLS
     // ───────────────────────────────────────────────────────────────
     function initFilterPills() {
-      document.querySelectorAll('.pill').forEach(p => {
+      // ONLY target pills inside the filter-inner container to avoid conflict with constants button
+      document.querySelectorAll('.filter-inner .pill').forEach(p => {
         p.addEventListener('click', () => {
-          document.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+          document.querySelectorAll('.filter-inner .pill').forEach(x => x.classList.remove('active'));
           p.classList.add('active');
           activeChapter = p.dataset.ch;
           render();
@@ -2123,6 +2548,8 @@
       ch6: { bg: 'rgba(251,191,36,0.15)', color: '#fde68a', border: 'rgba(251,191,36,0.3)' },
       ch7: { bg: 'rgba(248,113,113,0.15)', color: '#fca5a5', border: 'rgba(248,113,113,0.3)' },
       ch8: { bg: 'rgba(34,211,238,0.15)', color: '#a5f3fc', border: 'rgba(34,211,238,0.3)' },
+      ch9: { bg: 'rgba(251,146,60,0.15)', color: '#fdba74', border: 'rgba(251,146,60,0.3)' },
+      ch10: { bg: 'rgba(74,222,128,0.15)', color: '#86efac', border: 'rgba(74,222,128,0.3)' },
     };
 
     function setupModal() {
