@@ -1,55 +1,54 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CLEP Chemistry Equations</title>
+  <title>CLEP Chemistry — Equation Reference</title>
   <meta name="description"
     content="Interactive CLEP Chemistry equation reference. All equations organized by chapter with detailed variable explanations, units, and descriptions.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
   <style>
-
+    
     :root {
-        --black: #0a0a0a;
-        --white: #f5f0e8;
-        --yellow: #ffdd00;
-        --red: #ff3131;
-        --blue: #1a1aff;
-        --green: #00c44f;
-        --card-bg: #ffffff;
-        --border: 4px solid var(--black);
-        --shadow: 6px 6px 0 var(--black);
-        --radius: 0px;
-        --font-display: 'Bebas Neue', sans-serif;
-        --font-body: 'DM Sans', sans-serif;
+      --black: #0a0a0a;
+      --white: #f5f0e8;
+      --yellow: #ffdd00;
+      --red: #ff3131;
+      --blue: #1a1aff;
+      --green: #00c44f;
+      --card-bg: #ffffff;
+      --border: 4px solid var(--black);
+      --shadow: 6px 6px 0 var(--black);
+      --radius: 0px;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
 
-        /* Chapter Accents (Statify-fied) */
-        --ch2-c: #60a5fa;
-        --ch3-c: #34d399;
-        --ch4-c: #a78bfa;
-        --ch5-c: #f472b6;
-        --ch6-c: #fbbf24;
-        --ch7-c: #f87171;
-        --ch8-c: #22d3ee;
-        --ch9-c: #fb923c;
-        --ch10-c: #4ade80;
-        --kinetics: #c084fc;
-        --polyatoms: #f472b6;
-        --solubility: #3b82f6;
-        --groups: #10b981;
+      
+      --ch2-c: #60a5fa;
+      --ch3-c: #34d399;
+      --ch4-c: #a78bfa;
+      --ch5-c: #f472b6;
+      --ch6-c: #fbbf24;
+      --ch7-c: #f87171;
+      --ch8-c: #22d3ee;
+      --ch9-c: #fb923c;
+      --ch10-c: #4ade80;
+      --kinetics: #c084fc;
+      --polyatoms: #f472b6;
+      --solubility: #3b82f6;
+      --groups: #10b981;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   RESET + BASE
-═══════════════════════════════════════════════════════════ */
+    
     *,
     *::before,
     *::after {
@@ -65,8 +64,8 @@
     body {
       background-color: var(--white);
       background-image:
-          repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0, 0, 0, .06) 40px),
-          repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0, 0, 0, .06) 40px);
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0, 0, 0, .06) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0, 0, 0, .06) 40px);
       font-family: var(--font-body);
       font-size: 18px;
       color: var(--black);
@@ -74,9 +73,7 @@
       line-height: 1.6;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   ANIMATED BACKGROUND
-═══════════════════════════════════════════════════════════ */
+    
     .bg-canvas {
       position: fixed;
       inset: 0;
@@ -160,7 +157,7 @@
       }
     }
 
-    /* Top noise grain overlay */
+    
     .bg-canvas::after {
       content: '';
       position: absolute;
@@ -170,9 +167,7 @@
       pointer-events: none;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   LAYOUT SHELL
-═══════════════════════════════════════════════════════════ */
+    
     .page {
       position: relative;
       z-index: 1;
@@ -181,9 +176,7 @@
       padding: 0 clamp(1rem, 3vw, 2.5rem) 8rem;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   HERO HEADER
-═══════════════════════════════════════════════════════════ */
+    
     .hero {
       text-align: center;
       padding: clamp(3rem, 8vh, 6rem) 1rem clamp(2rem, 5vh, 4rem);
@@ -211,7 +204,7 @@
       font-weight: 500;
     }
 
-    /* ─── Search ────────────────────────────────────────────── */
+    
     .search-row {
       display: flex;
       justify-content: center;
@@ -274,9 +267,7 @@
       color: var(--red);
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   STICKY CHAPTER FILTER BAR
-═══════════════════════════════════════════════════════════ */
+    
     .filter-wrap {
       position: sticky;
       top: 0;
@@ -327,21 +318,20 @@
       box-shadow: 4px 4px 0 rgba(255, 221, 0, 0.3);
     }
 
-    /* Special constants button */
+    
     #constants-btn {
-        background: var(--red) !important;
-        color: var(--white) !important;
-        border: 2px solid var(--black) !important;
-        box-shadow: 4px 4px 0 var(--black) !important;
-    }
-    #constants-btn:hover {
-        transform: translate(-2px, -2px);
-        box-shadow: 6px 6px 0 var(--black) !important;
+      background: var(--red) !important;
+      color: var(--white) !important;
+      border: 2px solid var(--black) !important;
+      box-shadow: 4px 4px 0 var(--black) !important;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   KINETICS TABLE (Reaction Orders)
-═══════════════════════════════════════════════════════════ */
+    #constants-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--black) !important;
+    }
+
+    
     .kinetics-section {
       margin-top: 3rem;
       margin-bottom: 4rem;
@@ -377,7 +367,7 @@
 
     .kinetics-table td {
       padding: 1.5rem 1.25rem;
-      border-bottom: 1px solid rgba(0,0,0,0.1);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
       vertical-align: middle;
       color: var(--black);
       font-family: var(--font-body);
@@ -408,9 +398,7 @@
       align-items: center;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   CHAPTER SECTIONS
-═══════════════════════════════════════════════════════════ */
+    
     .chapter-block {
       margin-bottom: 4.5rem;
     }
@@ -475,18 +463,14 @@
       background: var(--black);
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   EQUATIONS GRID
-═══════════════════════════════════════════════════════════ */
+    
     .eq-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 2rem;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   EQUATION CARD
-═══════════════════════════════════════════════════════════ */
+    
     .eq-card {
       position: relative;
       background: var(--card-bg);
@@ -498,19 +482,46 @@
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      border-top-width: 12px; /* Thicker top accent */
+      border-top-width: 12px;
+      
     }
 
-    /* Top accent colours */
-    .ch2 .eq-card { border-top-color: var(--ch2-c); }
-    .ch3 .eq-card { border-top-color: var(--ch3-c); }
-    .ch4 .eq-card { border-top-color: var(--ch4-c); }
-    .ch5 .eq-card { border-top-color: var(--ch5-c); }
-    .ch6 .eq-card { border-top-color: var(--ch6-c); }
-    .ch7 .eq-card { border-top-color: var(--ch7-c); }
-    .ch8 .eq-card { border-top-color: var(--ch8-c); }
-    .ch9 .eq-card { border-top-color: var(--ch9-c); }
-    .ch10 .eq-card { border-top-color: var(--ch10-c); }
+    
+    .ch2 .eq-card {
+      border-top-color: var(--ch2-c);
+    }
+
+    .ch3 .eq-card {
+      border-top-color: var(--ch3-c);
+    }
+
+    .ch4 .eq-card {
+      border-top-color: var(--ch4-c);
+    }
+
+    .ch5 .eq-card {
+      border-top-color: var(--ch5-c);
+    }
+
+    .ch6 .eq-card {
+      border-top-color: var(--ch6-c);
+    }
+
+    .ch7 .eq-card {
+      border-top-color: var(--ch7-c);
+    }
+
+    .ch8 .eq-card {
+      border-top-color: var(--ch8-c);
+    }
+
+    .ch9 .eq-card {
+      border-top-color: var(--ch9-c);
+    }
+
+    .ch10 .eq-card {
+      border-top-color: var(--ch10-c);
+    }
 
     .eq-card:hover {
       transform: translate(-4px, -4px);
@@ -549,7 +560,6 @@
       background: var(--white);
     }
 
-
     .eq-display {
       width: 100%;
       display: flex;
@@ -580,15 +590,13 @@
       color: var(--black);
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   MODAL OVERLAY
-═══════════════════════════════════════════════════════════ */
+    
     #modal-overlay,
     #constants-modal-overlay {
       position: fixed;
       inset: 0;
       z-index: 9000;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(4px);
       display: flex;
       align-items: center;
@@ -617,7 +625,8 @@
       position: relative;
     }
 
-    #modal-close, #constants-modal-close {
+    #modal-close,
+    #constants-modal-close {
       position: absolute;
       top: 1rem;
       right: 1rem;
@@ -636,8 +645,8 @@
     }
 
     #modal-close:hover {
-        transform: translate(-2px, -2px);
-        box-shadow: 4px 4px 0 var(--black);
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--black);
     }
 
     #modal-chapter-badge {
@@ -724,9 +733,7 @@
       padding: 3rem;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   EMPTY / ERROR STATES
-═══════════════════════════════════════════════════════════ */
+    
     .empty {
       grid-column: 1/-1;
       text-align: center;
@@ -742,30 +749,30 @@
       text-transform: uppercase;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   SCROLLBAR STYLING
-═══════════════════════════════════════════════════════════ */
+    
     ::-webkit-scrollbar {
       width: 12px;
     }
+
     ::-webkit-scrollbar-track {
       background: var(--white);
     }
+
     ::-webkit-scrollbar-thumb {
       background: var(--black);
       border: 3px solid var(--white);
     }
 
-    /* ═══════════════════════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════════════════════ */
+    
     @media (max-width: 600px) {
       .eq-grid {
         grid-template-columns: 1fr;
       }
+
       .modal-inner {
         padding: 1.5rem;
       }
+
       .filter-inner {
         justify-content: flex-start;
         overflow-x: auto;
@@ -778,7 +785,7 @@
 
 <body>
 
-  <!-- Ambient background -->
+  
   <div class="bg-canvas" aria-hidden="true">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
@@ -789,9 +796,9 @@
 
   <div class="page">
 
-    <!-- ── HERO ─────────────────────────────────────────────── -->
+    
     <header class="hero" id="hero">
-      <h1 class="hero-title">Equations</h1>
+      <h1 class="hero-title">Equation Reference</h1>
 
       <div class="search-row">
         <div class="search-box">
@@ -806,7 +813,7 @@
       <div id="stats"></div>
     </header>
 
-    <!-- ── CHAPTER FILTER PILLS ──────────────────────────────── -->
+    
     <div class="filter-wrap">
       <div class="filter-inner" id="filter-bar">
         <button class="pill active" data-ch="all">📚 All Chapters</button>
@@ -826,13 +833,11 @@
       </div>
     </div>
 
-    <!-- ── MAIN CONTENT ──────────────────────────────────────── -->
+    
     <main id="main"></main>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-     DETAIL MODAL
-═══════════════════════════════════════════════════════════ -->
+  
   <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-name">
     <div id="modal">
       <button id="modal-close" aria-label="Close">&times;</button>
@@ -858,9 +863,7 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-     CONSTANTS MODAL
-═══════════════════════════════════════════════════════════ -->
+  
   <div id="constants-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="constants-modal-name">
     <div class="constants-modal-container" style="max-width: 700px;">
       <button id="constants-modal-close" aria-label="Close">&times;</button>
@@ -899,8 +902,8 @@
                 <td>Ideal Gas Constant</td>
                 <td class="sym-cell">R</td>
                 <td class="unit-cell" style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem;">0.08206
-                  L·atm/(mol·K)<br><span
-                    style="color:#666; font-size:0.8rem; margin-top:2px; display:block;">8.314 J/(mol·K)</span>
+                  L·atm/(mol·K)<br><span style="color:#666; font-size:0.8rem; margin-top:2px; display:block;">8.314
+                    J/(mol·K)</span>
                 </td>
               </tr>
               <tr>
@@ -941,10 +944,7 @@
   </div>
 
   <script>
-    /* ═══════════════════════════════════════════════════════════════════
-       DATA — All equations from equations.txt
-       variables format: { sym, symLatex, name, unit, desc }
-    ═══════════════════════════════════════════════════════════════════ */
+    
     const KINETIC_ORDERS = [
       {
         order: "0", name: "Zero-Order",
@@ -1530,7 +1530,7 @@
                 ]
               },
               {
-                name: "Neutralization",
+                name: "Neutralisation",
                 eq: "HCl + NaOH \\rightarrow H_2O + NaCl",
                 desc: "A strong acid reacting with a strong base produces water and a salt. The net ionic equation is simply H⁺ + OH⁻ → H₂O.",
                 vars: [
@@ -2252,9 +2252,9 @@
       }
     ];
 
-    // ───────────────────────────────────────────────────────────────
+    
     // FLATTEN for search
-    // ───────────────────────────────────────────────────────────────
+    
     const FLAT = [];
     CHAPTERS.forEach(ch => {
       ch.sections.forEach(sec => {
@@ -2265,15 +2265,15 @@
     });
     const TOTAL = FLAT.length;
 
-    // ───────────────────────────────────────────────────────────────
+    
     // STATE
-    // ───────────────────────────────────────────────────────────────
+    
     let activeChapter = 'all';
     let searchQ = '';
 
-    // ───────────────────────────────────────────────────────────────
+    
     // BOOT
-    // ───────────────────────────────────────────────────────────────
+    
     document.addEventListener('DOMContentLoaded', () => {
       const poll = setInterval(() => {
         if (typeof katex !== 'undefined') {
@@ -2303,9 +2303,9 @@
       gsap.to('.orb', { opacity: 0.55, duration: 2, stagger: 0.3, ease: 'power2.out' });
     }
 
-    // ───────────────────────────────────────────────────────────────
+    
     // FILTER PILLS
-    // ───────────────────────────────────────────────────────────────
+    
     function initFilterPills() {
       // ONLY target pills inside the filter-inner container to avoid conflict with constants button
       document.querySelectorAll('.filter-inner .pill').forEach(p => {
@@ -2318,9 +2318,9 @@
       });
     }
 
-    // ───────────────────────────────────────────────────────────────
+    
     // SEARCH
-    // ───────────────────────────────────────────────────────────────
+    
     function setupSearch() {
       document.getElementById('search').addEventListener('input', e => {
         searchQ = e.target.value.toLowerCase().trim();
@@ -2328,9 +2328,9 @@
       });
     }
 
-    // ───────────────────────────────────────────────────────────────
+    
     // RENDER
-    // ───────────────────────────────────────────────────────────────
+    
     function render() {
       const main = document.getElementById('main');
       main.innerHTML = '';
@@ -2499,8 +2499,8 @@
       for (let i = 0; i < POLYATOMIC_IONS.length; i += 2) {
         const tr = document.createElement('tr');
         const ion1 = POLYATOMIC_IONS[i];
-        const ion2 = POLYATOMIC_IONS[i+1];
-        
+        const ion2 = POLYATOMIC_IONS[i + 1];
+
         tr.innerHTML = `
           <td style="width:150px"><div class="kinetics-math"></div></td>
           <td>${ion1.name}</td>
@@ -2509,9 +2509,9 @@
         `;
 
         const mathDivs = tr.querySelectorAll('.kinetics-math');
-        try { katex.render(ion1.ion, mathDivs[0], { throwOnError: false }); } catch(e) {}
+        try { katex.render(ion1.ion, mathDivs[0], { throwOnError: false }); } catch (e) { }
         if (ion2) {
-            try { katex.render(ion2.ion, mathDivs[1], { throwOnError: false }); } catch(e) {}
+          try { katex.render(ion2.ion, mathDivs[1], { throwOnError: false }); } catch (e) { }
         }
 
         tbody.appendChild(tr);
@@ -2558,12 +2558,12 @@
           <td style="width:300px"><div class="kinetics-math"></div></td>
           <td>${s.detail ? '<div class="kinetics-math detail-math"></div>' : ''}</td>
         `;
-        try { katex.render(s.rule, tr.querySelector('.kinetics-math'), { throwOnError: false }); } catch(e) {}
+        try { katex.render(s.rule, tr.querySelector('.kinetics-math'), { throwOnError: false }); } catch (e) { }
         if (s.detail) {
-            try { 
-                const detailStr = `\\color{#ff3131}\\rightarrow\\text{ } ` + s.detail;
-                katex.render(detailStr, tr.querySelector('.detail-math'), { throwOnError: false }); 
-            } catch(e) {}
+          try {
+            const detailStr = `\\color{#ff3131}\\rightarrow\\text{ } ` + s.detail;
+            katex.render(detailStr, tr.querySelector('.detail-math'), { throwOnError: false });
+          } catch (e) { }
         }
         tbody.appendChild(tr);
       });
@@ -2579,12 +2579,12 @@
           <td style="width:300px"><div class="kinetics-math"></div></td>
           <td>${s.detail ? '<div class="kinetics-math detail-math"></div>' : ''}</td>
         `;
-        try { katex.render(s.rule, tr.querySelector('.kinetics-math'), { throwOnError: false }); } catch(e) {}
+        try { katex.render(s.rule, tr.querySelector('.kinetics-math'), { throwOnError: false }); } catch (e) { }
         if (s.detail) {
-            try { 
-                const detailStr = `\\color{#ff3131}\\rightarrow\\text{ } ` + s.detail;
-                katex.render(detailStr, tr.querySelector('.detail-math'), { throwOnError: false }); 
-            } catch(e) {}
+          try {
+            const detailStr = `\\color{#ff3131}\\rightarrow\\text{ } ` + s.detail;
+            katex.render(detailStr, tr.querySelector('.detail-math'), { throwOnError: false });
+          } catch (e) { }
         }
         tbody.appendChild(tr);
       });
@@ -2636,9 +2636,9 @@
         `;
 
         const divs = tr.querySelectorAll('.kinetics-math');
-        try { katex.render(g.group, divs[0], { throwOnError: false }); } catch(e) {}
-        try { katex.render(g.formula, divs[1], { throwOnError: false }); } catch(e) {}
-        try { katex.render(g.example, divs[2], { throwOnError: false }); } catch(e) {}
+        try { katex.render(g.group, divs[0], { throwOnError: false }); } catch (e) { }
+        try { katex.render(g.formula, divs[1], { throwOnError: false }); } catch (e) { }
+        try { katex.render(g.example, divs[2], { throwOnError: false }); } catch (e) { }
 
         tbody.appendChild(tr);
       });
@@ -2790,13 +2790,13 @@
       } else if (activeChapter !== 'all') {
         s.innerHTML = `Showing <strong>${shown}</strong> equations`;
       } else {
-        s.innerHTML = `<strong>${TOTAL}</strong> equations across <strong>10</strong> chapters`;
+        s.innerHTML = `<strong>${TOTAL}</strong> equations across <strong>${CHAPTERS.length}</strong> chapters`;
       }
     }
 
-    // ───────────────────────────────────────────────────────────────
+    
     // MODAL
-    // ───────────────────────────────────────────────────────────────
+    
     const CHAPTER_STYLES = {
       ch2: { bg: 'rgba(96,165,250,0.15)', color: '#93c5fd', border: 'rgba(96,165,250,0.3)' },
       ch3: { bg: 'rgba(52,211,153,0.15)', color: '#6ee7b7', border: 'rgba(52,211,153,0.3)' },
